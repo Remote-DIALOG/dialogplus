@@ -34,15 +34,15 @@ class DialogBox extends React.Component {
                                 variant="standard"
                             >
                             <FormLabel component="legend">Pick One</FormLabel>
-                                {this.props.data.usertype}.map((type, index) => return(<p>type</p>))
-                                <FormGroup>
-                                <FormControlLabel control={<Checkbox checked={this.props.data.client} onChange={e=>this.props.data.handleChange('client',e)} name="client" />}
-                                    label="Client"
-                                />
-                                <FormControlLabel control={<Checkbox checked={this.props.data.clinican} onChange={e=>this.props.data.handleChange('clinican',e)} name="clinican" />}
-                                    label="Clinican"
-                                />
-                                </FormGroup>
+                                    <FormGroup>
+                                    <FormControlLabel control={<Checkbox checked={this.props.data.client} onChange={e=>this.props.data.handleChange('client',e)} name="client" />}
+                                        label="Client"
+                                    />
+                                    <FormControlLabel control={<Checkbox checked={this.props.data.clinican} onChange={e=>this.props.data.handleChange('clinican',e)} name="clinican" />}
+                                        label="Clinican"
+                                    />
+                                    </FormGroup>
+                                
                                 {this.props.data.error.iserror ? <FormHelperText>{this.props.data.error.message}</FormHelperText>:null}
                             </FormControl>
                             </DialogContent>

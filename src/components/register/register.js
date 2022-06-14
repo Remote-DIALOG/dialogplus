@@ -2,6 +2,7 @@ import { ThreeSixtyOutlined } from '@mui/icons-material';
 import { toHaveStyle } from '@testing-library/jest-dom/dist/matchers';
 import React from 'react';
 import DialogBox from './dialog';
+import ClinetRegistration from './clinet';
 class Register extends React.Component {
     constructor(props) {
         super(props);
@@ -24,24 +25,26 @@ class Register extends React.Component {
 
     }
     setUsertype () {
-
+        if (this.state.client==false && this.state.clinican==false) {
+            let error = {
+                message:"Please select one option",
+                iserror: true,
+            }
+            this.setState({error:error})
+        }
+        if (this.state.client || this.state.clinican) { 
+            this.setState({openDialog:false})
+        }
     }
     handleChange (name,event) {
-        // if (this.state.client==true && this.state.clinican==true) {
-        //     let error = {
-        //         message:"Please select only one option",
-        //         iserror: true,
-        //     }
-        //     this.setState({error:error})
-        // }
-        // if (name==="client") {
-        //     this.setState({client:!this.state.client});
-        //     // this.setState({error:{message:'',isError:false}})
-        // }
-        // if (name==="clinican") {
-        //     this.setState({clinican:!this.state.clinican});
-        //     // this.setState({error:{message:'',isError:false}})
-        // }
+        if (name==="client" && this.state.clinican==false) {
+            this.setState({client:!this.state.client});
+            this.setState({error:{message:'',isError:false}})
+        }
+        if (name==="clinican" && this.state.client==false) {
+            this.setState({clinican:!this.state.clinican});
+            this.setState({error:{message:'',isError:false}})
+        }
     }
     componentDidMount(){
         this.setState({openDialog:true});
@@ -56,8 +59,16 @@ class Register extends React.Component {
             client:this.state.client,
             clinican:this.state.clinican
         }
+        let form
+        if (this.state.client==true && this.state.openDialog==false) {
+            form = <ClinetRegistration/>
+        }
         return (
-            <DialogBox data={handlers}/>
+            <div>
+                <DialogBox data={handlers}/>
+                {form}
+            </div>
+           
         );
     }
 }
