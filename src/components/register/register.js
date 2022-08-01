@@ -3,6 +3,7 @@ import { toHaveStyle } from '@testing-library/jest-dom/dist/matchers';
 import React from 'react';
 import DialogBox from './dialog';
 import ClinetRegistration from './clinet';
+import ClinicanRegistration from './clinican';
 class Register extends React.Component {
     constructor(props) {
         super(props);
@@ -62,6 +63,9 @@ class Register extends React.Component {
         let form
         if (this.state.client==true && this.state.openDialog==false) {
             form = <ClinetRegistration/>
+        }
+        if (this.state.clinican==true && this.state.openDialog==false) {
+            form = <ClinicanRegistration/>
         }
         return (
             <div>

@@ -39,7 +39,7 @@ class DialogBox extends React.Component {
                                         label="Client"
                                     />
                                     <FormControlLabel control={<Checkbox checked={this.props.data.clinican} onChange={e=>this.props.data.handleChange('clinican',e)} name="clinican" />}
-                                        label="Clinican"
+                                        label="Clinician"
                                     />
                                     </FormGroup>
                                 

@@ -11,12 +11,18 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import GoogleIcon from '@mui/icons-material/Google';
+import FacebookLogin from "react-facebook-login";
+
 import '../../stylesheets/login.css';
 class ClinetRegistration extends React.Component {
     constructor(props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.responseGoogle = this.responseGoogle.bind(this);
+        this.responseFacebook = this.responseFacebook.bind(this);
+    }
+    responseFacebook () {
+
     }
     responseGoogle () {
 
@@ -94,8 +100,15 @@ class ClinetRegistration extends React.Component {
                   onFailure={this.responseGoogle}
                   cookiePolicy={"single_host_origin"}
                   className="GOOGLE"
-
-    />
+                />
+                <FacebookLogin
+                btnContent=" SIGN UP With FACEBOOK"
+                appId="185202659227880"
+                fields="name,email,picture"
+                onSuccess={this.responseFacebook}
+                onFailure={this.responseFacebook}
+                cssClass="FACEBOOK"
+              />
               </Grid>
             </Grid>
             <Button

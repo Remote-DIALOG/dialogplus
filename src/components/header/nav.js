@@ -24,7 +24,7 @@ class NavBar extends React.Component {
               color: 'inherit',
               textDecoration: 'none',
             }}
-          >Dialog+</Typography>
+          >DIALOG+</Typography>
           </Toolbar>
           </Container>
         </AppBar>

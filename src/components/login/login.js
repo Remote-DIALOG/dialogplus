@@ -9,23 +9,40 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import { connect } from "react-redux";
+import {increment, decrement, invcrementByAmount, validatUser} from '../../reducers/login';
+import { ElevenMpTwoTone, Thermostat } from '@mui/icons-material';
 class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state  = {
-            error: {
-                message:''
-            },
-            user : {
-                email:'',
-                password: ''
-            }
+            error: '',
+            username:'',
+            password: ''
         }
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
 
     }
-    handleSubmit () {
+    handleChange(event) {
+        // this.setState({event.target.id:event.target.value})
+        if (event.target.id == "username") {
+           this.setState({username:event.target.value})
+        }
+        if (event.target.id == "password") {
+            this.setState({password:event.target.value})
+        }
+
+    }
+    handleSubmit (event) {
+        event.preventDefault();
         console.log("handle submit")
+        let userinfo = {
+            "username": this.state.username,
+            "password": this.state.password
+        }
+        // console.log(userinfo);
+        this.props.validatUser(userinfo);
     }
     render () {
         return (
@@ -39,16 +56,17 @@ class Login extends React.Component {
                         <Typography component="h1" variant="h5">
                             Sign in
                         </Typography>
-                    <Box component="form" onSubmit={this.handleSubmit} noValidate sx={{ mt: 1 }}>
+                    <Box component="form"  onSubmit={this.handleSubmit} noValidate sx={{ mt: 1 }}>
                         <TextField 
                             margin="normal" 
                             required
                             fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
+                            id="username"
+                            label="Username"
+                            name="username"
                             autoFocus
+                            value={this.state.username}
+                            onChange={this.handleChange}
                         />
                         <TextField
                             margin="normal"
@@ -59,6 +77,8 @@ class Login extends React.Component {
                             type="password"
                             id="password"
                             autoComplete="current-password"
+                            value={this.state.password}
+                            onChange={this.handleChange}
                         />
                         <Button
                             type="submit"
@@ -87,4 +107,14 @@ class Login extends React.Component {
         );
     }
 }
-export default Login
+const mapStateToProps = (state) => ({
+    count:state.loginReducer.value
+})
+const mapDispatchToProps = {
+    increment,
+    decrement,
+    invcrementByAmount,
+    validatUser
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Login)
+// export default Login;
