@@ -8,6 +8,7 @@ import './App.css';
 import Client from './components/client';
 import Session from './components/session/index';
 import ActionItems from './components/client/actionItems';
+import Review from './components/session/review'
 import { Provider } from 'react-redux';
 import store from './store';
 class App extends React.Component {
@@ -29,6 +30,7 @@ class App extends React.Component {
           <Route path='/client' element={<Client/>}/>
           <Route path='/session' element={<Session/>}/>
           <Route path='/action' element={<ActionItems/>}/>
+          <Route path='/review' element={<Review/>}/>
         </Routes> 
          </BrowserRouter> 
       </div>
