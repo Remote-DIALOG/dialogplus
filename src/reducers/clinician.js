@@ -1,46 +1,44 @@
-// import TutorialDataService from '../utils/UserDataService'
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import API from '../utils/api';
-// import {postCall} from '../utils/api';
-export const getData = createAsyncThunk(
-    "user/login",
+export const getClients = createAsyncThunk(
+    "clinician/getClients",
     async (args, {rejectWithValue} ) => {   
         try {
-            const {data} = await API.post('/users/login', {headers: {
+            const {data} = await API.post('/clinician/getclinets', {headers: {
                 'Content-Type': 'application/json',
             },
                 args
             }); 
             return data;
         }catch(error) {
-            this.rejectWithValue(error.response.data);
+            this.rejectWithValue(error.response.message);
         }
     }
 )
-export const loginSlice = createSlice({
-    name:"login",
+export const ClinicianSlice = createSlice({
+    name:"clinician",
     initialState: {
         isSuccess:false,
-        userinfo:{},
+        clinetlist:[],
         message:"",
         isLoading:false
     },
     reducers :{},
     extraReducers: {
-        [getData.pending]: (state, {payload}) =>  {
+        [getClients.pending]: (state, {payload}) =>  {
             state.isLoading = true;
         },
 
-        [getData.fulfilled]: (state, {payload}) => {
+        [getClients.fulfilled]: (state, {payload}) => {
             state.isLoading = true;
-            state.userinfo = payload;
+            state.clinetlist = payload;
             state.isSuccess = true;
         },
-        [getData.rejected]: (state, {payload}) => {
+        [getClients.rejected]: (state, {payload}) => {
             state.message = payload;
             state.isLoading = false;
             state.isSuccess = false;
         }
     },
 })
-export default loginSlice.reducer;
+export default ClinicianSlice.reducer;

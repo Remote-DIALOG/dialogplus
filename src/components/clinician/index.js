@@ -1,8 +1,5 @@
 import React from 'react';
 import Container from '@mui/material/Container';
-import { CssBaseline } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Button from '@mui/material/Button';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -13,6 +10,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import PersonIcon from '@mui/icons-material/Person';
 import ADDClinet from './addClient';
+import { connect } from "react-redux";
+import {getClients} from '../../reducers/clinician';
 // Generate Order Data
 function createData(id, name) {
     return { id, name};
@@ -30,9 +29,15 @@ class Clinicican extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            open:false
+            open:false,
+            rows:[]
         }
         this.openAddClinet = this.openAddClinet.bind(this)
+    }
+    componentDidMount() {
+        let username = {username:"suyog@gmail.com"}
+        console.log("clicinican did mount")
+        this.props.getClients(username)
     }
     openAddClinet () {
         this.setState({open:!this.state.open})
@@ -69,4 +74,11 @@ class Clinicican extends React.Component {
         );
     }
 }
-export default Clinicican
+const mapStateToProps = (state) => ({
+    userinfo:state.clinicianReducer.clinetlist
+})
+const mapDispatchToProps = {
+    getClients
+
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Clinicican);
