@@ -35,8 +35,8 @@ class Clinicican extends React.Component {
         this.openAddClinet = this.openAddClinet.bind(this)
     }
     componentDidMount() {
-        let username = {username:"suyog@gmail.com"}
-        console.log("clicinican did mount")
+        console.log(this.props.userinfo)
+        let username = {username:this.props.userinfo.emailid}
         this.props.getClients(username)
     }
     openAddClinet () {
@@ -59,10 +59,10 @@ class Clinicican extends React.Component {
                     <Table size="medium" padding="none">
                         <TableHead></TableHead>
                         <TableBody>
-                            {rows.map((row) => (
+                            {this.props.clinetList.map((row) => (
                             <TableRow key={row.id}>
                                 <TableCell sx={{padding:"0px"}}><PersonIcon/></TableCell>
-                                <TableCell>{row.name}</TableCell>
+                                <TableCell>{row.fullname}</TableCell>
                             </TableRow>
                         ))}
                         </TableBody>
@@ -75,7 +75,8 @@ class Clinicican extends React.Component {
     }
 }
 const mapStateToProps = (state) => ({
-    userinfo:state.clinicianReducer.clinetlist
+    clinetList:state.clinicianReducer.clinetlist,
+    userinfo:state.loginReducer.userinfo
 })
 const mapDispatchToProps = {
     getClients

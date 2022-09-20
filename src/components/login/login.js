@@ -45,7 +45,6 @@ class Login extends React.Component {
 
     }
     componentDidUpdate(prevProps, prevState, snapshot) {
-        console.log("reditect should happen", this.props)
         if (this.props.userinfo.category == 'clinician') {
             this.props.nagivate('/clinician')
 

@@ -16,7 +16,6 @@ class App extends React.Component {
     super(props)
   }
   render () {
-    console.log("props in app", this.props)
     return (
       <Provider store={store}>
       <div>

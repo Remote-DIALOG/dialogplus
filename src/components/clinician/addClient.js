@@ -17,7 +17,6 @@ class ADDClinet extends React.Component {
         super(props)
     }
     render() {
-        console.log(this.props)
         return (
             <Dialog open={this.props.handles.open} onClose={this.props.handles.handleClose}>
                 <DialogTitle>
