@@ -11,8 +11,6 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { connect } from "react-redux";
 import {getData} from '../../reducers/login';
-import { Navigate } from 'react-router-dom';
-import { toHaveStyle } from '@testing-library/jest-dom/dist/matchers';
 class Login extends React.Component {
     constructor(props) {
         super(props);

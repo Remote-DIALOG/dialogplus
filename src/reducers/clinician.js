@@ -1,5 +1,18 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import API from '../utils/api';
+export const addClinet = createAsyncThunk(
+    "clinician/addClient", 
+    async (args, {rejectWithValue}) => {
+        try {
+            const {data} = await API.post('/clinician/addClient', {headers:{'content-type':'application/json'},
+            args
+        });
+        return data;
+        }catch(error) {
+            this.rejectWithValue(error.reposnse.message);
+        }
+    }
+);
 export const getClients = createAsyncThunk(
     "clinician/getClients",
     async (args, {rejectWithValue} ) => {   

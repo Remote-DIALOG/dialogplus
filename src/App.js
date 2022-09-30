@@ -22,12 +22,12 @@ class App extends React.Component {
         <NavBar/>
         <Routes>
           <Route path='/' exact element={<Login nagivate={this.props.nagivate}/>}/>
-          <Route path="/register"  element={<Register/>}/>
-          <Route path='/clinician' element={<Clinicican/>}/>
-          <Route path='/client' element={<Client/>}/>
-          <Route path='/session' element={<Session/>}/>
-          <Route path='/action' element={<ActionItems/>}/>
-          <Route path='/review' element={<Review/>}/>
+          <Route path="/register"  element={<Register nagivate={this.props.nagivate}/>}/>
+          <Route path='/clinician' element={<Clinicican nagivate={this.props.nagivate}/>}/>
+          <Route path='/client' element={<Client nagivate={this.props.nagivate}/>}/>
+          <Route path='/session' element={<Session nagivate={this.props.nagivate}/>}/>
+          <Route path='/action' element={<ActionItems nagivate={this.props.nagivate}/>}/>
+          <Route path='/review' element={<Review nagivate={this.props.nagivate}/>}/>
         </Routes> 
       </div>
       </Provider>

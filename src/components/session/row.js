@@ -12,14 +12,26 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Slider from '@mui/material/Slider';
 import CustomizedSwitches from './switch';
+import '../../stylesheets/slider.css'
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
-  function valuetext(value) {
+function valuetext(value) {
     return `${value}`;
-  }
+}
+
 export default function Row(props) {
     const { row , index, marks} = props;
     const [open, setOpen] = React.useState(false);
+    const [value, setvalue] = React.useState({})
+    const [rating, setrating] = React.useState([{
+      "id":"",
+      "value":0
+    }])
+    const handleChange = (event) => {
+      event.preventDefault();
+      setrating({...rating, id:event.target.name, value:event.target.value});
+      console.log(rating)
+    }
   
     return (
       <React.Fragment>
@@ -54,17 +66,18 @@ export default function Row(props) {
                   </TableHead>
                   <TableBody>
                   <Box sx={{ width: '100%', justifyContent:'space-around'}}>
-
-                                  <Slider
-                                    aria-label="Custom marks"
-                                    defaultValue={1}
-                                    getAriaValueText={valuetext}
-                                    step={1}
-                                    min={1}
-                                    max={7}
-                                    marks={marks}
-                                  />
-                                </Box>
+                    <Slider
+                        aria-label="Custom marks"
+                        defaultValue={1}
+                        getAriaValueText={valuetext}
+                        step={1}
+                        min={1}
+                        max={7}
+                        marks={marks}
+                        onChange={handleChange}
+                        name={row}
+                    />
+                  </Box>
                   <Box sx={{width:'100%', justifyContent:'flex-end', display:'flex'}}>
                     <Typography>Do you need more help in this area?</Typography>
                   </Box>

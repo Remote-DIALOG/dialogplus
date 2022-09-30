@@ -1,0 +1,4 @@
+.MuiSlider-thumb:is(:hover, .Mui-active) {
+    display: none;
+  }
+  

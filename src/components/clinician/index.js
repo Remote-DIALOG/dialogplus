@@ -33,6 +33,10 @@ class Clinicican extends React.Component {
             rows:[]
         }
         this.openAddClinet = this.openAddClinet.bind(this)
+        this.handlenavigation = this.handlenavigation.bind(this)
+    }
+    handlenavigation () {
+        this.props.nagivate('/client')
     }
     componentDidMount() {
         console.log(this.props.userinfo)
@@ -60,9 +64,9 @@ class Clinicican extends React.Component {
                         <TableHead></TableHead>
                         <TableBody>
                             {this.props.clinetList.map((row) => (
-                            <TableRow key={row.id}>
+                            <TableRow key={row.id} onClick={this.handlenavigation}>
                                 <TableCell sx={{padding:"0px"}}><PersonIcon/></TableCell>
-                                <TableCell>{row.fullname}</TableCell>
+                                <TableCell onClick={this.handlenavigation}>{row.fullname.replace(/\s/g, '')}</TableCell>
                             </TableRow>
                         ))}
                         </TableBody>

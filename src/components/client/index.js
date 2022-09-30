@@ -23,13 +23,21 @@ const rows = [
 class Client extends React.Component {
     constructor(props) {
         super(props)
+        this.state = {
+
+        }
+        this.handleSession = this.handleSession.bind(this);
+    }
+    handleSession() {
+        console.log("session")
+        this.props.nagivate('/session');
     }
     render() {
         return(
             <Container maxWidth={false}>
             <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
              <Box><Typography variant='h4'>Elvis Presley</Typography></Box>
-             <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.openAddClinet}>New Seesion</Button>
+             <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.handleSession}>New Seesion</Button>
          </Box>
          <Box>
              <Table size="medium" padding='none'>
