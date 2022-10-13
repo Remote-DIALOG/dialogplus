@@ -1,8 +1,9 @@
-import { CompressOutlined } from "@mui/icons-material";
 import axios from "axios";
-
+const hostname = window.location.hostname
+const protocol = hostname=='localhost'? 'http://':'https://'
+const port = ':443'
 const API  = axios.create({
-    "baseURL":'http://127.0.0.1:443',
+    "baseURL": protocol+hostname+port,
     timeout:1000,
 });
 export default API;

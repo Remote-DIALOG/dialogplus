@@ -8,7 +8,8 @@ import TableContainer from '@mui/material/TableContainer';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Row from './row';
-
+import { connect } from "react-redux";
+import {setValue} from '../../reducers/session';
 const marks = [
   { name:"totally dissatisifies",
     value: 1,
@@ -51,27 +52,28 @@ class Session extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-          open:false
+          session:[]
         }
-        this.setOpen = this.setOpen.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
-    setOpen() {
-      this.setState({open:!this.state.open})
-    } 
+    handleChange (event) {
+      var data = JSON.parse(JSON.stringify({scale:event.target.name, rating:event.target.value}));
+      this.props.setValue(data)
+    }
     render () {
         return (
             <div>
               <Container maxWidth={false}>
                 <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
                   <Box sx={{margin:2}}><Typography variant='h4'>Assessment</Typography></Box>
-                  <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.openAddClinet}>Review</Button>
+                  <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={()=>console.log("review is clickec")}>Review</Button>
                 </Box>
                 <Box>
                   <TableContainer component={Paper}>
                     <Table aria-label="collapsible table">
                       <TableBody>
                         {scale.map((row, index)=> (
-                          <Row row={row} key={index} index={index} marks={marks}/>
+                          <Row row={row} key={index} index={index} marks={marks} handleChange={this.handleChange}/>
                         ))}
                       </TableBody>
                     </Table>
@@ -85,4 +87,11 @@ class Session extends React.Component {
         );
     }
 }
-export default Session;
+const mapStateToProps = (state) => ({
+  seesion:state.loginReducer.session
+})
+const mapDispatchToProps = {
+  setValue
+
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Session);

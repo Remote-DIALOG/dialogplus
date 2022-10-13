@@ -9,17 +9,9 @@ import TableRow from '@mui/material/TableRow';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import ContentPasteIcon from '@mui/icons-material/ContentPaste';
-function createData(id, name) {
-    return { id, name};
-}
-const rows = [
-    createData(0,'Friday, 29 oct 2021',),
-    createData(1,'Wednesday, 20 oct 2021',),
-    createData(2, 'Thursday, 14 oct 2021'),
-    createData(3,'Monday,4 oct 2021'),
-    createData(4,'Friday, 29 sept 2021'),
-];
-  
+import EditIcon from '@mui/icons-material/Edit';
+import {connect} from 'react-redux';
+import {setActionItems} from '../../reducers/client';
 class Client extends React.Component {
     constructor(props) {
         super(props)
@@ -27,6 +19,12 @@ class Client extends React.Component {
 
         }
         this.handleSession = this.handleSession.bind(this);
+        this.handleClick = this.handleClick.bind(this);
+    }
+    handleClick (id) {
+        console.log(id)
+        this.props.nagivate('/action')
+
     }
     handleSession() {
         console.log("session")
@@ -36,17 +34,18 @@ class Client extends React.Component {
         return(
             <Container maxWidth={false}>
             <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
-             <Box><Typography variant='h4'>Elvis Presley</Typography></Box>
+             <Box><Typography variant='h4'>{this.props.clientinfo.fullname}</Typography></Box>
              <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.handleSession}>New Seesion</Button>
          </Box>
          <Box>
              <Table size="medium" padding='none'>
                  <TableHead></TableHead>
                  <TableBody>
-                     {rows.map((row) => (
+                     {this.props.date.map((row) => (
                      <TableRow key={row.id}>
-                         <TableCell><ContentPasteIcon/></TableCell>
-                         <TableCell align='left'>{row.name}</TableCell>
+                         <TableCell style={{width: 50}}><ContentPasteIcon/></TableCell>
+                         <TableCell align='left' style={{width: 200}}>{row.name}</TableCell>
+                         <TableCell><div onClick = {()=>this.handleClick(row.id)}><EditIcon/></div></TableCell>
                      </TableRow>
                  ))}
                  </TableBody>
@@ -55,7 +54,9 @@ class Client extends React.Component {
          <Box sx={{justifyContent:'flex-start'}}>
              <Button type="submit"
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}>
+              sx={{ mt: 3, mb: 2 }}
+              onClick={()=>this.props.nagivate('/')}
+              >
                  Exit
              </Button>
          </Box>
@@ -64,4 +65,11 @@ class Client extends React.Component {
     }
 
 }
-export default Client;
+const mapStateToProps = (state) => ({
+    clientinfo:state.ClientReducer.clientinfo,
+    date:state.ClientReducer.dates
+  })
+const mapDispatchToProps = {
+    setActionItems
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Client);

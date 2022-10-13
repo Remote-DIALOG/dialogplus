@@ -25,7 +25,12 @@ export const SessionSlice = createSlice({
     },
     reducers :{
         setValue(state, action) {
-            console.log(action.payload)
+            console.log("seesion reducer = ", action.payload)
+            return {
+                ...state,
+                session:state.session.concat(action.payload)
+
+            }
         }
     },
     extraReducers: {

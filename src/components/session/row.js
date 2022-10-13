@@ -5,7 +5,6 @@ import IconButton from '@mui/material/IconButton';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -13,36 +12,33 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Slider from '@mui/material/Slider';
 import CustomizedSwitches from './switch';
 import '../../stylesheets/slider.css'
-const label = { inputProps: { 'aria-label': 'Switch demo' } };
-
 function valuetext(value) {
     return `${value}`;
 }
 
-export default function Row(props) {
-    const { row , index, marks} = props;
-    const [open, setOpen] = React.useState(false);
-    const [value, setvalue] = React.useState({})
-    const [rating, setrating] = React.useState([{
-      "id":"",
-      "value":0
-    }])
-    const handleChange = (event) => {
-      event.preventDefault();
-      setrating({...rating, id:event.target.name, value:event.target.value});
-      console.log(rating)
+class Row extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      open:false
     }
-  
+    this.setOpen = this.setOpen.bind(this);
+  }
+  setOpen() {
+    this.setState({open:!this.state.open});
+  }
+  render () {
+    const { row , index, marks} = this.props;
     return (
-      <React.Fragment>
-        <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+      <>
+      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
           <TableCell>
             <IconButton
               aria-label="expand row"
               size="small"
-              onClick={() => setOpen(!open)}
+              onClick={this.setOpen}
             >
-              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              {this.state.open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
           <TableCell component="th" scope="row">
@@ -56,14 +52,12 @@ export default function Row(props) {
         </TableRow>
         <TableRow>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-            <Collapse in={open} timeout="auto" unmountOnExit>
+            <Collapse in={this.state.open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
                 <Typography variant="h6" gutterBottom component="div">
                   How much are you satifised with your {row}
                 </Typography>
                 <Table size="small" aria-label="purchases">
-                  <TableHead>
-                  </TableHead>
                   <TableBody>
                   <Box sx={{ width: '100%', justifyContent:'space-around'}}>
                     <Slider
@@ -74,7 +68,7 @@ export default function Row(props) {
                         min={1}
                         max={7}
                         marks={marks}
-                        onChange={handleChange}
+                        onChange={this.props.handleChange}
                         name={row}
                     />
                   </Box>
@@ -90,7 +84,9 @@ export default function Row(props) {
             </Collapse>
           </TableCell>
         </TableRow>
-      </React.Fragment>
+        </>
     );
   }
+}
   
+  export default Row

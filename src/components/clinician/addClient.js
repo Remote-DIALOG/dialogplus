@@ -45,7 +45,6 @@ class ADDClinet extends React.Component {
         password:this.state.password
       }
       this.props.addClinet(data);
-      this.props.handles.handleClose();
       
     }
     render() {

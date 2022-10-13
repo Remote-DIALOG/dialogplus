@@ -1,16 +1,13 @@
-// import TutorialDataService from '../utils/UserDataService'
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {ReactSession} from 'react-client-session';
 import API from '../utils/api';
-// import {postCall} from '../utils/api';
 export const getData = createAsyncThunk(
     "user/login",
     async (args, {rejectWithValue} ) => {   
         try {
-            const {data} = await API.post('/users/login', {headers: {
-                'Content-Type': 'application/json',
-            },
-                args
-            }); 
+            
+            ReactSession.set("credential", JSON.stringify(args));
+            const {data} = await API.post('/users/login', args); 
             return data;
         }catch(error) {
             this.rejectWithValue(error.response.data);
@@ -23,18 +20,32 @@ export const loginSlice = createSlice({
         isSuccess:false,
         userinfo:{},
         message:"",
-        isLoading:false
+        isLoading:false,
+        isLogin:false
     },
-    reducers :{},
+    reducers :{
+        logout(state, action) {
+            console.log("login reducer = ", action.payload)
+        }
+    },
     extraReducers: {
         [getData.pending]: (state, {payload}) =>  {
             state.isLoading = true;
         },
 
         [getData.fulfilled]: (state, {payload}) => {
-            state.isLoading = true;
-            state.userinfo = payload;
-            state.isSuccess = true;
+            state.isLoading = false;
+            if (payload.hasOwnProperty("message")) {
+                state.message = payload.message
+                state.userinfo = {};
+                state.isSuccess = false;
+                state.isLogin = false;    
+            }
+            else {
+                state.userinfo = payload;
+                state.isSuccess = true;
+                state.isLogin = true; 
+            }
         },
         [getData.rejected]: (state, {payload}) => {
             state.message = payload;
@@ -43,4 +54,5 @@ export const loginSlice = createSlice({
         }
     },
 })
+export const {logout} = loginSlice.actions;
 export default loginSlice.reducer;

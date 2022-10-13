@@ -3,8 +3,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-// import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
+import BasicAlerts from '../../utils/alert';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
@@ -47,13 +46,16 @@ class Login extends React.Component {
             this.props.nagivate('/clinician')
 
         }
-        else{
-            this.props.nagivate('/')
+        if (this.props.userinfo.category == 'client'){
+            this.props.nagivate('/client')
         }
+
+        
     }
     render () {
         return (
             <div>
+                {this.props.message.length > 0 &&<BasicAlerts message={this.props.message}/>}
                 <Container component="main" maxWidth="xs">
                     <CssBaseline />
                     <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'column',alignItems: 'center',}}>
@@ -115,11 +117,12 @@ class Login extends React.Component {
     }
 }
 const mapStateToProps = (state) => ({
-    userinfo:state.loginReducer.userinfo
-})
+        userinfo:state.loginReducer.userinfo,
+        message:state.loginReducer.message
+});
 const mapDispatchToProps = {
     getData
 
-}
+};
 export default connect(mapStateToProps, mapDispatchToProps)(Login)
 // export default Login;

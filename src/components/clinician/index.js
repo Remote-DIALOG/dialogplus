@@ -11,20 +11,10 @@ import Typography from '@mui/material/Typography';
 import PersonIcon from '@mui/icons-material/Person';
 import ADDClinet from './addClient';
 import { connect } from "react-redux";
+import {ReactSession} from 'react-client-session';
 import {getClients} from '../../reducers/clinician';
-// Generate Order Data
-function createData(id, name) {
-    return { id, name};
-  }
-  
-  const rows = [
-    createData(0,'Elvis Presley',),
-    createData(1,'Paul McCartney',),
-    createData(2, 'Tom Scholz'),
-    createData(3,'Michael Jackson'),
-    createData(4,'Bruce Springsteen'),
-  ];
-  
+import {getData} from '../../reducers/login';
+import {setClientinfo} from '../../reducers/client';
 class Clinicican extends React.Component {
     constructor(props) {
         super(props);
@@ -35,12 +25,21 @@ class Clinicican extends React.Component {
         this.openAddClinet = this.openAddClinet.bind(this)
         this.handlenavigation = this.handlenavigation.bind(this)
     }
-    handlenavigation () {
-        this.props.nagivate('/client')
+    handlenavigation (row) {
+        if (row.id!=undefined) {
+            this.props.setClientinfo(row)
+            this.props.nagivate('/client')
+        }
     }
     componentDidMount() {
-        console.log(this.props.userinfo)
-        let username = {username:this.props.userinfo.emailid}
+        let username =  {"username":this.props.userinfo.emailid};;
+        if (this.props.userinfo.emailid==undefined) {
+            let credential = JSON.parse(ReactSession.get("credential"))
+            this.props.getData(credential)
+            username = { 
+                "username":credential.username
+            }
+        }
         this.props.getClients(username)
     }
     openAddClinet () {
@@ -66,7 +65,7 @@ class Clinicican extends React.Component {
                             {this.props.clinetList.map((row) => (
                             <TableRow key={row.id} onClick={this.handlenavigation}>
                                 <TableCell sx={{padding:"0px"}}><PersonIcon/></TableCell>
-                                <TableCell onClick={this.handlenavigation}>{row.fullname.replace(/\s/g, '')}</TableCell>
+                                <TableCell onClick={() => this.handlenavigation(row)}>{row.fullname}</TableCell>
                             </TableRow>
                         ))}
                         </TableBody>
@@ -83,7 +82,9 @@ const mapStateToProps = (state) => ({
     userinfo:state.loginReducer.userinfo
 })
 const mapDispatchToProps = {
-    getClients
-
+    getClients,
+    getData,
+    setClientinfo
+    
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Clinicican);
