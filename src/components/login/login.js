@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { connect } from "react-redux";
 import {getData} from '../../reducers/login';
+import {getClientInfo} from '../../reducers/client';
 class Login extends React.Component {
     constructor(props) {
         super(props);
@@ -24,10 +25,10 @@ class Login extends React.Component {
     }
     handleChange(event) {
         // this.setState({event.target.id:event.target.value})
-        if (event.target.id == "username") {
+        if (event.target.id === "username") {
            this.setState({username:event.target.value})
         }
-        if (event.target.id == "password") {
+        if (event.target.id === "password") {
             this.setState({password:event.target.value})
         }
 
@@ -42,11 +43,12 @@ class Login extends React.Component {
 
     }
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.userinfo.category == 'clinician') {
+        if (this.props.userinfo.category === 'clinician') {
             this.props.nagivate('/clinician')
 
         }
-        if (this.props.userinfo.category == 'client'){
+        if (this.props.userinfo.category === 'client'){
+            this.props.getClientInfo(this.props.userinfo)
             this.props.nagivate('/client')
         }
 
@@ -121,7 +123,8 @@ const mapStateToProps = (state) => ({
         message:state.loginReducer.message
 });
 const mapDispatchToProps = {
-    getData
+    getData,
+    getClientInfo
 
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Login)

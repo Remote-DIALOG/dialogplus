@@ -35,9 +35,6 @@ function FormDialog(props) {
   const handleChange = (event) => {
     setValue(event.target.value);
   };
-  const handleDelete = () => {
-    console.log('handle delete')
-  };
   return (
     <div>
       <div>
@@ -47,7 +44,7 @@ function FormDialog(props) {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle> Add new notes</DialogTitle>
         <DialogContent>
-        <Box component="form" sx={{'& .MuiTextField-root': { m: 1, width: '50ch' },}} noValidate autoComplete="off">
+        <Box component="form" sx={{'& .MuiTextField-root': { m: 1, width: '70ch' },}} noValidate autoComplete="off">
           <div>
             <TextField
               id="outlined-multiline-flexible"
@@ -55,9 +52,6 @@ function FormDialog(props) {
               maxRows={4}
               value={value}
               onChange={handleChange}
-              inputProps ={{
-                maxLength:255
-              }}
             />
           </div>
         </Box>

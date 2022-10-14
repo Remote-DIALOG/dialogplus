@@ -80,7 +80,8 @@ class Session extends React.Component {
                   </TableContainer>
                 </Box>
                 <Box sx={{width:"100%", justifyContent:"space-between", display:"flex"}}>
-                  <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>Exit</Button>
+                  <Button type="submit" variant="outlined" sx={{ mt: 3, mb: 2 }}>Exit</Button>
+                  <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={()=>console.log("review is clickec")}>Review</Button>
                 </Box>
               </Container>                
          </div>

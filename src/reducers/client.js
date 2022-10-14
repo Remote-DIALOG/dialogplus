@@ -4,14 +4,21 @@ export const getSessionDates = createAsyncThunk(
     "client/getSessionDates",
     async (args, {rejectWithValue} ) => {   
         try {
-            const {data} = await API.post('/users/getSessionDates', {headers: {
-                'Content-Type': 'application/json',
-            },
-            args
-            }); 
+            const {data} = await API.post('/client/getSessionDates',args); 
             return data;
         }catch(error) {
             this.rejectWithValue(error.response.data);
+        }
+    }
+)
+export const getClientInfo = createAsyncThunk(
+    "clinet/getclientInfo",
+    async (args, {rejectWithValue}) => {
+        try {
+            const {data} = await API.post('/client/getClinetinfo', args);
+            return data
+        }catch(error) {
+            this.rejectWithValue(error)
         }
     }
 )
@@ -34,6 +41,22 @@ export const ClientSlice = createSlice({
         }
     },
     extraReducers: {
+        [getClientInfo.pending]:(state, {payload}) => {
+            state.isLoading = true;
+        },
+        [getClientInfo.fulfilled]: (state, {payload}) => {
+            state.isLoading = false;
+            state.clientinfo = payload;
+            state.isSuccess = true
+        },
+        [getClientInfo.rejected]: (state, {payload}) => {
+            state.message = payload;
+            state.isLoading = false;
+            state.isSuccess = false;
+        },
+
+
+
         [getSessionDates.pending]: (state, {payload}) =>  {
             state.isLoading = true;
         },

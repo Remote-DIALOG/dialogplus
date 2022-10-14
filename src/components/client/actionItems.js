@@ -9,7 +9,7 @@ import ListItem from '@mui/material/ListItem';
 import {connect} from 'react-redux';
 import Paper from '@mui/material/Paper';
 import FormDialog from './addnotes';
-import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+import {styled} from '@mui/material/styles';
 import {getNotes} from '../../reducers/actionitems';
 const Item = styled(Paper)(({ theme }) => ({
   textAlign: 'left',
@@ -33,8 +33,9 @@ class ActionItems extends React.Component {
                 <Typography variant='h4'>Previous action items</Typography>
                 <Button variant="contained" onClick={()=>this.props.nagivate('/client')}>Finish</Button>
             </Box>
-            <Box sx={{ flexGrow: 1 }}>
+            <Box sx={{ flexGrow: 1}}>
                 <Grid container spacing={2}>
+                    {/* <Paper elevation={2}> */}
                     <Grid item xs={4}>
                        <Typography variant='h5'>Job Situation</Typography>
                        <List sx={{ listStyleType: 'disc' }}>
@@ -42,6 +43,8 @@ class ActionItems extends React.Component {
                             <ListItem sx={{ display: 'list-item' }}>Item 2</ListItem>
                         </List>
                     </Grid>
+                    {/* </Paper> */}
+                    {/* <Paper elevation={2}> */}
                     <Grid item xs={4}>
                        <Typography variant='h5'>FriendShip</Typography>
                        <List sx={{ listStyleType: 'disc' }}>
@@ -49,6 +52,8 @@ class ActionItems extends React.Component {
                             <ListItem sx={{ display: 'list-item' }}>Item 2</ListItem>
                         </List>
                     </Grid>
+                    {/* </Paper> */}
+                    {/* <Paper elevation={2}> */}
                     <Grid item xs={4}>
                        <Typography variant='h5'>Medication</Typography>
                        <List sx={{ listStyleType: 'disc' }}>
@@ -56,6 +61,7 @@ class ActionItems extends React.Component {
                             <ListItem sx={{ display: 'list-item' }}>Item 2</ListItem>
                         </List>
                     </Grid>
+                    {/* </Paper> */}
                 </Grid>
             </Box>
             <Box sx={{marginTop:10, display:'flex', flexDirection:'column', alignItems:'center'}}>

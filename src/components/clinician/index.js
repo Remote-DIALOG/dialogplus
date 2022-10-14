@@ -26,14 +26,14 @@ class Clinicican extends React.Component {
         this.handlenavigation = this.handlenavigation.bind(this)
     }
     handlenavigation (row) {
-        if (row.id!=undefined) {
+        if (row.id!==undefined) {
             this.props.setClientinfo(row)
             this.props.nagivate('/client')
         }
     }
     componentDidMount() {
         let username =  {"username":this.props.userinfo.emailid};;
-        if (this.props.userinfo.emailid==undefined) {
+        if (this.props.userinfo.emailid===undefined) {
             let credential = JSON.parse(ReactSession.get("credential"))
             this.props.getData(credential)
             username = { 

@@ -12,6 +12,7 @@ import ContentPasteIcon from '@mui/icons-material/ContentPaste';
 import EditIcon from '@mui/icons-material/Edit';
 import {connect} from 'react-redux';
 import {setActionItems} from '../../reducers/client';
+import {getSessionDates} from '../../reducers/client';
 class Client extends React.Component {
     constructor(props) {
         super(props)
@@ -30,14 +31,17 @@ class Client extends React.Component {
         console.log("session")
         this.props.nagivate('/session');
     }
+    componentDidMount () {
+        // this.props.getSessionDates()
+    }
     render() {
         return(
-            <Container maxWidth={false}>
-            <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
-             <Box><Typography variant='h4'>{this.props.clientinfo.fullname}</Typography></Box>
-             <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.handleSession}>New Seesion</Button>
-         </Box>
-         <Box>
+        <Container maxWidth={false}>
+                <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
+                <Box><Typography variant='h4'>{this.props.clientinfo.fullname}</Typography></Box>
+                <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.handleSession}>New Session</Button>
+            </Box>
+            <Box>
              <Table size="medium" padding='none'>
                  <TableHead></TableHead>
                  <TableBody>
@@ -53,7 +57,7 @@ class Client extends React.Component {
          </Box>
          <Box sx={{justifyContent:'flex-start'}}>
              <Button type="submit"
-              variant="contained"
+              variant="outlined"
               sx={{ mt: 3, mb: 2 }}
               onClick={()=>this.props.nagivate('/')}
               >
@@ -70,6 +74,7 @@ const mapStateToProps = (state) => ({
     date:state.ClientReducer.dates
   })
 const mapDispatchToProps = {
-    setActionItems
+    setActionItems,
+    getSessionDates
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Client);
