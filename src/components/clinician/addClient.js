@@ -8,7 +8,7 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import { connect } from "react-redux";
-import { addClinet } from '../../reducers/clinician';
+import { addClinet, setClinet} from '../../reducers/clinician';
 import CloseIcon from '@mui/icons-material/Close';
 import { Typography } from '@mui/material';
 class ADDClinet extends React.Component {
@@ -25,13 +25,13 @@ class ADDClinet extends React.Component {
     }
     handleChange (event) {
       console.log(event.target.id)
-      if (event.target.id == "firstName") {
+      if (event.target.id === "firstName") {
         this.setState({firstname:event.target.value})
      }
-     if (event.target.id == "lastName") {
+     if (event.target.id ===  "lastName") {
          this.setState({lastname:event.target.value})
      }
-     if (event.target.id == "email") {
+     if (event.target.id === "email") {
       this.setState({email:event.target.value})
   }
     }
@@ -40,10 +40,11 @@ class ADDClinet extends React.Component {
       this.setState({password: Math.random().toString(36).slice(2, 10)})
       let data = {
         clinicianId: this.props.userinfo.id, 
-        clientname: this.state.firstname + " " +this.state.lastname,
+        fullname: this.state.firstname + " " +this.state.lastname,
         email: this.state.email,
         password:this.state.password
       }
+      this.props.setClinet(data)
       this.props.addClinet(data);
       
     }
@@ -51,7 +52,7 @@ class ADDClinet extends React.Component {
         return (
             <Dialog open={this.props.handles.open} onClose={this.props.handles.handleClose}>
                 <DialogTitle>
-                    <Grid container direction="row" justifyContent="space-between">New Clinet
+                    <Grid container direction="row" justifyContent="space-between">New Client
                     <IconButton aria-label="close" onClick={this.props.handles.handleClose}>
                         <CloseIcon />
                     </IconButton>
@@ -119,7 +120,8 @@ const mapStateToProps = (state) => ({
   userinfo:state.loginReducer.userinfo
 })
 const mapDispatchToProps = {
-  addClinet
+  addClinet,
+  setClinet
 
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ADDClinet);

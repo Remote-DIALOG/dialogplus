@@ -11,7 +11,6 @@ import Typography from '@mui/material/Typography';
 import PersonIcon from '@mui/icons-material/Person';
 import ADDClinet from './addClient';
 import { connect } from "react-redux";
-import {ReactSession} from 'react-client-session';
 import {getClients} from '../../reducers/clinician';
 import {getData} from '../../reducers/login';
 import {setClientinfo} from '../../reducers/client';
@@ -32,15 +31,13 @@ class Clinicican extends React.Component {
         }
     }
     componentDidMount() {
-        let username =  {"username":this.props.userinfo.emailid};;
-        if (this.props.userinfo.emailid===undefined) {
-            let credential = JSON.parse(ReactSession.get("credential"))
-            this.props.getData(credential)
-            username = { 
-                "username":credential.username
+            let username = { 
+                "username":this.props.userinfo.emailid
             }
-        }
-        this.props.getClients(username)
+            console.log("username===========>", username)
+            this.props.getClients(username)
+
+        
     }
     openAddClinet () {
         this.setState({open:!this.state.open})

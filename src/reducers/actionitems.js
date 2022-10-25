@@ -3,13 +3,8 @@ import API from '../utils/api';
 export const getNotes = createAsyncThunk(
     "actionitem/getNotes",
     async (args, {rejectWithValue} ) => { 
-        console.log("------------>", args)
         try {
-            const {data} = await API.get('/actionitem/getnotes', {headers: {
-                'Content-Type': 'application/json',
-            },
-                args
-            }); 
+            const {data} = await API.get('/actionitem/getnotes',args); 
             return data;
         }catch(error) {
             this.rejectWithValue(error.response.data);

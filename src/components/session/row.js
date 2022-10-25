@@ -10,8 +10,12 @@ import Typography from '@mui/material/Typography';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Slider from '@mui/material/Slider';
+import { nanoid } from 'nanoid'
 import CustomizedSwitches from './switch';
+import { connect } from 'react-redux';
+import {checkValue} from '../../reducers/session';
 import '../../stylesheets/slider.css'
+import {setValue} from '../../reducers/session';
 function valuetext(value) {
     return `${value}`;
 }
@@ -20,18 +24,19 @@ class Row extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      open:false
+      open:false,
+      defaultRating:10,
     }
-    this.setOpen = this.setOpen.bind(this);
+    this.setOpen = this.setOpen.bind(this);   
   }
   setOpen() {
     this.setState({open:!this.state.open});
   }
   render () {
-    const { row , index, marks} = this.props;
     return (
-      <>
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+      <React.Fragment>
+
+      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }} key={nanoid()}>
           <TableCell>
             <IconButton
               aria-label="expand row"
@@ -41,21 +46,28 @@ class Row extends React.Component {
               {this.state.open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
-          <TableCell component="th" scope="row">
-            {row}
+
+
+          <TableCell component="th" scope="row"  >
+            <Typography variant='h6'>{this.props.row}</Typography>
           </TableCell>
+
           <TableCell align="right">
             <Box sx={{ width: 300 }}>
-              <Slider disabled defaultValue={index+5} aria-label="Default" />
+              <Slider disabled value={()=>this.props.getDefaultValue(this.props.row)} 
+              aria-labelledby='discrete-slider'
+              valueLabelDisplay='auto' />
             </Box>
            </TableCell>
         </TableRow>
-        <TableRow>
+
+
+        <TableRow key={nanoid()}>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
             <Collapse in={this.state.open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
                 <Typography variant="h6" gutterBottom component="div">
-                  How much are you satifised with your {row}
+                  How satifised are you with your {this.props.row} ?
                 </Typography>
                 <Table size="small" aria-label="purchases">
                   <TableBody>
@@ -67,9 +79,9 @@ class Row extends React.Component {
                         step={1}
                         min={1}
                         max={7}
-                        marks={marks}
+                        marks={this.props.marks}
                         onChange={this.props.handleChange}
-                        name={row}
+                        name={this.props.row}
                     />
                   </Box>
                   <Box sx={{width:'100%', justifyContent:'flex-end', display:'flex'}}>
@@ -84,9 +96,16 @@ class Row extends React.Component {
             </Collapse>
           </TableCell>
         </TableRow>
-        </>
+        </React.Fragment>
     );
   }
 }
+const mapStateToProps = (state) => ({
+  session:state.SessionReducer
+})
+const mapDispatchToProps = {
+  checkValue,
+  setValue
+}
   
-  export default Row
+export default connect(mapStateToProps, mapDispatchToProps)(Row)

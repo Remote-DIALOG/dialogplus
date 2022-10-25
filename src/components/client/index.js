@@ -13,6 +13,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import {connect} from 'react-redux';
 import {setActionItems} from '../../reducers/client';
 import {getSessionDates} from '../../reducers/client';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 class Client extends React.Component {
     constructor(props) {
         super(props)
@@ -39,7 +41,7 @@ class Client extends React.Component {
         <Container maxWidth={false}>
                 <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
                 <Box><Typography variant='h4'>{this.props.clientinfo.fullname}</Typography></Box>
-                <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.handleSession}>New Session</Button>
+                <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.handleSession} endIcon={<ArrowForwardIosIcon/>}>New Session</Button>
             </Box>
             <Box>
              <Table size="medium" padding='none'>
@@ -60,6 +62,7 @@ class Client extends React.Component {
               variant="outlined"
               sx={{ mt: 3, mb: 2 }}
               onClick={()=>this.props.nagivate('/')}
+              startIcon={<div><ArrowBackIosIcon/><ArrowBackIosIcon/></div>}
               >
                  Exit
              </Button>

@@ -1,21 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import {ReactSession} from 'react-client-session';
 import API from '../utils/api';
 export const getData = createAsyncThunk(
     "user/login",
     async (args, {rejectWithValue} ) => {   
         try {
-            console.log("in user/login");
-            if( ReactSession.get("credential").length === 0)  {
-                console.log("in if condition")
-                ReactSession.set("credential", JSON.stringify(args));
-            }
             const {data} = await API.post('/users/login', args); 
-            console.log("data", data, typeof(data));
             return data;
         }catch(error) {
-            console.log("error = ", error)
-            this.rejectWithValue(error.response.data);
+            console.log("error = ", error.response.data.message)
+            this.rejectWithValue(error.response.data.message);
         }
     }
 )
@@ -39,16 +32,15 @@ export const loginSlice = createSlice({
         },
 
         [getData.fulfilled]: (state, {payload}) => {
-            console.log("in fullfilled", payload)
             state.isLoading = false;
             state.userinfo = payload;
             state.isSuccess = true;
             state.isLogin = true; 
+          
         },
         [getData.rejected]: (state, {payload}) => {
             console.log("in rejected", payload)
             state.message = payload|| "Something went wrong";
-            console.log(payload)
             state.isLoading = false;
             state.isSuccess = false;
         }

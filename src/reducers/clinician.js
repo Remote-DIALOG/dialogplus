@@ -5,7 +5,7 @@ export const addClinet = createAsyncThunk(
     async (args, {rejectWithValue}) => {
         try {
             const {data} = await API.post('/clinician/addClient', args);
-        return data;
+            return data;
         }catch(error) {
             this.rejectWithValue(error.reposnse.message);
         }
@@ -30,7 +30,14 @@ export const ClinicianSlice = createSlice({
         message:"",
         isLoading:false
     },
-    reducers :{},
+    reducers :{
+        setClinet(state, action) {
+            return {
+                ...state,
+                clinetlist:state.clinetlist.concat(action.payload)
+            }
+        }
+    },
     extraReducers: {
         [getClients.pending]: (state, {payload}) =>  {
             state.isLoading = true;
@@ -48,4 +55,5 @@ export const ClinicianSlice = createSlice({
         }
     },
 })
+export const {setClinet} = ClinicianSlice.actions;
 export default ClinicianSlice.reducer;

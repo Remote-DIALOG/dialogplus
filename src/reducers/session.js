@@ -1,17 +1,25 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import API from '../utils/api';
-export const getData = createAsyncThunk(
-    "user/login",
+export const getSessionData = createAsyncThunk(
+    "session/getData",
     async (args, {rejectWithValue} ) => {   
         try {
-            const {data} = await API.post('/users/login', {headers: {
-                'Content-Type': 'application/json',
-            },
-                args
-            }); 
+            const {data} = await API.post('/users/login',args); 
             return data;
         }catch(error) {
-            this.rejectWithValue(error.response.data);
+            this.rejectWithValue(JSON.stringify(error));
+        }
+    }
+)
+export const saveCurrentSession = createAsyncThunk(
+    "session/saveCurrentSession",
+    async(args, {rejectWithValue})=> {
+        try {
+            const {data} = await API.post('/session/saveSession', args);
+            console.log(data)
+            return data
+        }catch(error) {
+            this.rejectWithValue(JSON.stringify(error))
         }
     }
 )
@@ -19,36 +27,39 @@ export const SessionSlice = createSlice({
     name:"session",
     initialState: {
         isSuccess:false,
-        session:[],
+        current_session:[],
+        past_session:[],
         message:"",
         isLoading:false
     },
     reducers :{
         setValue(state, action) {
-            console.log("seesion reducer = ", action.payload)
             return {
                 ...state,
-                session:state.session.concat(action.payload)
-
-            }
-        }
+                current_session:action.payload
+             }            
+           
+        },
+        checkValue(state, action) {
+            console.log('check value is called')
+        },
     },
     extraReducers: {
-        [getData.pending]: (state, {payload}) =>  {
-            state.isLoading = true;
-        },
+        // [getSessionData.pending]: (state, {payload}) =>  {
+        //     state.isLoading = true;
+        // },
 
-        [getData.fulfilled]: (state, {payload}) => {
-            state.isLoading = true;
-            state.userinfo = payload;
-            state.isSuccess = true;
-        },
-        [getData.rejected]: (state, {payload}) => {
-            state.message = payload;
-            state.isLoading = false;
-            state.isSuccess = false;
-        }
+        // [getSessionData.fulfilled]: (state, {payload}) => {
+        //     state.isLoading = true;
+        //     state.userinfo = payload;
+        //     state.isSuccess = true;
+        // },
+        // [getSessionData.rejected]: (state, {payload}) => {
+        //     state.message = payload;
+        //     state.isLoading = false;
+        //     state.isSuccess = false;
+        // }
     },
 })
-export const {setValue} = SessionSlice.actions;
+export const {setValue,checkValue} = SessionSlice.actions;
 export default SessionSlice.reducer;
