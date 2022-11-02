@@ -30,15 +30,70 @@ export const SessionSlice = createSlice({
         current_session:[],
         past_session:[],
         message:"",
-        isLoading:false
+        isLoading:false,
+        scale: ["Mental health", "Physical health", "Job situation", "Accommodation", "Leisure activities", "Relationship with partner/family", "Friendship", "Personal safety", "Medication", "Practical help", "Meetings"],
+        marks: [
+            { name:"totally dissatisifies",
+              value: 1,
+              label: '1',
+            },
+            {
+              name: "very dissatisifies",
+              value: 2,
+              label: '2',
+            },
+            {
+              name:"fairly dissatisifies",
+              value: 3,
+              label: '3',
+            },
+            { name:"in the middle",
+              value: 4,
+              label: '4',
+            },
+            { name:"in the middle",
+            value: 4,
+            label: '4',
+            },  
+            { name:"fairly satisfied",
+            value: 5,
+            label: '5',
+            },  
+            { name:"very satifised",
+            value: 6,
+            label: '6',
+            },  
+            { name:"totally satisfied",
+            value: 7,
+            label: '7',
+            }
+          ],
+          current_session: [
+            {"created_at":""},
+            {"created_by":16},
+            {"name": "Mental health","value" :0},
+            {"name":"Physical health","value": 0},
+            {"name":"Job situation","value": 0},
+            {"name":"Accommodation" ,"value": 0},
+            {"name":"Leisure activities" ,"value":0},
+            {"name":"Relationship","value":0},
+            {"name":"Friendship","value":0},
+            {"name":"Personal safety","value": 0},
+            {"name":"Medication","value":0},
+            {"name":"Practical help","value":0},
+            {"name":"Meetings","value":0}
+          ]
+
     },
     reducers :{
-        setValue(state, action) {
-            return {
-                ...state,
-                current_session:action.payload
-             }            
-           
+        setCurrentSessionValue(state, action) {
+            console.log(action)
+            let stringifyCurrentSession = JSON.stringify(state.current_session)
+            let copyofCurrentSession = JSON.parse(stringifyCurrentSession)
+            let changesvalue = copyofCurrentSession.find(name=>name.name==action.payload.name)
+            changesvalue.value = action.payload.value
+            return {...state, current_session: copyofCurrentSession}
+            
         },
         checkValue(state, action) {
             console.log('check value is called')
@@ -61,5 +116,5 @@ export const SessionSlice = createSlice({
         // }
     },
 })
-export const {setValue,checkValue} = SessionSlice.actions;
+export const {setCurrentSessionValue,checkValue} = SessionSlice.actions;
 export default SessionSlice.reducer;
