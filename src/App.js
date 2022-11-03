@@ -8,13 +8,13 @@ import './App.css';
 import Client from './components/client';
 import Session from './components/session/index';
 import ActionItems from './components/client/actionItems';
-import Review from './components/session/review'
+import Review from './components/review/review'
 import { Provider } from 'react-redux';
 import { ReactSession } from 'react-client-session';
 import store from './store';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
-import {getData} from './reducers/login';
-import {connect} from 'react-redux';
+// import {getData} from './reducers/login';
+// import {connect} from 'react-redux';
 const theme = createTheme({
   typography: {
     fontFamily: [
@@ -48,14 +48,14 @@ class App extends React.Component {
     );
   }
 }
-const mapStateToProps = (state) => ({
-  clinetList:state.clinicianReducer.clinetlist,
-  userinfo:state.loginReducer.userinfo
-})
-const mapDispatchToProps = {
-  getData
+// const mapStateToProps = (state) => ({
+//   clinetList:state.clinicianReducer.clinetlist,
+//   userinfo:state.loginReducer.userinfo
+// })
+// const mapDispatchToProps = {
+//   getData
 
-}
+// }
 export function APPWithRouter(props) {
   const nagivate  = useNavigate()
   return (<App nagivate={nagivate}></App>)

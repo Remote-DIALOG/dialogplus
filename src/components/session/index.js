@@ -1,6 +1,5 @@
 import React from "react";
 import List from "@mui/material/List";
-import Divider from "@mui/material/Divider";
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -8,8 +7,9 @@ import Button from '@mui/material/Button';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import Row from './row';
-import {setCurrentSessionValue} from '../../reducers/session'
+import {setCurrentSessionValue, setUserIdAndTime} from '../../reducers/session'
 import {connect} from 'react-redux';
+import BasicAlerts from "../../utils/alert";
 class Session extends React.Component {
   constructor(props) {
     super(props);
@@ -29,26 +29,37 @@ class Session extends React.Component {
         "Medication":0,
         "Practical help":0,
         "Meetings":0
-      }
+      },
+      errormessage:""
     }
     this.handleReview = this.handleReview.bind(this)
     this.handleChanges = this.handleChanges.bind(this)
   }
   handleReview() {
+    let flag = 1
+    for (var i=2;i<this.props.session.current_session.length;i++) {
+      if (this.props.session.current_session[i].value===0){
+        flag = 0
+        break
+      }
+    }
+    if (flag===0) {
+      this.setState({errormessage:"Please complete the session"})
+      return;
+    }
+    let userId = this.props.userinfo
+    this.props.setUserIdAndTime({userId})
     this.props.nagivate('/review')
   }
   handleChanges(event) {
-    // console.log(event)
     let name = event.target.name
     let value = event.target.value
-    console.log(this.state.current_session[name], value)
-    // this.setState(this.state.current_session[name]=value)
     this.props.setCurrentSessionValue({name, value})
   }
   render() {
-    console.log(this.state.current_session)
     return (
       <Container maxWidth={false}>
+        {this.state.errormessage.length > 0 &&<BasicAlerts message={this.state.errormessage}/>}
         <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
           <Box sx={{margin:2}}><Typography variant='h4'>Assessment</Typography></Box>
             <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.handleReview} endIcon={<ArrowForwardIosIcon/>}>Review</Button>
@@ -69,8 +80,10 @@ class Session extends React.Component {
 }
 const mapStateToProps = (state) => ({
   session:state.SessionReducer,
+  userinfo:state.UserReducer.userinfo,
 })
 const mapDispatchToProps = {
-  setCurrentSessionValue
+  setCurrentSessionValue,
+  setUserIdAndTime
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Session);

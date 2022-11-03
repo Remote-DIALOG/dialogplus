@@ -27,7 +27,6 @@ export const SessionSlice = createSlice({
     name:"session",
     initialState: {
         isSuccess:false,
-        current_session:[],
         past_session:[],
         message:"",
         isLoading:false,
@@ -76,7 +75,7 @@ export const SessionSlice = createSlice({
             {"name":"Job situation","value": 0},
             {"name":"Accommodation" ,"value": 0},
             {"name":"Leisure activities" ,"value":0},
-            {"name":"Relationship","value":0},
+            {"name":"Relationship with partner/family","value":0},
             {"name":"Friendship","value":0},
             {"name":"Personal safety","value": 0},
             {"name":"Medication","value":0},
@@ -90,13 +89,21 @@ export const SessionSlice = createSlice({
             console.log(action)
             let stringifyCurrentSession = JSON.stringify(state.current_session)
             let copyofCurrentSession = JSON.parse(stringifyCurrentSession)
-            let changesvalue = copyofCurrentSession.find(name=>name.name==action.payload.name)
+            let changesvalue = copyofCurrentSession.find(name=>name.name===action.payload.name)
             changesvalue.value = action.payload.value
             return {...state, current_session: copyofCurrentSession}
             
         },
         checkValue(state, action) {
             console.log('check value is called')
+        },
+        setUserIdAndTime(state, action) {
+            let userId = action.payload.userId
+            let timestamp = action.payload.timestamp;
+            let copyofCurrentSession = JSON.parse(JSON.stringify(state.current_session))
+            copyofCurrentSession.created_at = timestamp
+            copyofCurrentSession.created_by = userId
+            return {...state, current_session: copyofCurrentSession}
         },
     },
     extraReducers: {
@@ -116,5 +123,5 @@ export const SessionSlice = createSlice({
         // }
     },
 })
-export const {setCurrentSessionValue,checkValue} = SessionSlice.actions;
+export const {setCurrentSessionValue,checkValue, setUserIdAndTime} = SessionSlice.actions;
 export default SessionSlice.reducer;

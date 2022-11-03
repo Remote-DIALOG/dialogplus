@@ -34,7 +34,7 @@ class Row extends React.Component {
         let current_value = this.props.session.current_session.find(scale => scale.name===this.props.row)
         if (current_value!=undefined && current_value.value>0) {
             let percent = (current_value.value/7)*100
-            console.log(percent)
+            // console.log(percent)
             this.setState({progress:percent})
         }
 
