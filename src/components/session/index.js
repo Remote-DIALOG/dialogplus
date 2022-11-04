@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import Row from './row';
-import {setCurrentSessionValue, setUserIdAndTime} from '../../reducers/session'
+import {setCurrentSessionValue, setUserIdAndTime, saveCurrentSession} from '../../reducers/session'
 import {connect} from 'react-redux';
 import BasicAlerts from "../../utils/alert";
 class Session extends React.Component {
@@ -47,8 +47,13 @@ class Session extends React.Component {
       this.setState({errormessage:"Please complete the session"})
       return;
     }
-    let userId = this.props.userinfo
-    this.props.setUserIdAndTime({userId})
+    let userId = this.props.clientinfo.id
+    var today = new Date();
+    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    var dateTime = date+' '+time;
+    this.props.setUserIdAndTime({userId, dateTime})
+    this.props.saveCurrentSession(this.props.session.current_session)
     this.props.nagivate('/review')
   }
   handleChanges(event) {
@@ -80,10 +85,11 @@ class Session extends React.Component {
 }
 const mapStateToProps = (state) => ({
   session:state.SessionReducer,
-  userinfo:state.UserReducer.userinfo,
+  clientinfo:state.ClientReducer.clientinfo,
 })
 const mapDispatchToProps = {
   setCurrentSessionValue,
-  setUserIdAndTime
+  setUserIdAndTime,
+  saveCurrentSession
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Session);

@@ -8,10 +8,14 @@ import './App.css';
 import Client from './components/client';
 import Session from './components/session/index';
 import ActionItems from './components/client/actionItems';
-import Review from './components/review/review'
+import Select from './components/session/select';
+import Review from './components/session/review';
+import Discuss from './components/session/discuss';
 import { Provider } from 'react-redux';
 import { ReactSession } from 'react-client-session';
-import store from './store';
+import { persistor, store } from './store';
+import { PersistGate } from 'redux-persist/integration/react';
+
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 // import {getData} from './reducers/login';
 // import {connect} from 'react-redux';
@@ -30,6 +34,7 @@ class App extends React.Component {
   render () {
     return (
       <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
         <ThemeProvider theme={theme}>
           <div>
             <NavBar/>
@@ -41,9 +46,12 @@ class App extends React.Component {
               <Route path='/session' element={<Session nagivate={this.props.nagivate}/>}/>
               <Route path='/action' element={<ActionItems nagivate={this.props.nagivate}/>}/>
               <Route path='/review' element={<Review nagivate={this.props.nagivate}/>}/>
+              <Route path='/select' element={<Select nagivate={this.props.nagivate}/>}/>
+              <Route path='/discuss' element={<Discuss nagivate={this.props.nagivate}/>}/>
             </Routes> 
           </div>
         </ThemeProvider>
+        </PersistGate>
       </Provider>
     );
   }

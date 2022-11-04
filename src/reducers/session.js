@@ -14,6 +14,7 @@ export const getSessionData = createAsyncThunk(
 export const saveCurrentSession = createAsyncThunk(
     "session/saveCurrentSession",
     async(args, {rejectWithValue})=> {
+        console.log(args)
         try {
             const {data} = await API.post('/session/saveSession', args);
             console.log(data)
@@ -69,7 +70,7 @@ export const SessionSlice = createSlice({
           ],
           current_session: [
             {"created_at":""},
-            {"created_by":16},
+            {"created_by":0},
             {"name": "Mental health","value" :0},
             {"name":"Physical health","value": 0},
             {"name":"Job situation","value": 0},
@@ -81,8 +82,8 @@ export const SessionSlice = createSlice({
             {"name":"Medication","value":0},
             {"name":"Practical help","value":0},
             {"name":"Meetings","value":0}
-          ]
-
+          ],
+          select_scale:[]
     },
     reducers :{
         setCurrentSessionValue(state, action) {
@@ -99,12 +100,20 @@ export const SessionSlice = createSlice({
         },
         setUserIdAndTime(state, action) {
             let userId = action.payload.userId
-            let timestamp = action.payload.timestamp;
+            let timestamp = action.payload.dateTime;
             let copyofCurrentSession = JSON.parse(JSON.stringify(state.current_session))
-            copyofCurrentSession.created_at = timestamp
-            copyofCurrentSession.created_by = userId
+            copyofCurrentSession[0].created_at = timestamp
+            copyofCurrentSession[1].created_by = userId
             return {...state, current_session: copyofCurrentSession}
         },
+        selectScale(state, action) {
+            return {
+                ...state,
+                select_scale:action.payload
+
+
+            }
+        }
     },
     extraReducers: {
         // [getSessionData.pending]: (state, {payload}) =>  {
@@ -123,5 +132,5 @@ export const SessionSlice = createSlice({
         // }
     },
 })
-export const {setCurrentSessionValue,checkValue, setUserIdAndTime} = SessionSlice.actions;
+export const {setCurrentSessionValue,checkValue, setUserIdAndTime, selectScale} = SessionSlice.actions;
 export default SessionSlice.reducer;
