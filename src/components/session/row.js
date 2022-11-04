@@ -55,6 +55,7 @@ class Row extends React.Component {
           unmountOnExit
           >
             <Box sx={{ width: '100%', justifyContent:'space-around'}}>
+              <Typography>How satisfied are you with your {this.props.row}?</Typography>
               <Slider
                 aria-label="Custom marks"
                 defaultValue={1}
