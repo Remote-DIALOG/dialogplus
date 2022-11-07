@@ -14,6 +14,7 @@ import ListItem from '@mui/material/ListItem';
 
 import TableFooter from '@mui/material/TableFooter';
 import Result from './result';
+import { ThirtyFpsOutlined } from '@mui/icons-material';
  class Discuss extends React.Component {
      constructor(props) {
          super(props) 
@@ -23,6 +24,10 @@ import Result from './result';
          }
          this.handleChangePage = this.handleChangePage.bind(this)
          this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this)
+         this.handleFinishButton = this.handleFinishButton.bind(this)
+     }
+     handleFinishButton () {
+        this.props.nagivate('/client')
      }
      handleChangePage (event, newPage) {
          this.setState({pages:newPage})
@@ -41,7 +46,7 @@ import Result from './result';
         <Container maxWidth={false}>
             <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
                 <Box sx={{margin:2}}><Typography variant='h4'>Discuss</Typography></Box>
-                <Button  variant="contained"sx={{ mt: 3, mb: 2 }}>Finish</Button>
+                <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.handleFinishButton}>Finish</Button>
             </Box>
             <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
                 <TableBody>

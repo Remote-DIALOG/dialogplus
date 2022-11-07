@@ -26,6 +26,11 @@ class Client extends React.Component {
         this.handleClick = this.handleClick.bind(this);
         this.handleExit = this.handleExit.bind(this);
     }
+    componentDidMount () {
+        // let clientid = this.props.clientinfo.clinetid
+        let clientid = 12
+        this.props.getSessionDates({"clientid":clientid})
+    }
     handleClick (id) {
         console.log(id)
         this.props.nagivate('/action')
@@ -49,11 +54,11 @@ class Client extends React.Component {
              <Table size="medium" padding='none'>
                  <TableHead></TableHead>
                  <TableBody>
-                     {this.props.date.map((row) => (
-                     <TableRow key={row.id}>
+                     {this.props.date.map((row, key) => (
+                     <TableRow key={key}>
                          <TableCell style={{width: 50}}><ContentPasteIcon/></TableCell>
-                         <TableCell align='left' style={{width: 200}}>{row.name}</TableCell>
-                         <TableCell><div onClick = {()=>this.handleClick(row.id)}><EditIcon/></div></TableCell>
+                         <TableCell align='left' style={{width: 200}}>{row}</TableCell>
+                         <TableCell><div onClick = {()=>this.handleClick(key)}><EditIcon/></div></TableCell>
                      </TableRow>
                  ))}
                  </TableBody>
