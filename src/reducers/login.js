@@ -12,6 +12,13 @@ export const getData = createAsyncThunk(
         }
     }
 )
+export const logout = createAsyncThunk(
+    "auth/logout",
+    async function (_payload, thunkAPI) {
+        thunkAPI.dispatch({ type: 'logout/LOGOUT' });
+        console.log('logged out')
+    }
+);
 export const loginSlice = createSlice({
     name:"login",
     initialState: {
@@ -21,11 +28,11 @@ export const loginSlice = createSlice({
         isLoading:false,
         isLogin:false
     },
-    reducers :{
-        logout(state, action) {
-            console.log("login reducer = ", action.payload)
-        }
-    },
+    // reducers :{
+    //     logout(state, action) {
+    //         console.log("login reducer = ", action.payload)
+    //     }
+    // },
     extraReducers: {
         [getData.pending]: (state, {payload}) =>  {
             state.isLoading = true;
@@ -46,5 +53,5 @@ export const loginSlice = createSlice({
         }
     },
 })
-export const {logout} = loginSlice.actions;
+// export const {logout} = loginSlice.actions;
 export default loginSlice.reducer;

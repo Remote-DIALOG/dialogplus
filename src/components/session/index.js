@@ -36,23 +36,20 @@ class Session extends React.Component {
     this.handleChanges = this.handleChanges.bind(this)
   }
   handleReview() {
-    let flag = 1
-    for (var i=2;i<this.props.session.current_session.length;i++) {
-      if (this.props.session.current_session[i].value===0){
-        flag = 0
-        break
-      }
-    }
-    if (flag===0) {
-      this.setState({errormessage:"Please complete the session"})
-      return;
-    }
-    let userId = this.props.clientinfo.id
+    // let flag = 1
+    // for (var i=2;i<this.props.session.current_session.length;i++) {
+    //   if (this.props.session.current_session[i].value===0){
+    //     flag = 0
+    //     break
+    //   }
+    // }
+    // if (flag===0) {
+    //   this.setState({errormessage:"Please complete the session"})
+    //   return;
+    // }
+    let userId = this.props.clientinfo.clinetid
     var today = new Date();
-    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    var dateTime = date+' '+time;
-    this.props.setUserIdAndTime({userId, dateTime})
+    this.props.setUserIdAndTime({userId, today})
     this.props.saveCurrentSession(this.props.session.current_session)
     this.props.nagivate('/review')
   }

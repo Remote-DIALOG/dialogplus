@@ -13,14 +13,21 @@ const persistConfig = {
     key: 'root',
     storage,
 };
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
     loginReducer:loginReducer,
     clinicianReducer:clinicianReducer,
     SessionReducer:SessionReducer,
     ClientReducer:ClientReducer,
     ActionItemsReducer:ActionItemsReducer
 })
-const pReducer = persistReducer(persistConfig, rootReducer);
+const reducerProxy = (state, action) => {
+    if(action.type === 'logout/LOGOUT') {
+      return appReducer(undefined, action);
+    }
+    return appReducer(state, action);
+  }
+  
+const pReducer = persistReducer(persistConfig, reducerProxy);
 export const store = configureStore({
     reducer : pReducer,
     middleware: [thunkMiddleware, logger],

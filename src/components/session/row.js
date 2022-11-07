@@ -72,7 +72,7 @@ class Row extends React.Component {
                 <Typography>Do you need more help in this area?</Typography>
               </Box>
               <Box sx={{width:'100%', justifyContent:'flex-end', display:'flex'}}>
-                <CheckboxesGroup/>
+                <CheckboxesGroup rows={this.props.row}/>
             </Box>
         </Collapse>
       </div>

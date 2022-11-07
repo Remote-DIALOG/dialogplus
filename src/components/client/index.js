@@ -15,14 +15,16 @@ import {setActionItems} from '../../reducers/client';
 import {getSessionDates} from '../../reducers/client';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import AlertDialog from '../../utils/dialogbox';
 class Client extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-
+            openDialog:false
         }
         this.handleSession = this.handleSession.bind(this);
         this.handleClick = this.handleClick.bind(this);
+        this.handleExit = this.handleExit.bind(this);
     }
     handleClick (id) {
         console.log(id)
@@ -33,8 +35,8 @@ class Client extends React.Component {
         console.log("session")
         this.props.nagivate('/session');
     }
-    componentDidMount () {
-        // this.props.getSessionDates()
+    handleExit () {
+        this.setState({openDialog:!this.state.openDialog})
     }
     render() {
         return(
@@ -61,12 +63,13 @@ class Client extends React.Component {
              <Button type="submit"
               variant="outlined"
               sx={{ mt: 3, mb: 2 }}
-              onClick={()=>this.props.nagivate('/')}
+              onClick={this.handleExit}
               startIcon={<div><ArrowBackIosIcon/><ArrowBackIosIcon/></div>}
               >
                  Exit
              </Button>
          </Box>
+         <AlertDialog open={this.state.openDialog} nagivate={this.props.nagivate} handleExit = {this.handleExit}/>
      </Container>
         );
     }
@@ -78,6 +81,6 @@ const mapStateToProps = (state) => ({
   })
 const mapDispatchToProps = {
     setActionItems,
-    getSessionDates
+    getSessionDates,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Client);

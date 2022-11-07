@@ -23,17 +23,19 @@ class Review extends React.Component {
 
     }
     handleSelect () {
-        this.props.nagivate('/select')
+        this.props.nagivate('/discuss')
     }
     render () {
         const current_session = this.props.current_session.slice(2)
-        console.log(current_session)
+        // console.log(current_session)
         return (
             <div>
                  <Container maxWidth={false}>
                  <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
                     <Box sx={{margin:2}}><Typography variant='h4'>Review</Typography></Box>
-                    <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.handleSelect}>Select</Button>
+                    <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.handleSelect}>
+                        Discuss
+                    </Button>
                 </Box>
                 <Box sx ={{marginTop:3, display:'flex', flexDirection:'row', justifyContent:'space-between', backgroundColor:"#202c2b17", }}>
                     <Stack direction="row" spacing={1}>   

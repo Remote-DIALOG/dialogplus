@@ -87,7 +87,6 @@ export const SessionSlice = createSlice({
     },
     reducers :{
         setCurrentSessionValue(state, action) {
-            console.log(action)
             let stringifyCurrentSession = JSON.stringify(state.current_session)
             let copyofCurrentSession = JSON.parse(stringifyCurrentSession)
             let changesvalue = copyofCurrentSession.find(name=>name.name===action.payload.name)
@@ -106,13 +105,25 @@ export const SessionSlice = createSlice({
             copyofCurrentSession[1].created_by = userId
             return {...state, current_session: copyofCurrentSession}
         },
-        selectScale(state, action) {
+        updateSelectScale(state, action) {
+            console.log("------>", action.payload)
             return {
                 ...state,
-                select_scale:action.payload
+                select_scale:state.select_scale.concat(action.payload)
 
 
             }
+        },
+        deleteSelectScale(state, action) {
+            let copySelectScale = state.select_scale
+            copySelectScale = copySelectScale.filter(function(item) {
+                return item.name!=action.payload.name
+            })
+            return {
+                ...state,
+                select_scale: copySelectScale
+            }
+
         }
     },
     extraReducers: {
@@ -132,5 +143,5 @@ export const SessionSlice = createSlice({
         // }
     },
 })
-export const {setCurrentSessionValue,checkValue, setUserIdAndTime, selectScale} = SessionSlice.actions;
+export const {setCurrentSessionValue,checkValue, setUserIdAndTime,updateSelectScale,deleteSelectScale} = SessionSlice.actions;
 export default SessionSlice.reducer;

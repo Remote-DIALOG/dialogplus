@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import {selectScale} from '../../reducers/session'
 import {connect} from 'react-redux';
 import Result from './result';
 
@@ -68,6 +67,6 @@ const mapStateToProps = (state) => ({
     session:state.SessionReducer,
   })
   const mapDispatchToProps = {
-    selectScale
+    // selectScale
   }
 export default connect(mapStateToProps, mapDispatchToProps)(Select);
