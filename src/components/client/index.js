@@ -34,7 +34,6 @@ class Client extends React.Component {
     handleClick (id) {
         console.log(id)
         this.props.nagivate('/action')
-
     }
     handleSession() {
         console.log("session")
