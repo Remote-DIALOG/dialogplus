@@ -4,7 +4,7 @@ export const getNotes = createAsyncThunk(
     "actionitem/getNotes",
     async (args, {rejectWithValue} ) => { 
         try {
-            const {data} = await API.get('/actionitem/getnotes',args); 
+            const {data} = await API.post('/actionitem/getnotes',args); 
             return data;
         }catch(error) {
             this.rejectWithValue(error.response.data);
@@ -15,11 +15,7 @@ export const addNotes = createAsyncThunk(
     "actionitem/addNotes",
     async (args, {rejectWithValue} ) => {   
         try {
-            const {data} = await API.post('/actionitem/addNotes', {headers: {
-                'Content-Type': 'application/json',
-            },
-                args
-            }); 
+            const {data} = await API.post('/actionitem/addNotes',args); 
             return data;
         }catch(error) {
             this.rejectWithValue(error.response.data);
@@ -63,7 +59,7 @@ export const NotesSlice = createSlice({
         },
         [getNotes.fulfilled]: (state, {payload}) => {
             state.isLoading = false;
-            state.actionitems = payload;
+            state.notes = payload;
             state.isSuccess = true;
         },
         [getNotes.rejected]: (state, {payload}) => {

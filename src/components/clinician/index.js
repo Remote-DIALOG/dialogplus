@@ -34,10 +34,7 @@ class Clinicican extends React.Component {
             let username = { 
                 "username":this.props.userinfo.emailid
             }
-            console.log("username===========>", username)
             this.props.getClients(username)
-
-        
     }
     openAddClinet () {
         this.setState({open:!this.state.open})

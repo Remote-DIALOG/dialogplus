@@ -16,6 +16,7 @@ import {getSessionDates} from '../../reducers/client';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import AlertDialog from '../../utils/dialogbox';
+import { CircularProgress } from '@mui/material';
 class Client extends React.Component {
     constructor(props) {
         super(props)
@@ -27,8 +28,7 @@ class Client extends React.Component {
         this.handleExit = this.handleExit.bind(this);
     }
     componentDidMount () {
-        // let clientid = this.props.clientinfo.clinetid
-        let clientid = 12
+        let clientid = this.props.clientinfo.clinetid
         this.props.getSessionDates({"clientid":clientid})
     }
     handleClick (id) {
@@ -36,15 +36,16 @@ class Client extends React.Component {
         this.props.nagivate('/action')
     }
     handleSession() {
-        console.log("session")
         this.props.nagivate('/session');
     }
-    handleExit () {
+    handleExit () { 
         this.setState({openDialog:!this.state.openDialog})
     }
     render() {
         return(
         <Container maxWidth={false}>
+            { this.props.client.isLoading? <CircularProgress sx={{marginTop:'10%', marginLeft:'50%'}}/> : 
+                <div>
                 <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
                 <Box><Typography variant='h4'>{this.props.clientinfo.fullname}</Typography></Box>
                 <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.handleSession} endIcon={<ArrowForwardIosIcon/>}>New Session</Button>
@@ -56,7 +57,7 @@ class Client extends React.Component {
                      {this.props.date.map((row, key) => (
                      <TableRow key={key}>
                          <TableCell style={{width: 50}}><ContentPasteIcon/></TableCell>
-                         <TableCell align='left' style={{width: 200}}>{row}</TableCell>
+                         <TableCell align='left' style={{width:300, fontFamily:'sans-serif'}}><Typography>{row.replace(/['"]+/g, '')}</Typography></TableCell>
                          <TableCell><div onClick = {()=>this.handleClick(key)}><EditIcon/></div></TableCell>
                      </TableRow>
                  ))}
@@ -66,20 +67,23 @@ class Client extends React.Component {
          <Box sx={{justifyContent:'flex-start'}}>
              <Button type="submit"
               variant="outlined"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{mt:2, pr:2, mr:3}}
               onClick={this.handleExit}
-              startIcon={<div><ArrowBackIosIcon/><ArrowBackIosIcon/></div>}
+              startIcon={<Box sx={{marginTop:1}}><ArrowBackIosIcon/><ArrowBackIosIcon/></Box>}
               >
                  Exit
              </Button>
          </Box>
-         <AlertDialog open={this.state.openDialog} nagivate={this.props.nagivate} handleExit = {this.handleExit}/>
+         <AlertDialog open={this.state.openDialog} nagivate={this.props.nagivate} handleExit = {this.handleExit}/> 
+         </div>
+        }
      </Container>
         );
     }
 
 }
 const mapStateToProps = (state) => ({
+    client:state.ClientReducer,
     clientinfo:state.ClientReducer.clientinfo,
     date:state.ClientReducer.dates
   })

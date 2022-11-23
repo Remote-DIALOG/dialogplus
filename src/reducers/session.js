@@ -1,10 +1,22 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import API from '../utils/api';
-export const getSessionData = createAsyncThunk(
-    "session/getData",
+// export const getSessionData = createAsyncThunk(
+//     "session/getData",
+//     async (args, {rejectWithValue} ) => {   
+//         try {
+//             const {data} = await API.post('/users/login',args); 
+//             return data;
+//         }catch(error) {
+//             this.rejectWithValue(JSON.stringify(error));
+//         }
+//     }
+// )
+export const getPastSession = createAsyncThunk(
+    "session/getPastSession",
     async (args, {rejectWithValue} ) => {   
         try {
-            const {data} = await API.post('/users/login',args); 
+            console.log("past session")
+            const {data} = await API.post('/session/getPastSession',args); 
             return data;
         }catch(error) {
             this.rejectWithValue(JSON.stringify(error));
@@ -14,10 +26,8 @@ export const getSessionData = createAsyncThunk(
 export const saveCurrentSession = createAsyncThunk(
     "session/saveCurrentSession",
     async(args, {rejectWithValue})=> {
-        console.log(args)
         try {
             const {data} = await API.post('/session/saveSession', args);
-            console.log(data)
             return data
         }catch(error) {
             this.rejectWithValue(JSON.stringify(error))
@@ -35,37 +45,33 @@ export const SessionSlice = createSlice({
         marks: [
             { name:"totally dissatisifies",
               value: 1,
-              label: '1',
+              label: 'totally dissatisfied',
             },
             {
               name: "very dissatisifies",
               value: 2,
-              label: '2',
+              label:"very dissatisifies",
             },
             {
               name:"fairly dissatisifies",
               value: 3,
-              label: '3',
-            },
-            { name:"in the middle",
-              value: 4,
-              label: '4',
+              label: "fairly dissatisifies",
             },
             { name:"in the middle",
             value: 4,
-            label: '4',
+            label: "in the middle",
             },  
             { name:"fairly satisfied",
             value: 5,
-            label: '5',
+            label: "fairly satisfied",
             },  
             { name:"very satifised",
             value: 6,
-            label: '6',
+            label: "very satifised",
             },  
             { name:"totally satisfied",
             value: 7,
-            label: '7',
+            label: "totally satisfied",
             }
           ],
           current_session: [
@@ -99,7 +105,7 @@ export const SessionSlice = createSlice({
         },
         setUserIdAndTime(state, action) {
             let userId = action.payload.userId
-            let timestamp = action.payload.dateTime;
+            let timestamp = action.payload.today;
             let copyofCurrentSession = JSON.parse(JSON.stringify(state.current_session))
             copyofCurrentSession[0].created_at = timestamp
             copyofCurrentSession[1].created_by = userId
@@ -127,20 +133,20 @@ export const SessionSlice = createSlice({
         }
     },
     extraReducers: {
-        // [getSessionData.pending]: (state, {payload}) =>  {
-        //     state.isLoading = true;
-        // },
+        [getPastSession.pending]: (state, {payload}) =>  {
+            state.isLoading = true;
+        },
 
-        // [getSessionData.fulfilled]: (state, {payload}) => {
-        //     state.isLoading = true;
-        //     state.userinfo = payload;
-        //     state.isSuccess = true;
-        // },
-        // [getSessionData.rejected]: (state, {payload}) => {
-        //     state.message = payload;
-        //     state.isLoading = false;
-        //     state.isSuccess = false;
-        // }
+        [getPastSession.fulfilled]: (state, {payload}) => {
+            state.isLoading = true;
+            state.past_session = payload;
+            state.isSuccess = true;
+        },
+        [getPastSession.rejected]: (state, {payload}) => {
+            state.message = payload;
+            state.isLoading = false;
+            state.isSuccess = false;
+        }
     },
 })
 export const {setCurrentSessionValue,checkValue, setUserIdAndTime,updateSelectScale,deleteSelectScale} = SessionSlice.actions;

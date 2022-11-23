@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import BasicAlerts from '../../utils/alert';
@@ -11,6 +10,9 @@ import Container from '@mui/material/Container';
 import { connect } from "react-redux";
 import {getData} from '../../reducers/login';
 import {getClientInfo} from '../../reducers/client';
+import {logout} from '../../reducers/login';
+import LoadingButton from '@mui/lab/LoadingButton';
+
 class Login extends React.Component {
     constructor(props) {
         super(props);
@@ -48,16 +50,18 @@ class Login extends React.Component {
 
         }
         if (this.props.userinfo.category === 'client'){
-            this.props.getClientInfo(this.props.userinfo)
-            this.props.nagivate('/client')
-        }
-
-        
+            this.props.getClientInfo(this.props.userinfo).then((data) => {
+                 this.props.nagivate('/client')
+            })
+        }   
+    }
+    componentDidMount () {
+        this.props.logout()
     }
     render () {
         return (
             <div>
-                {this.props.message.length > 0 &&<BasicAlerts message={this.props.message}/>}
+                {this.props.login.message.length > 0 &&<BasicAlerts message={this.props.login.message}/>}
                 <Container component="main" maxWidth="xs">
                     <CssBaseline />
                     <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'column',alignItems: 'center',}}>
@@ -91,14 +95,15 @@ class Login extends React.Component {
                             value={this.state.password}
                             onChange={this.handleChange}
                         />
-                        <Button
+                        
+                        <LoadingButton 
                             type="submit"
                             fullWidth
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
-                        >
-                        Sign In
-                        </Button>
+                            loading={this.props.login.isLoading}>
+                            Submit
+                        </LoadingButton>
                         {/* <Grid container>
                             <Grid item xs>
                                 <Link href="#" variant="body2">
@@ -120,11 +125,12 @@ class Login extends React.Component {
 }
 const mapStateToProps = (state) => ({
         userinfo:state.loginReducer.userinfo,
-        message:state.loginReducer.message
+        login:state.loginReducer
 });
 const mapDispatchToProps = {
     getData,
-    getClientInfo
+    getClientInfo,
+    logout
 
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Login)

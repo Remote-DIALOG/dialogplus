@@ -55,7 +55,7 @@ class Row extends React.Component {
           unmountOnExit
           >
             <Box sx={{ width: '100%', justifyContent:'space-around'}}>
-              <Typography>How satisfied are you with your {this.props.row}?</Typography>
+              <Typography variant='h6'>How satisfied are you with your {this.props.row}?</Typography>
               <Slider
                 aria-label="Custom marks"
                 defaultValue={1}
@@ -66,6 +66,7 @@ class Row extends React.Component {
                 marks={this.props.session.marks}
                 onChange={this.props.handleChanges}
                 name={this.props.row}
+                sx={{width:'95%', marginLeft:5}}
               />
             </Box>
             <Box sx={{width:'100%', justifyContent:'flex-end', display:'flex'}}>

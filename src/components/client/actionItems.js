@@ -33,44 +33,13 @@ class ActionItems extends React.Component {
                 <Typography variant='h4'>Previous action items</Typography>
                 <Button variant="contained" onClick={()=>this.props.nagivate('/client')}>Finish</Button>
             </Box>
-            <Box sx={{ flexGrow: 1}}>
-                <Grid container spacing={2}>
-                    {/* <Paper elevation={2}> */}
-                    <Grid item xs={4}>
-                       <Typography variant='h5'>Job Situation</Typography>
-                       <List sx={{ listStyleType: 'disc' }}>
-                            <ListItem sx={{ display: 'list-item' }}>Item 1</ListItem>
-                            <ListItem sx={{ display: 'list-item' }}>Item 2</ListItem>
-                        </List>
-                    </Grid>
-                    {/* </Paper> */}
-                    {/* <Paper elevation={2}> */}
-                    <Grid item xs={4}>
-                       <Typography variant='h5'>FriendShip</Typography>
-                       <List sx={{ listStyleType: 'disc' }}>
-                            <ListItem sx={{ display: 'list-item' }}>Item 1</ListItem>
-                            <ListItem sx={{ display: 'list-item' }}>Item 2</ListItem>
-                        </List>
-                    </Grid>
-                    {/* </Paper> */}
-                    {/* <Paper elevation={2}> */}
-                    <Grid item xs={4}>
-                       <Typography variant='h5'>Medication</Typography>
-                       <List sx={{ listStyleType: 'disc' }}>
-                            <ListItem sx={{ display: 'list-item' }}>Item 1</ListItem>
-                            <ListItem sx={{ display: 'list-item' }}>Item 2</ListItem>
-                        </List>
-                    </Grid>
-                    {/* </Paper> */}
-                </Grid>
-            </Box>
             <Box sx={{marginTop:10, display:'flex', flexDirection:'column', alignItems:'center'}}>
                 <Typography variant='h5'>Notes</Typography>
                 <Box sx={{marginTop:5}}><FormDialog/></Box>
             </Box>
             <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'column'}}>
                 {this.props.notes.map((value, idx) => (
-                    <Box sx={{width:'100%', justifyContent:'flex-end', padding:'10px'}}>
+                    <Box sx={{width:'100%', justifyContent:'flex-end', padding:'10px'}} key={idx}>
                         <Item elevation={1} key={idx}>
                             <Typography variant='h6'>{value.created_at}</Typography>
                             <Typography variant='body'>{value.message}</Typography>

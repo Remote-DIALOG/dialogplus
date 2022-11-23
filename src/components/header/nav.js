@@ -6,18 +6,20 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import IconButton from '@mui/material/IconButton';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import { Container } from '@mui/system';
 import {connect} from 'react-redux';
 import {logout} from '../../reducers/login';
+import AlertDialog from '../../utils/dialogbox';
 class NavBar extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
           openMenu: false,
-          anchorEl:null
+          anchorEl:null,
+          openDialog:false
         }
         this.handleMenu = this.handleMenu.bind(this);
         this.handleClose = this.handleClose.bind(this);
+        this.handlelogout = this.handlelogout.bind(this);
     }
     handleMenu(event) {
       console.log('handle menu')
@@ -26,6 +28,9 @@ class NavBar extends React.Component {
     handleClose () {
       console.log('handle close')
       this.setState({anchorEl:null})
+    }
+    handlelogout () {
+      this.setState({openDialog:!this.state.openDialog})
     }
     render () {
         return (
@@ -63,13 +68,13 @@ class NavBar extends React.Component {
                 onClose={this.handleClose}
               >
                 <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                <MenuItem onClick={this.handleClose}>My account</MenuItem>
-                <MenuItem onClick={this.handleClose}>Logout</MenuItem>
+                <MenuItem onClick={this.handlelogout}>Logout</MenuItem>
               </Menu>
                 </div>
               )}
             </Toolbar>
           </AppBar>
+          <AlertDialog open={this.state.openDialog} nagivate={this.props.nagivate} handleExit = {this.handlelogout}/> 
         </Box>
         );
     }

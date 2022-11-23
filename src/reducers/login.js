@@ -7,8 +7,14 @@ export const getData = createAsyncThunk(
             const {data} = await API.post('/users/login', args); 
             return data;
         }catch(error) {
-            console.log("error = ", error.response.data.message)
-            this.rejectWithValue(error.response.data.message);
+            // console.log(error)
+            let message
+            if (error.code=='ERR_NETWORK') {
+                message = "Unable to connect to server please check your Network"
+            } else {
+                message = error.response.data.message;
+            }
+            return rejectWithValue(message);
         }
     }
 )
@@ -16,23 +22,17 @@ export const logout = createAsyncThunk(
     "auth/logout",
     async function (_payload, thunkAPI) {
         thunkAPI.dispatch({ type: 'logout/LOGOUT' });
-        console.log('logged out')
     }
 );
 export const loginSlice = createSlice({
     name:"login",
-    initialState: {
+    initialState: { 
         isSuccess:false,
         userinfo:{},
         message:"",
         isLoading:false,
         isLogin:false
     },
-    // reducers :{
-    //     logout(state, action) {
-    //         console.log("login reducer = ", action.payload)
-    //     }
-    // },
     extraReducers: {
         [getData.pending]: (state, {payload}) =>  {
             state.isLoading = true;
@@ -42,16 +42,16 @@ export const loginSlice = createSlice({
             state.isLoading = false;
             state.userinfo = payload;
             state.isSuccess = true;
-            state.isLogin = true; 
+            state.isLogin = true;
+            state.message=""
           
         },
-        [getData.rejected]: (state, {payload}) => {
-            console.log("in rejected", payload)
-            state.message = payload|| "Something went wrong";
+        [getData.rejected]: (state, action) => {
+            console.log("in rejected", action)
+            state.message = action.payload|| "Something went wrong";
             state.isLoading = false;
             state.isSuccess = false;
         }
     },
 })
-// export const {logout} = loginSlice.actions;
 export default loginSlice.reducer;

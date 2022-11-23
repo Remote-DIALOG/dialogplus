@@ -8,19 +8,21 @@ import Stack from '@mui/material/Stack';
 import List from "@mui/material/List";
 import { ListItemText } from '@mui/material';
 
-import {saveCurrentSession} from '../../reducers/session'
+import {saveCurrentSession,getPastSession} from '../../reducers/session'
 import {connect} from 'react-redux';
 import Result from './result';
-import { ContactPageSharp } from '@mui/icons-material';
 
 class Review extends React.Component {
     constructor(props) {
         super(props)
         this.handleSelect = this.handleSelect.bind(this)
+        this.setSession = this.setSession(this)
     }
     componentDidMount () {
-        // this.props.saveCurrentSession(this.props.current_session)
-
+        this.props.getPastSession({"clientid":this.props.clientinfo.clinetid})
+    }
+    setSession(event) {
+       console.log("chip is clicked")
     }
     handleSelect () {
         this.props.nagivate('/discuss')
@@ -40,6 +42,10 @@ class Review extends React.Component {
                 <Box sx ={{marginTop:3, display:'flex', flexDirection:'row', justifyContent:'space-between', backgroundColor:"#202c2b17", }}>
                     <Stack direction="row" spacing={1}>   
                         <Chip label={this.props.current_session[0]['created_at']}/>
+                          <Chip label={"Current Session"}/>
+                        {this.props.session.past_session.map((row, index)=>(
+                             <Chip label={row[0]['created_at']} onClick={this.setSession}/>
+                        ))}
                     </Stack>
                 </Box>
                 <Box> 
@@ -63,9 +69,11 @@ class Review extends React.Component {
 const mapStateToProps = (state) => ({
     current_session:state.SessionReducer.current_session,
     session:state.SessionReducer,
+    clientinfo:state.ClientReducer.clientinfo
   })
   const mapDispatchToProps = {
-      saveCurrentSession
+      saveCurrentSession,
+      getPastSession
   }
 // export default connect(mapStateToProps, mapDispatchToProps)(Review);
 export default connect(mapStateToProps, mapDispatchToProps)(Review);

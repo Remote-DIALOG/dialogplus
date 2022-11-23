@@ -12,13 +12,10 @@ import Select from './components/session/select';
 import Review from './components/session/review';
 import Discuss from './components/session/discuss';
 import { Provider } from 'react-redux';
-import { ReactSession } from 'react-client-session';
 import { persistor, store } from './store';
 import { PersistGate } from 'redux-persist/integration/react';
-
 import {createTheme, ThemeProvider} from '@mui/material/styles';
-// import {getData} from './reducers/login';
-// import {connect} from 'react-redux';
+import { SocketContext,socket } from './utils/socket';
 const theme = createTheme({
   typography: {
     fontFamily: [
@@ -28,16 +25,19 @@ const theme = createTheme({
 });
 class App extends React.Component {
   constructor(props) {
-    super(props)
-    ReactSession.setStoreType("localStorage");
+    super(props) 
+    this.state = {
+      openDialog:false
+    }
   }
+
   render () {
     return (
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
         <ThemeProvider theme={theme}>
           <div>
-            <NavBar/>
+            <NavBar nagivate={this.props.nagivate}/>
             <Routes>
               <Route path='/' exact element={<Login nagivate={this.props.nagivate}/>}/>
               <Route path="/register"  element={<Register nagivate={this.props.nagivate}/>}/>
@@ -50,6 +50,7 @@ class App extends React.Component {
               <Route path='/discuss' element={<Discuss nagivate={this.props.nagivate}/>}/>
             </Routes> 
           </div>
+        
         </ThemeProvider>
         </PersistGate>
       </Provider>

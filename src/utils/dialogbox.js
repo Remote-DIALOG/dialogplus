@@ -16,7 +16,6 @@ function AlertDialog(props) {
       props.logout()
       props.nagivate('/')
       props.handleExit()
-      console.log("handle yes in dialogbox")
   }
 
   return (

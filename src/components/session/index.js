@@ -11,6 +11,7 @@ import {setCurrentSessionValue, setUserIdAndTime, saveCurrentSession} from '../.
 import {connect} from 'react-redux';
 import BasicAlerts from "../../utils/alert";
 import {get_date} from '../../utils/get_date';
+import {initiateSocketConnection} from '../../reducers/socket';
 class Session extends React.Component {
   constructor(props) {
     super(props);
@@ -31,17 +32,24 @@ class Session extends React.Component {
         "Practical help":0,
         "Meetings":0
       },
-      errormessage:""
+      errormessage:"",
+      socket:null
     }
     this.handleReview = this.handleReview.bind(this)
     this.handleChanges = this.handleChanges.bind(this)
+  }
+  componentDidMount () {
+    let token = this.props.userinfo.token
+    // initiateSocketConnection(token)
   }
   handleReview() {
     let userId = this.props.clientinfo.clinetid
     var today = get_date();
     this.props.setUserIdAndTime({userId, today})
-    this.props.saveCurrentSession(this.props.session.current_session)
-    this.props.nagivate('/review')
+    this.props.saveCurrentSession(this.props.current_session).then(() =>{
+      this.props.nagivate('/review')    
+    })
+   
   }
   handleChanges(event) {
     let name = event.target.name
@@ -57,7 +65,7 @@ class Session extends React.Component {
             <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.handleReview} endIcon={<ArrowForwardIosIcon/>}>Review</Button>
           </Box>
           <List component="nav" aria-labelledby="nested-list-subheader">
-            {this.state.scale.map((row, index)=>(
+            {this.props.session.scale.map((row, index)=>(
               <Row key={index} row={row} handleChanges={this.handleChanges} ></Row>
 
             ))}
@@ -73,6 +81,7 @@ class Session extends React.Component {
 const mapStateToProps = (state) => ({
   session:state.SessionReducer,
   clientinfo:state.ClientReducer.clientinfo,
+  userinfo:state.loginReducer.userinfo
 })
 const mapDispatchToProps = {
   setCurrentSessionValue,

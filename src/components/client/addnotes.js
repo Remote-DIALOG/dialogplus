@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import {addNewNotes} from '../../reducers/actionitems';
 import {addNotes} from '../../reducers/actionitems';
 import {connect} from 'react-redux';
+import {get_date} from '../../utils/get_date'
 function FormDialog(props) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState('');
@@ -19,7 +20,7 @@ function FormDialog(props) {
     let notes = {
       "createdby": props.userinfo.emailid,
       "message" : value,
-      "created_at":new Date().toUTCString()
+      "created_at": get_date()
     }
     props.addNewNotes(notes)
     props.addNotes(notes);
