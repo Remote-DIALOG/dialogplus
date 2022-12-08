@@ -14,6 +14,8 @@ import { connect } from "react-redux";
 import {getClients} from '../../reducers/clinician';
 import {getData} from '../../reducers/login';
 import {setClientinfo} from '../../reducers/client';
+import Paper from "@mui/material/Paper";
+
 class Clinicican extends React.Component {
     constructor(props) {
         super(props);
@@ -34,7 +36,10 @@ class Clinicican extends React.Component {
             let username = { 
                 "username":this.props.userinfo.emailid
             }
+
             this.props.getClients(username)
+
+        
     }
     openAddClinet () {
         this.setState({open:!this.state.open})
@@ -53,13 +58,13 @@ class Clinicican extends React.Component {
                     <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.openAddClinet}>New Client</Button>
                 </Box>
                 <Box>
-                    <Table size="medium" padding="none">
+                    <Table size="medium" padding="none" sx={{"& .MuiTableRow-root:hover": {backgroundColor: "#86b1db"}}}>
                         <TableHead></TableHead>
                         <TableBody>
                             {this.props.clinetList.map((row) => (
-                            <TableRow key={row.id} onClick={this.handlenavigation}>
-                                <TableCell sx={{padding:"0px"}}><PersonIcon/></TableCell>
-                                <TableCell onClick={() => this.handlenavigation(row)}>{row.fullname}</TableCell>
+                            <TableRow key={row.id} onClick={this.handlenavigation} >
+                                <TableCell sx={{width:100}}><PersonIcon/></TableCell>
+                                <TableCell onClick={() => this.handlenavigation(row)} align='left'><Typography>{row.fullname}</Typography></TableCell>
                             </TableRow>
                         ))}
                         </TableBody>

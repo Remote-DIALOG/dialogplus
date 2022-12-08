@@ -12,6 +12,8 @@ import {getData} from '../../reducers/login';
 import {getClientInfo} from '../../reducers/client';
 import {logout} from '../../reducers/login';
 import LoadingButton from '@mui/lab/LoadingButton';
+import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
 
 class Login extends React.Component {
     constructor(props) {
@@ -104,18 +106,18 @@ class Login extends React.Component {
                             loading={this.props.login.isLoading}>
                             Submit
                         </LoadingButton>
-                        {/* <Grid container>
+                        <Grid container>
                             <Grid item xs>
-                                <Link href="#" variant="body2">
+                                <Link href="/forgetpassword" variant="body2">
                                     Forgot password?
                                 </Link>
                             </Grid>
-                            <Grid item>
+                            {/* <Grid item>
                                 <Link href="register" variant="body2">
                                     {"Don't have an account? Sign Up"}
                                 </Link>
-                            </Grid>
-                        </Grid> */}
+                            </Grid> */}
+                        </Grid>
                     </Box>
                     </Box>
                 </Container>

@@ -1,5 +1,10 @@
 import React from 'react';
-import {Route,Routes, useNavigate} from "react-router-dom"
+import { Provider } from 'react-redux';
+import { persistor, store } from './store';
+import { PersistGate } from 'redux-persist/integration/react';
+import {createTheme, ThemeProvider} from '@mui/material/styles';
+import {Route,Routes, useNavigate} from "react-router-dom";
+import Forgetpassword from './components/login/forgetPassword';
 import Register from './components/register/register';
 import Login from './components/login/login';
 import NavBar  from './components/header/nav';
@@ -11,10 +16,7 @@ import ActionItems from './components/client/actionItems';
 import Select from './components/session/select';
 import Review from './components/session/review';
 import Discuss from './components/session/discuss';
-import { Provider } from 'react-redux';
-import { persistor, store } from './store';
-import { PersistGate } from 'redux-persist/integration/react';
-import {createTheme, ThemeProvider} from '@mui/material/styles';
+
 import { SocketContext,socket } from './utils/socket';
 const theme = createTheme({
   typography: {
@@ -48,6 +50,7 @@ class App extends React.Component {
               <Route path='/review' element={<Review nagivate={this.props.nagivate}/>}/>
               <Route path='/select' element={<Select nagivate={this.props.nagivate}/>}/>
               <Route path='/discuss' element={<Discuss nagivate={this.props.nagivate}/>}/>
+              <Route path='/forgetpassword' element={<Forgetpassword nagivate={this.props.nagivate}/>}/>
             </Routes> 
           </div>
         
