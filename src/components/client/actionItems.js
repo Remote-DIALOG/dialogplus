@@ -11,6 +11,8 @@ import Paper from '@mui/material/Paper';
 import FormDialog from './addnotes';
 import {styled} from '@mui/material/styles';
 import {getNotes} from '../../reducers/actionitems';
+import { CommentSection} from 'react-comments-section'
+import 'react-comments-section/dist/index.css'
 const Item = styled(Paper)(({ theme }) => ({
   textAlign: 'left',
   lineHeight: '60px',
@@ -19,6 +21,27 @@ const Item = styled(Paper)(({ theme }) => ({
 class ActionItems extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            data: [
+                {
+                  userId: '01a',
+                  comId: '012',
+                  fullName: 'Suyog Pipliwal',
+                  text: 'This is by Suyog Pipliwal! ',
+                  avatarUrl:'https://ui-avatars.com/api/name=Suyog&background=random',
+                  replies: []
+                },
+                {
+                  userId: '02b',
+                  comId: '017',
+                  fullName: 'Pat',
+                  avatarUrl:'https://ui-avatars.com/api/name=Pat&background=random',
+                  text: 'This is by Sir',
+                  
+                  replies: []
+                }
+              ]
+        }
     }
     componentDidMount() {
         let data = {
@@ -26,6 +49,11 @@ class ActionItems extends React.Component {
         }
         this.props.getNotes(data)
     }
+    onSubmitAction = (data) => {
+        console.log('this comment was posted!',data)
+      }
+    
+      customNoComment = () => <div className='no-com'>No comments wohoooo!</div>
     render () {
         return (
             <Container maxWidth={false}>
@@ -33,9 +61,22 @@ class ActionItems extends React.Component {
                 <Typography variant='h4'>Previous action items</Typography>
                 <Button variant="contained" onClick={()=>this.props.nagivate('/client')}>Finish</Button>
             </Box>
-            <Box sx={{marginTop:10, display:'flex', flexDirection:'column', alignItems:'center'}}>
+            <Box sx={{marginTop:10, display:'flex', flexDirection:'column', alignItems:'left'}}>
                 <Typography variant='h5'>Notes</Typography>
-                <Box sx={{marginTop:5}}><FormDialog/></Box>
+                <CommentSection
+                    currentUser={{
+                        currentUserId: '01a',
+                        currentUserImg:'https://ui-avatars.com/api/name=Suyog&background=random', 
+                        currentUserFullName: 'Suyog Pipliwal'
+                    }}
+                    commentData={this.state.data}
+                    onSubmitAction={(data) => this.onSubmitAction(data)}
+                    customNoComment={() => this.customNoComment()}
+                    logIn={{
+                        loginLink: 'http://localhost:3001/',
+                        signupLink: 'http://localhost:3001/'
+                    }}
+                />
             </Box>
             <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'column'}}>
                 {this.props.notes.map((value, idx) => (

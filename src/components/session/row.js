@@ -37,10 +37,10 @@ class Row extends React.Component {
             // console.log(percent)
             this.setState({progress:percent})
         }
-
     }
 }
   render () {
+    // console.log("------->", this.props.value, this.props.row)
     return (
       <div>
         <ListItem button onClick={this.setOpen} divider>
@@ -58,7 +58,7 @@ class Row extends React.Component {
               <Typography variant='h6'>How satisfied are you with your {this.props.row}?</Typography>
               <Slider
                 aria-label="Custom marks"
-                defaultValue={1}
+                defaultValue={this.props.value}
                 getAriaValueText={valuetext}
                 step={1}
                 min={1}

@@ -1,13 +1,26 @@
 import * as React from 'react';
-import Alert from '@mui/material/Alert';
-import Stack from '@mui/material/Stack';
+import Snackbar from '@mui/material/Snackbar';
 
-export default function BasicAlerts(props) {
+export default function CustomAlert(props) {
+  const [open, setOpen] = React.useState(true);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
   return (
-    <Stack sx={{ width: '100%' }} spacing={2}>
-      <Alert variant="filled" severity="error">
-          {props.message}
-      </Alert>
-    </Stack>
+      <Snackbar
+      open={open}
+      autoHideDuration={3000}
+      message={props.message}
+      onClose={handleClose}
+      anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+    />
   );
 }

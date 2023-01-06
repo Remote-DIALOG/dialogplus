@@ -42,6 +42,7 @@ function FormDialog(props) {
       <Button variant="contained" onClick={handleClickOpen}>
             Add new Notes
       </Button>
+
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle> Add new notes</DialogTitle>
         <DialogContent>

@@ -17,6 +17,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import AlertDialog from '../../utils/dialogbox';
 import { CircularProgress } from '@mui/material';
+import {initiateSocketConnection, join_room} from '../../reducers/socket';
 class Client extends React.Component {
     constructor(props) {
         super(props)
@@ -28,8 +29,13 @@ class Client extends React.Component {
         this.handleExit = this.handleExit.bind(this);
     }
     componentDidMount () {
-        let clientid = this.props.clientinfo.clinetid
+        let clientid = this.props.client.clientinfo.id
         this.props.getSessionDates({"clientid":clientid})
+        if (this.props.userinfo.category=='clinician') {
+            console.log("this is where socket connected is made in clinician")
+            initiateSocketConnection(this.props.userinfo.token)
+            join_room(clientid)
+        }
     }
     handleClick (id) {
         console.log(id)
@@ -47,14 +53,15 @@ class Client extends React.Component {
             { this.props.client.isLoading? <CircularProgress sx={{marginTop:'10%', marginLeft:'50%'}}/> : 
                 <div>
                 <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
-                <Box><Typography variant='h4'>{this.props.clientinfo.fullname}</Typography></Box>
+                <Box><Typography variant='h4'>{this.props.client.clientinfo.fullname}</Typography></Box>
                 <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.handleSession} endIcon={<ArrowForwardIosIcon/>}>New Session</Button>
             </Box>
             <Box>
-             <Table size="medium" padding='none'>
-                 <TableHead></TableHead>
-                 <TableBody>
-                     {this.props.date.map((row, key) => (
+            {this.props.client.dates.length==0 ? <Typography sx={{textAlign:'center'}}>No Session Yet</Typography>: 
+                <Table size="medium" padding='none'>
+                <TableHead></TableHead>
+                <TableBody>
+                {this.props.client.dates.map((row, key) => (
                      <TableRow key={key}>
                          <TableCell style={{width: 50}}><ContentPasteIcon/></TableCell>
                          <TableCell align='left' style={{width:300, fontFamily:'sans-serif'}}><Typography>{row.replace(/['"]+/g, '')}</Typography></TableCell>
@@ -63,7 +70,8 @@ class Client extends React.Component {
                  ))}
                  </TableBody>
              </Table>
-         </Box>
+            }
+            </Box>
          <Box sx={{justifyContent:'flex-start'}}>
              <Button type="submit"
               variant="outlined"
@@ -84,8 +92,7 @@ class Client extends React.Component {
 }
 const mapStateToProps = (state) => ({
     client:state.ClientReducer,
-    clientinfo:state.ClientReducer.clientinfo,
-    date:state.ClientReducer.dates
+    userinfo:state.loginReducer.userinfo
   })
 const mapDispatchToProps = {
     setActionItems,

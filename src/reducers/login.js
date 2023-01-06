@@ -47,7 +47,6 @@ export const loginSlice = createSlice({
           
         },
         [getData.rejected]: (state, action) => {
-            console.log("in rejected", action)
             state.message = action.payload|| "Something went wrong";
             state.isLoading = false;
             state.isSuccess = false;

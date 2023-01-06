@@ -2,7 +2,7 @@ import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import BasicAlerts from '../../utils/alert';
+import CustomAlert from '../../utils/alert';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
@@ -28,7 +28,6 @@ class Login extends React.Component {
 
     }
     handleChange(event) {
-        // this.setState({event.target.id:event.target.value})
         if (event.target.id === "username") {
            this.setState({username:event.target.value})
         }
@@ -63,7 +62,7 @@ class Login extends React.Component {
     render () {
         return (
             <div>
-                {this.props.login.message.length > 0 &&<BasicAlerts message={this.props.login.message}/>}
+                {this.props.login.message.length > 0 &&<CustomAlert message={this.props.login.message}/>}
                 <Container component="main" maxWidth="xs">
                     <CssBaseline />
                     <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'column',alignItems: 'center',}}>

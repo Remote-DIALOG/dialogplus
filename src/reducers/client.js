@@ -70,7 +70,7 @@ export const ClientSlice = createSlice({
             state.message = payload;
             state.isLoading = false;
             state.isSuccess = false;
-            state.date = []
+            state.dates = []
         },
 
     },

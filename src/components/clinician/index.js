@@ -34,7 +34,7 @@ class Clinicican extends React.Component {
     }
     componentDidMount() {
             let username = { 
-                "username":this.props.userinfo.emailid
+                "username":this.props.userinfo.username
             }
 
             this.props.getClients(username)
@@ -64,7 +64,7 @@ class Clinicican extends React.Component {
                             {this.props.clinetList.map((row) => (
                             <TableRow key={row.id} onClick={this.handlenavigation} >
                                 <TableCell sx={{width:100}}><PersonIcon/></TableCell>
-                                <TableCell onClick={() => this.handlenavigation(row)} align='left'><Typography>{row.fullname}</Typography></TableCell>
+                                <TableCell onClick={() => this.handlenavigation(row)} align='left'><Typography>{row.full_name}({row.username})</Typography></TableCell>
                             </TableRow>
                         ))}
                         </TableBody>
