@@ -36,6 +36,7 @@ class Row extends React.Component {
             let percent = (current_value.value/7)*100
             // console.log(percent)
             this.setState({progress:percent})
+            this.setState({open:!this.state.open})
         }
     }
 }
@@ -46,7 +47,7 @@ class Row extends React.Component {
         <ListItem button onClick={this.setOpen} divider>
           {this.state.open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           <ListItemText primary={this.props.row} primaryTypographyProps={{'variant':'h6'}}/>
-          <Result progress={this.state.progress}/>
+          {!this.state.open ? <Result progress={this.state.progress}/>: null}
         </ListItem>
         <Collapse 
           key={this.props.key}
@@ -56,6 +57,7 @@ class Row extends React.Component {
           >
             <Box sx={{ width: '100%', justifyContent:'space-around'}}>
               <Typography variant='h6'>How satisfied are you with your {this.props.row}?</Typography>
+
               <Slider
                 aria-label="Custom marks"
                 defaultValue={this.props.value}

@@ -46,6 +46,10 @@ class Session extends React.Component {
       join_room(this.props.userinfo.id)
     }
   }
+  componentDidUpdate () {
+    recive_message()
+    // this.forceUpdate()
+  }
   handleReview() {
     let userId = this.props.clientinfo.clinetid
     var today = get_date();
@@ -58,9 +62,7 @@ class Session extends React.Component {
     let name = event.target.name
     let value = event.target.value
     this.props.setCurrentSessionValue({name, value})
-    send_message({id:this.props.clientinfo.id,name, value})
-    recive_message()
-    
+    send_message({id:this.props.clientinfo.id,name, value}) 
   }
   render() {
     return (
@@ -68,7 +70,7 @@ class Session extends React.Component {
         {this.state.errormessage.length > 0 &&<BasicAlerts message={this.state.errormessage}/>}
         <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
           <Box sx={{margin:2}}><Typography variant='h4'>Assessment</Typography></Box>
-            <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.handleReview} endIcon={<ArrowForwardIosIcon/>}>Review</Button>
+            <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.handleReview} endIcon={<ArrowForwardIosIcon/>}>Next</Button>
           </Box>
           <List component="nav" aria-labelledby="nested-list-subheader">
             {this.props.session.scale.map((row, index)=>(

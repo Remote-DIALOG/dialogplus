@@ -4,7 +4,8 @@ import Stack from '@mui/material/Stack';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import {connect} from 'react-redux';
-import {updateSelectScale,deleteSelectScale} from '../../reducers/session'
+import {updateSelectScale,deleteSelectScale} from '../../reducers/session';
+import {selectscale, deselectscale} from '../../reducers/socket';
 function CustomizedSwitches(props) {
   const [yes, setyes] = React.useState(false);
   const [no, setno] = React.useState(false);
@@ -15,6 +16,10 @@ function CustomizedSwitches(props) {
     for (var i = 2; i < props.session.current_session.length; i++) {
       if (props.session.current_session[i].name === props.rows) {
           props.updateSelectScale(props.session.current_session[i])
+          let data = JSON.parse(JSON.stringify(props.session.current_session[i]));
+          data.id = props.clientinfo.clientid
+          console.log("data", data)
+          selectscale(data)
           return;
       }
     }
@@ -25,6 +30,9 @@ function CustomizedSwitches(props) {
     for (var i = 2; i < props.session.current_session.length; i++) {
       if (props.session.current_session[i].name === props.rows) {
           props.deleteSelectScale(props.session.current_session[i])
+          let data = JSON.parse(JSON.stringify(props.session.current_session[i]));
+          data.id = props.clientinfo.clientid
+          deleteSelectScale(data)
           return;
       }
     }
@@ -39,7 +47,8 @@ function CustomizedSwitches(props) {
   );
 }
 const mapStateToProps = (state) => ({
-  session:state.SessionReducer
+  session:state.SessionReducer,
+  clientinfo:state.ClientReducer.clientinfo
 })
 const mapDispatchToProps = {
   updateSelectScale,

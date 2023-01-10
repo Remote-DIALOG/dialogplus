@@ -77,17 +77,17 @@ export const SessionSlice = createSlice({
           current_session: [
             {"created_at":""},
             {"created_by":0},
-            {"name": "Mental health","value" :0},
-            {"name":"Physical health","value": 0},
-            {"name":"Job situation","value": 0},
-            {"name":"Accommodation" ,"value": 0},
-            {"name":"Leisure activities" ,"value":0},
-            {"name":"Relationship with partner/family","value":0},
-            {"name":"Friendship","value":0},
-            {"name":"Personal safety","value": 0},
-            {"name":"Medication","value":0},
-            {"name":"Practical help","value":0},
-            {"name":"Meetings","value":0}
+            {"name": "Mental health","value" :0, "help":null, "select":false},
+            {"name":"Physical health","value": 0, "help":null, "select":false},
+            {"name":"Job situation","value": 0, "help":null, "select":false},
+            {"name":"Accommodation" ,"value": 0, "help":null, "select":false},
+            {"name":"Leisure activities" ,"value":0, "help":null, "select":false},
+            {"name":"Relationship with partner/family","value":0, "help":null, "select":false},
+            {"name":"Friendship","value":0, "help":null, "select":false},
+            {"name":"Personal safety","value": 0, "help":null, "select":false},
+            {"name":"Medication","value":0, "help":null, "select":false},
+            {"name":"Practical help","value":0, "help":null, "select":false},
+            {"name":"Meetings","value":0, "help":null, "select":false}
           ],
           select_scale:[]
     },
@@ -113,21 +113,24 @@ export const SessionSlice = createSlice({
         },
         updateSelectScale(state, action) {
             console.log("------>", action.payload)
+            let copyofSession = JSON.parse(JSON.stringify(state.current_session))
+            let updatehelpvalue = copyofSession.find(name=>name.name===action.payload.name)
+            updatehelpvalue.help = "yes"
             return {
                 ...state,
-                select_scale:state.select_scale.concat(action.payload)
+                current_session:copyofSession
 
 
             }
         },
         deleteSelectScale(state, action) {
-            let copySelectScale = state.select_scale
-            copySelectScale = copySelectScale.filter(function(item) {
-                return item.name!=action.payload.name
-            })
+            console.log("------>", action.payload)
+            let copyofSession = JSON.parse(JSON.stringify(state.current_session))
+            let updatehelpvalue = copyofSession.find(name=>name.name===action.payload.name)
+            updatehelpvalue.help = "no"
             return {
                 ...state,
-                select_scale: copySelectScale
+                current_session:copyofSession
             }
 
         }

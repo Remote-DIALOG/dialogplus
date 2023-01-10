@@ -22,11 +22,13 @@ class NavBar extends React.Component {
         this.handlelogout = this.handlelogout.bind(this);
     }
     handleMenu(event) {
-      console.log('handle menu')
+      console.log(event.currentTarget)
       this.setState({anchorEl:event.currentTarget})
+      //setTimeout(() =>  this.setState({anchorEl:event.currentTarget}), 1) 
     }
     handleClose () {
       console.log('handle close')
+      //setTimeout(() => this.setState({anchorEl:null}), 1) 
       this.setState({anchorEl:null})
       this.props.nagivate('/profile')
     }
@@ -35,6 +37,7 @@ class NavBar extends React.Component {
     }
     render () {
         return (
+          <div>
           <Box sx={{ flexGrow: 1 }}>
           <AppBar position="static">
             <Toolbar>
@@ -77,6 +80,7 @@ class NavBar extends React.Component {
           </AppBar>
           <AlertDialog open={this.state.openDialog} nagivate={this.props.nagivate} handleExit = {this.handlelogout}/> 
         </Box>
+        </div>
         );
     }
 }
