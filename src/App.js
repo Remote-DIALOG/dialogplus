@@ -17,6 +17,7 @@ import Select from './components/session/select';
 import Review from './components/session/review';
 import Discuss from './components/session/discuss';
 import Profile from './components/header/profile';
+import PreviousActionItems from './components/client/previousactionitems';
 import { TrackerProvider, Tracker } from 'react-tracker'
 import trackAddToCart from './utils/track'
 import { SocketContext,socket } from './utils/socket';
@@ -54,8 +55,9 @@ class App extends React.Component {
               <Route path="/register"  element={<Register nagivate={this.props.nagivate}/>}/>
               <Route path='/clinician' element={<Clinicican nagivate={this.props.nagivate}/>}/>
               <Route path='/client' element={<Client nagivate={this.props.nagivate}/>}/>
+              <Route path='/previousactionitem' element={<PreviousActionItems nagivate={this.props.nagivate}/>}/>
               <Route path='/session' element={<Session nagivate={this.props.nagivate}/>}/>
-              <Route path='/action' element={<ActionItems nagivate={this.props.nagivate}/>}/>
+              <Route path='/actionitems' element={<ActionItems nagivate={this.props.nagivate}/>}/>
               <Route path='/review' element={<Review nagivate={this.props.nagivate}/>}/>
               <Route path='/select' element={<Select nagivate={this.props.nagivate}/>}/>
               <Route path='/discuss' element={<Discuss nagivate={this.props.nagivate}/>}/>

@@ -54,6 +54,7 @@ function FormDialog(props) {
               maxRows={4}
               value={value}
               onChange={handleChange}
+              autoFocus
             />
           </div>
         </Box>

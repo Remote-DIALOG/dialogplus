@@ -18,6 +18,11 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import AlertDialog from '../../utils/dialogbox';
 import { CircularProgress } from '@mui/material';
 import {initiateSocketConnection, join_room} from '../../reducers/socket';
+import {styled} from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+import {getNotes} from '../../reducers/actionitems';
+
+
 class Client extends React.Component {
     constructor(props) {
         super(props)
@@ -31,8 +36,8 @@ class Client extends React.Component {
     componentDidMount () {
         let clientid = this.props.client.clientinfo.id
         this.props.getSessionDates({"clientid":clientid})
+        this.props.getNotes({"emailid":this.props.userinfo.emailid})
         if (this.props.userinfo.category=='clinician') {
-            console.log("this is where socket connected is made in clinician")
             initiateSocketConnection(this.props.userinfo.token)
             join_room(clientid)
         }
@@ -42,7 +47,7 @@ class Client extends React.Component {
         this.props.nagivate('/action')
     }
     handleSession() {
-        this.props.nagivate('/session');
+        this.props.nagivate('/previousactionitem')
     }
     handleExit () { 
         this.setState({openDialog:!this.state.openDialog})
@@ -92,10 +97,12 @@ class Client extends React.Component {
 }
 const mapStateToProps = (state) => ({
     client:state.ClientReducer,
-    userinfo:state.loginReducer.userinfo
+    userinfo:state.loginReducer.userinfo,
+    notes:state.ActionItemsReducer.notes,
   })
 const mapDispatchToProps = {
     setActionItems,
     getSessionDates,
+    getNotes
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Client);

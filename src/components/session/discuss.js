@@ -19,7 +19,7 @@ import { IconButton } from '@mui/material';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import PropTypes from 'prop-types';
-import TabPanel from './tabpannel';
+import TabPanel from '@mui/lab/TabPanel';
 
  class Discuss extends React.Component {
      constructor(props) {
@@ -54,14 +54,12 @@ import TabPanel from './tabpannel';
                 variant="fullWidth"
             >
                 {selectscale.map((data, index)=>(
-                   
                     <Tab label={data.name} key={index}/>
-                   
-                   
-                   
                 ))}
             </Tabs>
-   
+            <Box sx={{padding:2}}>
+                
+            </Box>
     </Container>
   );
 }

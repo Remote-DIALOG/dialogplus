@@ -15,7 +15,14 @@ import {getClients} from '../../reducers/clinician';
 import {getData} from '../../reducers/login';
 import {setClientinfo} from '../../reducers/client';
 import Paper from "@mui/material/Paper";
+import FormDialog from '../client/addnotes';
+import {styled} from '@mui/material/styles';
 
+const Item = styled(Paper)(({ theme }) => ({
+    textAlign: 'left',
+    lineHeight: '60px',
+    padding:'25px'
+  }));
 class Clinicican extends React.Component {
     constructor(props) {
         super(props);
@@ -78,7 +85,8 @@ class Clinicican extends React.Component {
 }
 const mapStateToProps = (state) => ({
     clinetList:state.clinicianReducer.clinetlist,
-    userinfo:state.loginReducer.userinfo
+    userinfo:state.loginReducer.userinfo,
+    notes:state.ActionItemsReducer.notes,
 })
 const mapDispatchToProps = {
     getClients,

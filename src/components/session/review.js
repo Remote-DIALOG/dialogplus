@@ -34,7 +34,7 @@ class Review extends React.Component {
             <div>
                  <Container maxWidth={false}>
                  <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
-                    <Box sx={{margin:2}}><Typography variant='h4'>Review</Typography></Box>
+                    <Box sx={{margin:2}}><Typography variant='h4'>{current_session[0].created_at}</Typography></Box>
                     <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.handleSelect}>
                         Discuss
                     </Button>

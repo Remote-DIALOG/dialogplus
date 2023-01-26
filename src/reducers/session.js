@@ -112,10 +112,9 @@ export const SessionSlice = createSlice({
             return {...state, current_session: copyofCurrentSession}
         },
         updateSelectScale(state, action) {
-            console.log("------>", action.payload)
             let copyofSession = JSON.parse(JSON.stringify(state.current_session))
             let updatehelpvalue = copyofSession.find(name=>name.name===action.payload.name)
-            updatehelpvalue.help = "yes"
+            updatehelpvalue.help = true
             return {
                 ...state,
                 current_session:copyofSession
@@ -124,10 +123,9 @@ export const SessionSlice = createSlice({
             }
         },
         deleteSelectScale(state, action) {
-            console.log("------>", action.payload)
             let copyofSession = JSON.parse(JSON.stringify(state.current_session))
             let updatehelpvalue = copyofSession.find(name=>name.name===action.payload.name)
-            updatehelpvalue.help = "no"
+            updatehelpvalue.help = false
             return {
                 ...state,
                 current_session:copyofSession

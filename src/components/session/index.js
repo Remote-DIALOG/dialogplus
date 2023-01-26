@@ -12,32 +12,29 @@ import {connect} from 'react-redux';
 import BasicAlerts from "../../utils/alert";
 import {get_date} from '../../utils/get_date';
 import {initiateSocketConnection, join_room, send_message, recive_message} from '../../reducers/socket';
-import { ContentPasteSearch } from "@mui/icons-material";
 class Session extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      scale: ["Mental health", "Physical health", "Job situation", "Accommodation", "Leisure activities", "Relationship with partner/family", "Friendship", "Personal safety", "Medication", "Practical help", "Meetings"],
-      current_session: {
-        "created_at":"",
-        "created_by":16,
-        "Mental health": 0,
-        "Physical health": 0,
-        "Job situation": 0,
-        "Accommodation": 0,
-        "Leisure activities":0,
-        "Relationship":0,
-        "Friendship":0,
-        "Personal safety": 0,
-        "Medication":0,
-        "Practical help":0,
-        "Meetings":0
-      },
       errormessage:"",
-      socket:null
+      socket:null,
+      open:[false,false,false,false,false,false,false,false,false,false,false]
     }
     this.handleReview = this.handleReview.bind(this)
     this.handleChanges = this.handleChanges.bind(this)
+    this.setOpen = this.setOpen.bind(this)
+    this.setClose = this.setClose.bind(this);
+    
+  }
+  setClose (index) {
+    let copy = this.state.open
+    copy[index]=false
+    this.setState({open:copy})
+  }
+  setOpen(index) {
+    let copy = this.state.open
+    copy[index]=!copy[index]
+    this.setState({open:copy})
   }
   componentDidMount () {
     let token = this.props.userinfo.token
@@ -45,10 +42,10 @@ class Session extends React.Component {
       initiateSocketConnection(token)
       join_room(this.props.userinfo.id)
     }
+    recive_message()
   }
   componentDidUpdate () {
     recive_message()
-    // this.forceUpdate()
   }
   handleReview() {
     let userId = this.props.clientinfo.clinetid
@@ -58,10 +55,12 @@ class Session extends React.Component {
       this.props.nagivate('/review')    
     })
   }
-  handleChanges(event) {
+  handleChanges(event, currentIndex) {
     let name = event.target.name
     let value = event.target.value
     this.props.setCurrentSessionValue({name, value})
+    this.setClose(currentIndex)
+    this.setOpen(currentIndex+1)
     send_message({id:this.props.clientinfo.id,name, value}) 
   }
   render() {
@@ -74,13 +73,12 @@ class Session extends React.Component {
           </Box>
           <List component="nav" aria-labelledby="nested-list-subheader">
             {this.props.session.scale.map((row, index)=>(
-              <Row key={index} row={row} handleChanges={this.handleChanges} value={this.props.session.current_session[index+2].value}></Row>
-
+              <Row key={index} row={row} handleChanges={this.handleChanges} value={this.props.session.current_session[index+2].value} currentIndex={index} setOpen={this.setOpen} open={this.state.open[index]}></Row>
             ))}
         </List>
         <Box sx={{width:"100%", justifyContent:"space-between", display:"flex"}}>
           <Button type="submit" variant="outlined" sx={{ mt: 3, mb: 2 }} startIcon={<div><ArrowBackIosIcon/><ArrowBackIosIcon/></div>}>Exit</Button>
-          <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.handleReview} endIcon={<ArrowForwardIosIcon/>}>Review</Button>
+          <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.handleReview} endIcon={<ArrowForwardIosIcon/>}>Next</Button>
         </Box>
         </Container>         
     );
