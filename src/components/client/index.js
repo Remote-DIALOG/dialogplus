@@ -47,6 +47,10 @@ class Client extends React.Component {
         this.props.nagivate('/action')
     }
     handleSession() {
+        if (this.props.client.dates.length==0) {
+            this.props.nagivate('/session')
+            return;
+        }
         this.props.nagivate('/previousactionitem')
     }
     handleExit () { 

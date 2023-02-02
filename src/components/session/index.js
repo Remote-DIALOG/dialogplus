@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import Row from './row';
-import {setCurrentSessionValue, setUserIdAndTime, saveCurrentSession} from '../../reducers/session'
+import {setCurrentSessionValue, setUserIdAndTime, saveCurrentSession, setopen,updateHelp, deleteHelp} from '../../reducers/session'
 import {connect} from 'react-redux';
 import BasicAlerts from "../../utils/alert";
 import {get_date} from '../../utils/get_date';
@@ -18,24 +18,30 @@ class Session extends React.Component {
     this.state = {
       errormessage:"",
       socket:null,
-      open:[false,false,false,false,false,false,false,false,false,false,false]
     }
     this.handleReview = this.handleReview.bind(this)
     this.handleChanges = this.handleChanges.bind(this)
     this.setOpen = this.setOpen.bind(this)
-    this.setClose = this.setClose.bind(this);
+    this.handleyes = this.handleyes.bind(this);
+    this.handleno = this.handleno.bind(this);
     
   }
-  setClose (index) {
-    let copy = this.state.open
-    copy[index]=false
-    this.setState({open:copy})
+  setOpen(event, index) {
+    let name = this.props.session.current_session[index+2].name;
+    let open = !this.props.session.current_session[index+2].open;
+    this.props.setopen({name, open})
+    
   }
-  setOpen(index) {
-    let copy = this.state.open
-    copy[index]=!copy[index]
-    this.setState({open:copy})
+  handleyes (event,currentIndex) {
+    let name = this.props.session.current_session[currentIndex+2].name;
+    this.props.updateHelp({name:name})
   }
+  handleno (event, currentIndex) {
+    let name = this.props.session.current_session[currentIndex+2].name;
+    this.props.deleteHelp({name:name})
+   
+  }
+
   componentDidMount () {
     let token = this.props.userinfo.token
     if (this.props.userinfo.category=='client') {
@@ -44,8 +50,12 @@ class Session extends React.Component {
     }
     recive_message()
   }
-  componentDidUpdate () {
+  componentDidUpdate (previousProps, previousState) {
     recive_message()
+    if (JSON.stringify(previousProps.session.current_session)!==JSON.stringify(this.props.session.current_session)) {
+      send_message({id:this.props.clientinfo.id, current_session:this.props.session.current_session}) 
+      console.log("new props recvided", this.props.session.current_session)
+    }
   }
   handleReview() {
     let userId = this.props.clientinfo.clinetid
@@ -59,9 +69,7 @@ class Session extends React.Component {
     let name = event.target.name
     let value = event.target.value
     this.props.setCurrentSessionValue({name, value})
-    this.setClose(currentIndex)
-    this.setOpen(currentIndex+1)
-    send_message({id:this.props.clientinfo.id,name, value}) 
+   // send_message({id:this.props.clientinfo.id, current_session:this.props.session.current_session}) 
   }
   render() {
     return (
@@ -73,7 +81,19 @@ class Session extends React.Component {
           </Box>
           <List component="nav" aria-labelledby="nested-list-subheader">
             {this.props.session.scale.map((row, index)=>(
-              <Row key={index} row={row} handleChanges={this.handleChanges} value={this.props.session.current_session[index+2].value} currentIndex={index} setOpen={this.setOpen} open={this.state.open[index]}></Row>
+              <Row 
+              key={index} 
+              row={row} 
+              handleChanges={this.handleChanges} 
+              value={this.props.session.current_session[index+2].value} 
+              currentIndex={index} 
+              setOpen={this.setOpen} 
+              open={this.props.session.current_session[index+2].open} 
+              handleno={this.handleno} 
+              handleyes={this.handleyes}
+              help={this.props.session.current_session[index+2].help}>
+              </Row>
+             
             ))}
         </List>
         <Box sx={{width:"100%", justifyContent:"space-between", display:"flex"}}>
@@ -92,6 +112,9 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   setCurrentSessionValue,
   setUserIdAndTime,
-  saveCurrentSession
+  saveCurrentSession,
+  setopen,
+  updateHelp,
+  deleteHelp
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Session);

@@ -77,17 +77,17 @@ export const SessionSlice = createSlice({
           current_session: [
             {"created_at":""},
             {"created_by":0},
-            {"name": "Mental health","value" :0, "help":null, "select":false},
-            {"name":"Physical health","value": 0, "help":null, "select":false},
-            {"name":"Job situation","value": 0, "help":null, "select":false},
-            {"name":"Accommodation" ,"value": 0, "help":null, "select":false},
-            {"name":"Leisure activities" ,"value":0, "help":null, "select":false},
-            {"name":"Relationship with partner/family","value":0, "help":null, "select":false},
-            {"name":"Friendship","value":0, "help":null, "select":false},
-            {"name":"Personal safety","value": 0, "help":null, "select":false},
-            {"name":"Medication","value":0, "help":null, "select":false},
-            {"name":"Practical help","value":0, "help":null, "select":false},
-            {"name":"Meetings","value":0, "help":null, "select":false}
+            {"name": "Mental health","value" :0, "help":null, "select":false, open:false},
+            {"name":"Physical health","value": 0, "help":null, "select":false, open:false},
+            {"name":"Job situation","value": 0, "help":null, "select":false, open:false},
+            {"name":"Accommodation" ,"value": 0, "help":null, "select":false, open:false},
+            {"name":"Leisure activities" ,"value":0, "help":null, "select":false, open:false},
+            {"name":"Relationship with partner/family","value":0, "help":null, "select":false, open:false},
+            {"name":"Friendship","value":0, "help":null, "select":false, open:false},
+            {"name":"Personal safety","value": 0, "help":null, "select":false, open:false},
+            {"name":"Medication","value":0, "help":null, "select":false, open:false},
+            {"name":"Practical help","value":0, "help":null, "select":false, open:false},
+            {"name":"Meetings","value":0, "help":null, "select":false, open:false}
           ],
           select_scale:[]
     },
@@ -100,8 +100,12 @@ export const SessionSlice = createSlice({
             return {...state, current_session: copyofCurrentSession}
             
         },
-        checkValue(state, action) {
-            console.log('check value is called')
+        setopen(state, action) {
+            let stringifyCurrentSession = JSON.stringify(state.current_session)
+            let copyofCurrentSession = JSON.parse(stringifyCurrentSession)
+            let changesvalue = copyofCurrentSession.find(name=>name.name===action.payload.name)
+            changesvalue.open = action.payload.open
+            return {...state, current_session: copyofCurrentSession}
         },
         setUserIdAndTime(state, action) {
             let userId = action.payload.userId
@@ -109,20 +113,19 @@ export const SessionSlice = createSlice({
             let copyofCurrentSession = JSON.parse(JSON.stringify(state.current_session))
             copyofCurrentSession[0].created_at = timestamp
             copyofCurrentSession[1].created_by = userId
+            
             return {...state, current_session: copyofCurrentSession}
         },
-        updateSelectScale(state, action) {
+        updateHelp(state, action) {
             let copyofSession = JSON.parse(JSON.stringify(state.current_session))
             let updatehelpvalue = copyofSession.find(name=>name.name===action.payload.name)
             updatehelpvalue.help = true
             return {
                 ...state,
                 current_session:copyofSession
-
-
             }
         },
-        deleteSelectScale(state, action) {
+        deleteHelp(state, action) {
             let copyofSession = JSON.parse(JSON.stringify(state.current_session))
             let updatehelpvalue = copyofSession.find(name=>name.name===action.payload.name)
             updatehelpvalue.help = false
@@ -130,7 +133,12 @@ export const SessionSlice = createSlice({
                 ...state,
                 current_session:copyofSession
             }
-
+        },
+        updateSessionExternal(state, action) {
+            return {
+                ...state,
+                current_session:action.payload
+            }
         }
     },
     extraReducers: {
@@ -150,5 +158,5 @@ export const SessionSlice = createSlice({
         }
     },
 })
-export const {setCurrentSessionValue,checkValue, setUserIdAndTime,updateSelectScale,deleteSelectScale} = SessionSlice.actions;
+export const {setCurrentSessionValue,checkValue, setUserIdAndTime,updateHelp,deleteHelp, setopen, updateSessionExternal} = SessionSlice.actions;
 export default SessionSlice.reducer;

@@ -39,7 +39,7 @@ class Row extends React.Component {
   render () {
     return (
       <div>
-        <ListItem button onClick={()=>this.props.setOpen(this.props.currentIndex)} divider>
+        <ListItem button onClick={(event)=>this.props.setOpen(event,this.props.currentIndex)} divider>
           {this.state.open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           <ListItemText primary={this.props.row} primaryTypographyProps={{'variant':'h6'}}/>
           {!this.props.open ? <Result progress={this.state.progress}/>: null}
@@ -53,6 +53,7 @@ class Row extends React.Component {
             <Box sx={{ width: '100%', justifyContent:'space-around'}}>
               <Typography variant='h6'>How satisfied are you with your {this.props.row}?</Typography>
               <Slider
+                key={`slider-${this.props.value}`}
                 aria-label="Custom marks"
                 defaultValue={this.props.value}
                 getAriaValueText={valuetext}
@@ -71,8 +72,8 @@ class Row extends React.Component {
               <Box sx={{width:'100%', justifyContent:'flex-end', display:'flex'}}>
                 <FormGroup>
                   <Stack direction="row" spacing={1} alignItems="center">
-                    <FormControlLabel control={<Checkbox onChange={()=>{}} checked={false}/>} label="Yes"/>
-                    <FormControlLabel control={<Checkbox onChange={()=>{}} checked={false}/>} label="No"/>
+                    <FormControlLabel control={<Checkbox onChange={(event)=>{this.props.handleyes(event,this.props.currentIndex)}} checked={this.props.help}/>} label="Yes"/>
+                    <FormControlLabel control={<Checkbox onChange={(event)=>{this.props.handleno(event,this.props.currentIndex)}} checked={!this.props.help}/>} label="No"/>
                   </Stack>
                 </FormGroup>
             </Box>
