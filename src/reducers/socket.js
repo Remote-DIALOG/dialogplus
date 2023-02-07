@@ -4,8 +4,8 @@ import {store} from '../store'
 const hostname = window.location.hostname
 const protocol = hostname ==='localhost'? 'http://':'https://'
 const port = ':443'
-// const url = protocol+hostname+port
-const url = "http://"+"192.168.29.172:443"
+const url = protocol+hostname+port
+// const url = "http://"+"192.168.29.172:443"
 let socket;
 export const initiateSocketConnection = (token) => {
     socket = io(url, {auth: {token,},transports:['websocket']});
@@ -25,13 +25,13 @@ export const recive_message = async function () {
     store.dispatch(updateSessionExternal(data.current_session))
   })
 }
-export const session = async function (message) {
-  window.Session.handleReview();
-  await socket.emit("session", message)
+export const review = async function (message) {
+  await socket.emit("review", message)
 }
-export const savedsession = async function () {
-  socket.on("sessionsave", (data)=> {
-    console.log(data)
+export const movetoReview = async function () {
+  socket.on("movetoReview", (data)=> {
+    window.Session.handleReview();
+    //console.log(data)
   })
 }
 export const selectscale =  async function(message) {

@@ -134,6 +134,16 @@ export const SessionSlice = createSlice({
                 current_session:copyofSession
             }
         },
+        selectDomain(state, action) {
+            let copyofSession = JSON.parse(JSON.stringify(state.current_session))
+            let updateselectvalue = copyofSession.find(name=>name.name===action.payload.name)
+            console.log(updateselectvalue)
+            updateselectvalue.select = !updateselectvalue.select
+            return {
+                ...state,
+                current_session:copyofSession
+            }
+        },
         updateSessionExternal(state, action) {
             return {
                 ...state,
@@ -158,5 +168,5 @@ export const SessionSlice = createSlice({
         }
     },
 })
-export const {setCurrentSessionValue,checkValue, setUserIdAndTime,updateHelp,deleteHelp, setopen, updateSessionExternal} = SessionSlice.actions;
+export const {setCurrentSessionValue,checkValue, setUserIdAndTime,updateHelp,deleteHelp, setopen, updateSessionExternal, selectDomain} = SessionSlice.actions;
 export default SessionSlice.reducer;

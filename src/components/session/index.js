@@ -61,9 +61,10 @@ class Session extends React.Component {
     let userId = this.props.clientinfo.clinetid
     var today = get_date();
     this.props.setUserIdAndTime({userId, today})
-    this.props.saveCurrentSession(this.props.current_session).then(() =>{
-      this.props.nagivate('/review')    
-    })
+    // this.props.saveCurrentSession(this.props.current_session).then(() =>{
+    //   this.props.nagivate('/review')    
+    // })
+    this.props.nagivate('/review')    
   }
   handleChanges(event, currentIndex) {
     let name = event.target.name

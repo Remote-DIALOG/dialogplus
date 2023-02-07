@@ -12,7 +12,7 @@ class Result extends React.Component {
     render () {
         return (
             <Box sx={{ width: '300px', marginRight:'300px' }}>
-                <LinearProgress variant="determinate" value={this.props.progress} />
+                <LinearProgress variant="determinate" value={this.props.progress} color={this.props.color}/>
             </Box>
         )
     }
