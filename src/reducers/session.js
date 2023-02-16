@@ -15,7 +15,6 @@ export const getPastSession = createAsyncThunk(
     "session/getPastSession",
     async (args, {rejectWithValue} ) => {   
         try {
-            console.log("past session")
             const {data} = await API.post('/session/getPastSession',args); 
             return data;
         }catch(error) {
@@ -41,7 +40,7 @@ export const SessionSlice = createSlice({
         past_session:[],
         message:"",
         isLoading:false,
-        scale: ["Mental health", "Physical health", "Job situation", "Accommodation", "Leisure activities", "Relationship with partner/family", "Friendship", "Personal safety", "Medication", "Practical help", "Meetings"],
+        scale: ["Mental health", "Physical health", "Job situation", "Accommodation", "Leisure activities", "Relationship with partner/family", "Friendships", "Personal safety", "Medication", "Practical help", "Meetings"],
         marks: [
             { name:"totally dissatisifies",
               value: 1,
@@ -77,17 +76,17 @@ export const SessionSlice = createSlice({
           current_session: [
             {"created_at":""},
             {"created_by":0},
-            {"name": "Mental health","value" :0, "help":null, "select":false, open:false},
-            {"name":"Physical health","value": 0, "help":null, "select":false, open:false},
-            {"name":"Job situation","value": 0, "help":null, "select":false, open:false},
-            {"name":"Accommodation" ,"value": 0, "help":null, "select":false, open:false},
-            {"name":"Leisure activities" ,"value":0, "help":null, "select":false, open:false},
-            {"name":"Relationship with partner/family","value":0, "help":null, "select":false, open:false},
-            {"name":"Friendship","value":0, "help":null, "select":false, open:false},
-            {"name":"Personal safety","value": 0, "help":null, "select":false, open:false},
-            {"name":"Medication","value":0, "help":null, "select":false, open:false},
-            {"name":"Practical help","value":0, "help":null, "select":false, open:false},
-            {"name":"Meetings","value":0, "help":null, "select":false, open:false}
+            {"name": "Mental health","value" :0, "help":null, "select":false, open:false,actionitems:[]},
+            {"name":"Physical health","value": 0, "help":null, "select":false, open:false,actionitems:[]},
+            {"name":"Job situation","value": 0, "help":null, "select":false, open:false,actionitems:[]},
+            {"name":"Accommodation" ,"value": 0, "help":null, "select":false, open:false,actionitems:[]},
+            {"name":"Leisure activities" ,"value":0, "help":null, "select":false, open:false,actionitems:[]},
+            {"name":"Relationship with partner/family","value":0, "help":null, "select":false, open:false,actionitems:[]},
+            {"name":"Friendships","value":0, "help":null, "select":false, open:false,actionitems:[]},
+            {"name":"Personal safety","value": 0, "help":null, "select":false, open:false,actionitems:[]},
+            {"name":"Medication","value":0, "help":null, "select":false, open:false,actionitems:[]},
+            {"name":"Practical help","value":0, "help":null, "select":false, open:false,actionitems:[]},
+            {"name":"Meetings","value":0, "help":null, "select":false, open:false,actionitems:[]}
           ],
           select_scale:[]
     },
@@ -144,6 +143,16 @@ export const SessionSlice = createSlice({
                 current_session:copyofSession
             }
         },
+        addActionItems(state, action) {
+            let copyofSession = JSON.parse(JSON.stringify(state.current_session))
+            let domain = copyofSession.find(name=>name.name===action.payload.name)
+            domain.actionitems.push(action.payload.actionitems)
+            return {
+                ...state,
+                current_session:copyofSession
+            }
+            
+        },
         updateSessionExternal(state, action) {
             return {
                 ...state,
@@ -168,5 +177,5 @@ export const SessionSlice = createSlice({
         }
     },
 })
-export const {setCurrentSessionValue,checkValue, setUserIdAndTime,updateHelp,deleteHelp, setopen, updateSessionExternal, selectDomain} = SessionSlice.actions;
+export const {setCurrentSessionValue,checkValue, setUserIdAndTime,updateHelp,deleteHelp, setopen, updateSessionExternal, selectDomain, addActionItems} = SessionSlice.actions;
 export default SessionSlice.reducer;

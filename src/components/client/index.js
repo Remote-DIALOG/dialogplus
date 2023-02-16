@@ -20,7 +20,7 @@ import { CircularProgress } from '@mui/material';
 import {initiateSocketConnection, join_room} from '../../reducers/socket';
 import {styled} from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
-import {getNotes} from '../../reducers/actionitems';
+import {getNotes, setDate} from '../../reducers/notes';
 
 
 class Client extends React.Component {
@@ -36,15 +36,24 @@ class Client extends React.Component {
     componentDidMount () {
         let clientid = this.props.client.clientinfo.id
         this.props.getSessionDates({"clientid":clientid})
-        this.props.getNotes({"emailid":this.props.userinfo.emailid})
         if (this.props.userinfo.category=='clinician') {
             initiateSocketConnection(this.props.userinfo.token)
             join_room(clientid)
         }
     }
-    handleClick (id) {
+    handleClick (event, id) {
         console.log(id)
-        this.props.nagivate('/action')
+        let data = {
+            "clientId": this.props.client.clientinfo.id,
+            "sessiontime": this.props.client.dates[id].replace(/['"]+/g, '')
+        }
+        console.log("-------->", data)
+        this.props.setDate(this.props.client.dates[id].replace(/['"]+/g, ''))
+        this.props.getNotes(data).then(()=>{
+            this.props.nagivate('/previousactionitem')
+        })
+        
+
     }
     handleSession() {
         if (this.props.client.dates.length==0) {
@@ -62,7 +71,7 @@ class Client extends React.Component {
             { this.props.client.isLoading? <CircularProgress sx={{marginTop:'10%', marginLeft:'50%'}}/> : 
                 <div>
                 <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
-                <Box><Typography variant='h4'>{this.props.client.clientinfo.fullname}</Typography></Box>
+                <Box><Typography variant='h4'>{this.props.client.clientinfo.full_name}</Typography></Box>
                 <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.handleSession} endIcon={<ArrowForwardIosIcon/>}>New Session</Button>
             </Box>
             <Box>
@@ -74,7 +83,7 @@ class Client extends React.Component {
                      <TableRow key={key}>
                          <TableCell style={{width: 50}}><ContentPasteIcon/></TableCell>
                          <TableCell align='left' style={{width:300, fontFamily:'sans-serif'}}><Typography>{row.replace(/['"]+/g, '')}</Typography></TableCell>
-                         <TableCell><div onClick = {()=>this.handleClick(key)}><EditIcon/></div></TableCell>
+                         <TableCell><div onClick = {(event)=>(this.handleClick(event,key))}><EditIcon/></div></TableCell>
                      </TableRow>
                  ))}
                  </TableBody>
@@ -88,7 +97,7 @@ class Client extends React.Component {
               onClick={this.handleExit}
               startIcon={<Box sx={{marginTop:1}}><ArrowBackIosIcon/><ArrowBackIosIcon/></Box>}
               >
-                 Exit
+                 logout
              </Button>
          </Box>
          <AlertDialog open={this.state.openDialog} nagivate={this.props.nagivate} handleExit = {this.handleExit}/> 
@@ -102,11 +111,11 @@ class Client extends React.Component {
 const mapStateToProps = (state) => ({
     client:state.ClientReducer,
     userinfo:state.loginReducer.userinfo,
-    notes:state.ActionItemsReducer.notes,
-  })
+})
 const mapDispatchToProps = {
     setActionItems,
     getSessionDates,
-    getNotes
+    getNotes,
+    setDate
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Client);

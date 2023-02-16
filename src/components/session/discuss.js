@@ -1,48 +1,66 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import {connect} from 'react-redux';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import TableFooter from '@mui/material/TableFooter';
-import Result from './result';
-import TextField from '@mui/material/TextField';
-import { IconButton } from '@mui/material';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import PropTypes from 'prop-types';
 import TabPanel from './tabpannel';
 import LinearProgress from '@mui/material/LinearProgress';
-import AddIcon from '@mui/icons-material/Add';
+import TextField from '@mui/material/TextField';
+import {addActionItems} from '../../reducers/session';
+import {initiateSocketConnection, join_room, send_message, recive_message} from '../../reducers/socket';
  class Discuss extends React.Component {
      constructor(props) {
          super(props) 
          this.state = {
-             index:0
+             index:0,
+             actionitems:[{id:1, value:"", domain:""}],
+             item:""
          }
          this.handleChange = this.handleChange.bind(this)
+         this.addInput = this.addInput.bind(this);
          this.handleFinishButton = this.handleFinishButton.bind(this)
+         this.handleKeyDown = this.handleKeyDown.bind(this)
+     }
+     handleKeyDown (event, idx) {
+            const index = event.target.id;
+            let selectscale = this.props.current_session.filter(name => name.select===true)
+            let scale = selectscale[index]
+            console.log(this.state.item)
+            this.props.addActionItems({name:scale.name, actionitems:this.state.item})
+            this.setState({item:""})  
      }
      handleChange (event) {
-         console.log("handle chnage")
+         event.preventDefault()
+         console.log(event.target.value)
+         this.setState({item:event.target.value})
+
      }
+     addInput() {
+         this.setState(prevState =>({
+             actionitems:[...prevState.actionitems,{"value":"", "domain":""}]
+         }))
+     }
+
      handleFinishButton () {
-        this.props.nagivate('/client')
+        this.props.nagivate('/actionitems')
      }
+     componentDidUpdate (previousProps, previousState) {
+        recive_message()
+        if (JSON.stringify(previousProps.session.current_session)!==JSON.stringify(this.props.session.current_session)) {
+          send_message({id:this.props.clientinfo.id, current_session:this.props.session.current_session}) 
+          console.log("new props recvided", this.props.session.current_session)
+        }
+      }
      render () {
-         let selectscale = this.props.current_session.filter(name => name.select===true)
+        let selectscale = this.props.current_session.filter(name => name.select===true)
         return (
         <Container maxWidth={false}>
             <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
                 <Box sx={{margin:2}}><Typography variant='h4'>Discuss</Typography></Box>
-                <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.handleFinishButton}>Finish</Button>
+                <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.handleFinishButton}>Next</Button>
             </Box>
             <Tabs value={this.state.index} onChange={(_, index) => this.setState({index})} scrollButtons={false} indicatorColor="primary" textColor="inherit" variant="scrollable" scrollButtons allowScrollButtonsMobile>
                 {selectscale.map((data, index)=>(<Tab label={data.name} key={index}/>))}
@@ -54,31 +72,40 @@ import AddIcon from '@mui/icons-material/Add';
                         <ol type="1">
                             <li><Typography>Understanding</Typography></li>
                             <ul>
-                                <li>Why is this rating and not a lower one?</li>
-                                <li>What is working</li>
+                                <li><Typography>Why this rating and not a lower one?</Typography></li>
+                                <li><Typography>What is working?</Typography></li>
                             </ul>  
-                            <li>Looking forward</li>
+                            <li><Typography>Looking forward</Typography></li>
                                 <ul>
-                                    <li>Best case scenario?</li>
-                                    <li>Smallest improvement</li>
+                                    <li><Typography>Best case scenario?</Typography></li>
+                                    <li><Typography>Smallest improvement?</Typography></li>
                                 </ul>
-                            <li>Considering options</li>
+                            <li><Typography>Considering options</Typography></li>
                                 <ul>
-                                    <li>What can the patient do?</li>
-                                    <li>What can the clinician do?</li>
-                                    <li>What others can do</li>
+                                    <li><Typography>What can the patient do?</Typography></li>
+                                    <li><Typography>What can the clinician do?</Typography></li>
+                                    <li><Typography>What others can do?</Typography></li>
                                 </ul>
-                            <li>Agreeing on actions    
-                                <IconButton aria-label="add" onClick={this.handleChange}>
-                                <AddIcon />
-                                </IconButton>
-                            </li>
-                            
+                            <li><Typography>Agreeing on actions</Typography></li>
+                            <Box sx={{flexDirection:'row', position:'relative'}}>
+                                <TextField
+                                placeholder="Add Action item here"
+                                onChange={this.handleChange}
+                                sx={{width:'50%'}}
+                                id={index}
+                                value={this.state.item}
+                            /> 
+                            <Button id={index} variant="contained" sx={{marignLeft:'30px', height: '50px', paddingLeft:'10px'}} onClick={(event)=>(this.handleKeyDown(event, index))}>Add</Button>
+                            </Box>
+                            <ol type='1'>
+                                {data.actionitems.map((text, idx)=>(
+                                    <li><Typography>{text}</Typography></li>
+                                ))}
+                            </ol>
                         </ol>
                 </TabPanel>
-               
             ))}
-          
+
     </Container>
   );
 }
@@ -86,8 +113,9 @@ import AddIcon from '@mui/icons-material/Add';
 const mapStateToProps = (state) => ({
     current_session:state.SessionReducer.current_session,
     session:state.SessionReducer,
+    clientinfo:state.ClientReducer.clientinfo,
 })
 const mapDispatchToProps = {
-
+    addActionItems
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Discuss);

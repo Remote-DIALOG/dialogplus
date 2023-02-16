@@ -86,7 +86,7 @@ class Clinicican extends React.Component {
 const mapStateToProps = (state) => ({
     clinetList:state.clinicianReducer.clinetlist,
     userinfo:state.loginReducer.userinfo,
-    notes:state.ActionItemsReducer.notes,
+    notes:state.NotesReducer.notes,
 })
 const mapDispatchToProps = {
     getClients,

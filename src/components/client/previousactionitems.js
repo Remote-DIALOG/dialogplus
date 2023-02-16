@@ -5,9 +5,10 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import {connect} from 'react-redux';
 import FormDialog from './addnotes';
-import {getNotes} from '../../reducers/actionitems';
+import {getNotes} from '../../reducers/notes';
 import {styled} from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
+import {addPastNotes} from '../../reducers/notes'
 const Item = styled(Paper)(({ theme }) => ({
     textAlign: 'left',
     lineHeight: '60px',
@@ -19,17 +20,6 @@ class PreviousActionItems extends React.Component {
         this.state = {
         }
     }
-    componentDidMount() {
-        let data = {
-            "emailid": this.props.userinfo.emailid
-        }
-        this.props.getNotes(data)
-    }
-    onSubmitAction = (data) => {
-        console.log('this comment was posted!',data)
-      }
-    
-      customNoComment = () => <div className='no-com'>No comments wohoooo!</div>
     render () {
         return (
             <Container maxWidth={false}>
@@ -39,7 +29,9 @@ class PreviousActionItems extends React.Component {
             </Box>
             <Box sx={{marginTop:10, display:'flex', flexDirection:'column', alignItems:'left'}}>
             </Box>
-            <Box sx={{display:'flex', alignItems:'center', justifyContent:'center'}}><FormDialog/></Box>
+            <Box sx={{display:'flex', alignItems:'center', justifyContent:'center'}}>
+                <FormDialog addCurrentNotes={this.props.addPastNotes} sessiontime={this.props.sessiontime}/>
+            </Box>
             <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'column'}}>
                 {this.props.notes.map((value, idx) => (
                     <Box sx={{width:'100%', justifyContent:'flex-end', padding:'10px'}} key={idx}>
@@ -55,10 +47,13 @@ class PreviousActionItems extends React.Component {
     }
 }
 const mapStateToProps = (state) => ({
-    notes:state.ActionItemsReducer.notes,
-    userinfo:state.loginReducer.userinfo
+    notes:state.NotesReducer.pastnotes,
+    userinfo:state.loginReducer.userinfo,
+    sessiontime:state.NotesReducer.currentDate
 })
 const mapDispatchToProps = {
-    getNotes
+    getNotes,
+    addPastNotes
+
 }
 export default connect(mapStateToProps, mapDispatchToProps)(PreviousActionItems);

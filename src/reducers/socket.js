@@ -1,11 +1,12 @@
 import {setCurrentSessionValue, updateHelp, deleteHelp, updateSessionExternal} from './session'
+import {updateNotesExternal} from './notes';
 import { io } from "socket.io-client";
 import {store} from '../store'
 const hostname = window.location.hostname
 const protocol = hostname ==='localhost'? 'http://':'https://'
 const port = ':443'
 const url = protocol+hostname+port
-// const url = "http://"+"192.168.29.172:443"
+// const url = "http://"+"161.23.20.203:443"
 let socket;
 export const initiateSocketConnection = (token) => {
     socket = io(url, {auth: {token,},transports:['websocket']});
@@ -25,27 +26,14 @@ export const recive_message = async function () {
     store.dispatch(updateSessionExternal(data.current_session))
   })
 }
-export const review = async function (message) {
-  await socket.emit("review", message)
+export const sendNotes = async function (message) {
+  console.log("send note", message)
+  await socket.emit("sendNotes", message)
 }
-export const movetoReview = async function () {
-  socket.on("movetoReview", (data)=> {
-    window.Session.handleReview();
-    //console.log(data)
-  })
-}
-export const selectscale =  async function(message) {
-  await socket.emit("selectscale", message)
-}
-
-export const deselectscale = async function(message) {
-  await socket.emit ("deselectscale", message)
-}
-export const updatescalehelp =  async function() {
-  socket.on("selectscale", (data)=>{
-    store.dispatch(updateHelp(data))
-  })
-  store.on("deselectscale", (data)=>{
-    store.dispatch(deleteHelp(data))
+export const reciveNotes = async function () {
+  console.log("recvice is called")
+  socket.on("get_notes", (data)=> {
+    console.log("data from notes = ", data)
+   store.dispatch(updateNotesExternal(data.currentnotes))
   })
 }

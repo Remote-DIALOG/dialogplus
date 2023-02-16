@@ -4,7 +4,7 @@ import loginReducer from './reducers/login';
 import clinicianReducer from './reducers/clinician';
 import SessionReducer from './reducers/session';
 import ClientReducer from './reducers/client';
-import ActionItemsReducer from './reducers/actionitems';
+import NotesReducer from './reducers/notes';
 import thunkMiddleware from 'redux-thunk'
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
@@ -18,7 +18,7 @@ const appReducer = combineReducers({
     clinicianReducer:clinicianReducer,
     SessionReducer:SessionReducer,
     ClientReducer:ClientReducer,
-    ActionItemsReducer:ActionItemsReducer
+    NotesReducer:NotesReducer
 })
 const reducerProxy = (state, action) => {
     if(action.type === 'logout/LOGOUT') {

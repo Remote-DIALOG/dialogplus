@@ -34,12 +34,27 @@ class Session extends React.Component {
   }
   handleyes (event,currentIndex) {
     let name = this.props.session.current_session[currentIndex+2].name;
+    let open = !this.props.session.current_session[currentIndex+2].open;
     this.props.updateHelp({name:name})
+    this.props.setopen({name, open})
+    console.log("--------->", currentIndex)
+    if (currentIndex<10) {
+      let nextname = this.props.session.current_session[currentIndex+3].name;
+      let nextopen = !this.props.session.current_session[currentIndex+3].open;
+      this.props.setopen({name:nextname, open:true})
+    }
+
   }
   handleno (event, currentIndex) {
     let name = this.props.session.current_session[currentIndex+2].name;
+    let open = !this.props.session.current_session[currentIndex+2].open;
     this.props.deleteHelp({name:name})
-   
+    this.props.setopen({name, open})
+    if (currentIndex < 12) {
+      let nextname = this.props.session.current_session[currentIndex+3].name;
+      let nextopen = !this.props.session.current_session[currentIndex+3].open;
+      this.props.setopen({name:nextname, open:true})
+    }
   }
 
   componentDidMount () {
@@ -54,11 +69,11 @@ class Session extends React.Component {
     recive_message()
     if (JSON.stringify(previousProps.session.current_session)!==JSON.stringify(this.props.session.current_session)) {
       send_message({id:this.props.clientinfo.id, current_session:this.props.session.current_session}) 
-      console.log("new props recvided", this.props.session.current_session)
+      
     }
   }
   handleReview() {
-    let userId = this.props.clientinfo.clinetid
+    let userId = this.props.clientinfo.id
     var today = get_date();
     this.props.setUserIdAndTime({userId, today})
     // this.props.saveCurrentSession(this.props.current_session).then(() =>{

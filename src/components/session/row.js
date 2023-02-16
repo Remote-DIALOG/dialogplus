@@ -31,12 +31,14 @@ class Row extends React.Component {
     if (previousProps.session.current_session!=this.props.session.current_session) {
         let current_value = this.props.session.current_session.find(scale => scale.name===this.props.row)
         if (current_value!=undefined && current_value.value>0) {
-            let percent = (current_value.value/7)*100
+            let percent = current_value.value
             this.setState({progress:percent})
         }
     }
 }
   render () {
+    let yes = this.props.help
+    let no = this.props.help === null ? false : !this.props.help 
     return (
       <div>
         <ListItem button onClick={(event)=>this.props.setOpen(event,this.props.currentIndex)} divider>
@@ -72,8 +74,8 @@ class Row extends React.Component {
               <Box sx={{width:'100%', justifyContent:'flex-end', display:'flex'}}>
                 <FormGroup>
                   <Stack direction="row" spacing={1} alignItems="center">
-                    <FormControlLabel control={<Checkbox onChange={(event)=>{this.props.handleyes(event,this.props.currentIndex)}} checked={this.props.help}/>} label="Yes"/>
-                    <FormControlLabel control={<Checkbox onChange={(event)=>{this.props.handleno(event,this.props.currentIndex)}} checked={!this.props.help}/>} label="No"/>
+                    <FormControlLabel control={<Checkbox onChange={(event)=>{this.props.handleyes(event,this.props.currentIndex)}} checked={yes}/>} label="Yes"/>
+                    <FormControlLabel control={<Checkbox onChange={(event)=>{this.props.handleno(event,this.props.currentIndex)}} checked={no}/>} label="No"/>
                   </Stack>
                 </FormGroup>
             </Box>

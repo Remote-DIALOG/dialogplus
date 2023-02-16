@@ -14,15 +14,10 @@ function TabPanel(props) {
       {...other}
     >
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+         {children}
         </Box>
      
     </div>
   );
 }
-  TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.any.isRequired,
-    value: PropTypes.any.isRequired
-  };
 export default TabPanel;

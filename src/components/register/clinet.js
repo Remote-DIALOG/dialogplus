@@ -3,15 +3,12 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import GoogleLogin from 'react-google-login';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import GoogleIcon from '@mui/icons-material/Google';
-import FacebookLogin from "react-facebook-login";
 
 import '../../stylesheets/login.css';
 class ClinetRegistration extends React.Component {
@@ -91,24 +88,6 @@ class ClinetRegistration extends React.Component {
                   id="password"
                   autoComplete="new-password"
                 />
-              </Grid>
-              <Grid item xs={12}>
-                  <GoogleLogin
-                  clientId="491004959702-3bgqo54pt777f77dgl7cqd6s7e7rii81.apps.googleusercontent.com"
-                  buttonText={ 'SIGN UP WITH GOOGLE'}
-                  onSuccess={this.responseGoogle}
-                  onFailure={this.responseGoogle}
-                  cookiePolicy={"single_host_origin"}
-                  className="GOOGLE"
-                />
-                <FacebookLogin
-                btnContent=" SIGN UP With FACEBOOK"
-                appId="185202659227880"
-                fields="name,email,picture"
-                onSuccess={this.responseFacebook}
-                onFailure={this.responseFacebook}
-                cssClass="FACEBOOK"
-              />
               </Grid>
             </Grid>
             <Button

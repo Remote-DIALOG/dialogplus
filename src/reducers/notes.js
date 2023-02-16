@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import API from '../utils/api';
+import { setUserIdAndTime } from "./session";
 export const getNotes = createAsyncThunk(
     "actionitem/getNotes",
     async (args, {rejectWithValue} ) => { 
         try {
-            const {data} = await API.post('/actionitem/getnotes',args); 
+            const {data} = await API.post('/notes/getnotes',args); 
             return data;
         }catch(error) {
             this.rejectWithValue(error.response.data);
@@ -15,7 +16,7 @@ export const addNotes = createAsyncThunk(
     "actionitem/addNotes",
     async (args, {rejectWithValue} ) => {   
         try {
-            const {data} = await API.post('/actionitem/addNotes',args); 
+            const {data} = await API.post('/notes/addNotes',args); 
             return data;
         }catch(error) {
             this.rejectWithValue(error.response.data);
@@ -26,14 +27,34 @@ export const NotesSlice = createSlice({
     name:"actionitems",
     initialState: {
         isSuccess:false,
-        notes:[],
-        isLoading:false
+        pastnotes:[],
+        isLoading:false,
+        currentnotes:[],
+        currentDate:""
     },
     reducers :{
-        addNewNotes(state, action) {
+        addPastNotes(state, action) {
             return {
                 ...state,
-                notes:state.notes.concat(action.payload)
+                pastnotes:state.pastnotes.concat(action.payload)
+            }
+        },
+        updateNotesExternal(state, action) {
+            return {
+                ...state,
+                currentnotes:action.payload
+            }
+        },
+        addCurrentNotes(state, action) {
+            return {
+                ...state,
+                currentnotes:state.currentnotes.concat(action.payload)
+            }
+        },
+        setDate(state, action) {
+            return {
+                ...state,
+                currentDate:action.payload
             }
         }
     },
@@ -59,7 +80,7 @@ export const NotesSlice = createSlice({
         },
         [getNotes.fulfilled]: (state, {payload}) => {
             state.isLoading = false;
-            state.notes = payload;
+            state.pastnotes = payload;
             state.isSuccess = true;
         },
         [getNotes.rejected]: (state, {payload}) => {
@@ -70,5 +91,5 @@ export const NotesSlice = createSlice({
 
     },
 })
-export const {addNewNotes} = NotesSlice.actions;
+export const {addPastNotes, updateNotesExternal, setDate, addCurrentNotes} = NotesSlice.actions;
 export default NotesSlice.reducer;

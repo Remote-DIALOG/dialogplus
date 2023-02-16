@@ -18,7 +18,6 @@ import Review from './components/session/review';
 import Discuss from './components/session/discuss';
 import Profile from './components/header/profile';
 import PreviousActionItems from './components/client/previousactionitems';
-import { TrackerProvider, Tracker } from 'react-tracker'
 import trackAddToCart from './utils/track'
 import { SocketContext,socket } from './utils/socket';
 const theme = createTheme({
@@ -38,16 +37,12 @@ class App extends React.Component {
     
   }
   render () {
-    const tracker = new Tracker()
-    // Listen on all event
-    tracker.on('*', (event, eventsHistory) =>
-        console.log("event track ---->", event)
-    );
+  
     return (
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
         <ThemeProvider theme={theme}>
-        <TrackerProvider tracker={tracker}>
+        
           <div>
             <NavBar nagivate={this.props.nagivate}/>
             <Routes>
@@ -65,7 +60,7 @@ class App extends React.Component {
               <Route path='/profile' element={<Profile nagivate={this.props.nagivate}/>}/>
             </Routes> 
           </div>
-          </TrackerProvider>
+          
         </ThemeProvider>
         </PersistGate>
       </Provider>
