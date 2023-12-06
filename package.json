@@ -8,12 +8,16 @@
     "@mui/icons-material": "^5.8.3",
     "@mui/lab": "^5.0.0-alpha.109",
     "@mui/material": "^5.10.15",
+    "@mui/x-data-grid": "^5.17.25",
     "@reduxjs/toolkit": "^1.8.2",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "@types/jspdf": "^2.0.0",
     "axios": "^0.27.2",
     "bootstrap": "^5.2.3",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.5.31",
     "mdi-material-ui": "^7.6.0",
     "react": "^18.1.0",
     "react-bootstrap": "^2.7.2",
@@ -32,8 +36,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-scripts --openssl-legacy-provider start",
+    "build": "react-scripts --openssl-legacy-provider build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

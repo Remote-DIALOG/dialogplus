@@ -6,8 +6,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Box from '@mui/material/Box';
-import {addNewNotes} from '../../reducers/notes';
-import {addNotes} from '../../reducers/notes';
+import {addNotes, addCurrentNotes} from '../../reducers/notes';
 import {connect} from 'react-redux';
 import {get_date} from '../../utils/get_date'
 function FormDialog(props) {
@@ -21,10 +20,12 @@ function FormDialog(props) {
       "clientId": props.client.id,
       "message" : value,
       "created_at": get_date(),
-      "sessiontime":props.sessiontime
+      "sessiontime":props.sessiontime,
+      "created_by":props.userinfo.id
     }
+    console.log("--->", notes)
     props.addCurrentNotes(notes)
-    // props.addNotes(notes);
+    props.addNotes(notes);
     setValue('');
     handleClose()
   }
@@ -72,8 +73,10 @@ function FormDialog(props) {
 }
 const mapStateToProps = (state) => ({
   client:state.ClientReducer.clientinfo,
+  userinfo:state.loginReducer.userinfo
 })
 const mapDispatchToProps = {
-  addNotes
+  addNotes,
+  addCurrentNotes
 }
 export default connect(mapStateToProps,mapDispatchToProps)(FormDialog);

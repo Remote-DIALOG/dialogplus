@@ -7,10 +7,13 @@ import {connect} from 'react-redux';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import TabPanel from './tabpannel';
-import LinearProgress from '@mui/material/LinearProgress';
 import TextField from '@mui/material/TextField';
 import {addActionItems} from '../../reducers/session';
-import {initiateSocketConnection, join_room, send_message, recive_message} from '../../reducers/socket';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import {send_message, recive_message} from '../../reducers/socket';
+import ProgressBarWithLabel from '../../utils/Progress'
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+
  class Discuss extends React.Component {
      constructor(props) {
          super(props) 
@@ -23,6 +26,10 @@ import {initiateSocketConnection, join_room, send_message, recive_message} from 
          this.addInput = this.addInput.bind(this);
          this.handleFinishButton = this.handleFinishButton.bind(this)
          this.handleKeyDown = this.handleKeyDown.bind(this)
+         this.handleBackButton = this.handleBackButton.bind(this)
+     }
+     handleBackButton() {
+         this.props.nagivate('/review')
      }
      handleKeyDown (event, idx) {
             const index = event.target.id;
@@ -51,24 +58,32 @@ import {initiateSocketConnection, join_room, send_message, recive_message} from 
         recive_message()
         if (JSON.stringify(previousProps.session.current_session)!==JSON.stringify(this.props.session.current_session)) {
           send_message({id:this.props.clientinfo.id, current_session:this.props.session.current_session}) 
-          console.log("new props recvided", this.props.session.current_session)
         }
       }
      render () {
         let selectscale = this.props.current_session.filter(name => name.select===true)
         return (
         <Container maxWidth={false}>
-            <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
-                <Box sx={{margin:2}}><Typography variant='h4'>Discuss</Typography></Box>
-                <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.handleFinishButton}>Next</Button>
-            </Box>
-            <Tabs value={this.state.index} onChange={(_, index) => this.setState({index})} scrollButtons={false} indicatorColor="primary" textColor="inherit" variant="scrollable" scrollButtons allowScrollButtonsMobile>
-                {selectscale.map((data, index)=>(<Tab label={data.name} key={index}/>))}
+            <Box sx={{marginTop: '1%',marginBottom: '1%', display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
+                <Box><Button  variant="contained" onClick={this.handleBackButton} startIcon={<ArrowBackIosIcon/>}>Back</Button></Box>
+                <Box><Typography variant='h2'>Discuss</Typography></Box>
+                <Box><Button  variant="contained" onClick={this.handleFinishButton} endIcon={<ArrowForwardIosIcon/>}>Next</Button></Box>
+            </Box>   
+            <Tabs 
+                sx={{'& .Mui-selected':{backgroundColor:"#1976d2"}, '& .Mui-disabled':{backgroundColor:"red"}}} 
+                value={this.state.index} 
+                onChange={(_, index) => this.setState({index})} 
+                scrollButtons={false} 
+                textColor="inherit" 
+                variant="scrollable" 
+                allowScrollButtonsMobile
+            >
+                {selectscale.map((data, index)=>(<Tab label={data.name} key={index} sx={{border:"1px solid", borderRadius:'5px'}}/>))}
             </Tabs>
             
             {selectscale.map((data, index)=>(
-                <TabPanel value={this.state.index} index={index}>
-                    <LinearProgress variant="determinate" value={(selectscale[this.state.index].value/7)*100}/>
+                <TabPanel value={this.state.index} index={index} sx={{border:"solid"}}>
+                    <ProgressBarWithLabel value={(selectscale[this.state.index].value/7)*100} label={selectscale[this.state.index].value} color='#2196f3'/>
                         <ol type="1">
                             <li><Typography>Understanding</Typography></li>
                             <ul>
@@ -87,15 +102,18 @@ import {initiateSocketConnection, join_room, send_message, recive_message} from 
                                     <li><Typography>What others can do?</Typography></li>
                                 </ul>
                             <li><Typography>Agreeing on actions</Typography></li>
-                            <Box sx={{flexDirection:'row', position:'relative'}}>
+                            <ul>
+                                    <li><Typography>Decide together the key actions</Typography></li>
+                            </ul>
+                            <Box sx={{flexDirection:'row', position:'relative', paddingTop:"1%"}}>
                                 <TextField
-                                placeholder="Add Action item here"
+                                placeholder="Write actions here "
                                 onChange={this.handleChange}
                                 sx={{width:'50%'}}
                                 id={index}
                                 value={this.state.item}
                             /> 
-                            <Button id={index} variant="contained" sx={{marignLeft:'30px', height: '50px', paddingLeft:'10px'}} onClick={(event)=>(this.handleKeyDown(event, index))}>Add</Button>
+                            <Button id={index} variant="contained" sx={{marginLeft:'0.5%',height: '55px',}} onClick={(event)=>(this.handleKeyDown(event, index))}>Add</Button>
                             </Box>
                             <ol type='1'>
                                 {data.actionitems.map((text, idx)=>(

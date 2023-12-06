@@ -1,5 +1,3 @@
-import { ThreeSixtyOutlined } from '@mui/icons-material';
-import { toHaveStyle } from '@testing-library/jest-dom/dist/matchers';
 import React from 'react';
 import DialogBox from './dialog';
 import ClinetRegistration from './clinet';
@@ -26,7 +24,7 @@ class Register extends React.Component {
 
     }
     setUsertype () {
-        if (this.state.client==false && this.state.clinican==false) {
+        if (this.state.client === false && this.state.clinican ===false) {
             let error = {
                 message:"Please select one option",
                 iserror: true,
@@ -38,11 +36,11 @@ class Register extends React.Component {
         }
     }
     handleChange (name,event) {
-        if (name==="client" && this.state.clinican==false) {
+        if (name === "client" && this.state.clinican ===false) {
             this.setState({client:!this.state.client});
             this.setState({error:{message:'',isError:false}})
         }
-        if (name==="clinican" && this.state.client==false) {
+        if (name === "clinican" && this.state.client === false) {
             this.setState({clinican:!this.state.clinican});
             this.setState({error:{message:'',isError:false}})
         }
@@ -61,10 +59,10 @@ class Register extends React.Component {
             clinican:this.state.clinican
         }
         let form
-        if (this.state.client==true && this.state.openDialog==false) {
+        if (this.state.client === true && this.state.openDialog === false) {
             form = <ClinetRegistration/>
-        }
-        if (this.state.clinican==true && this.state.openDialog==false) {
+        } 
+        if (this.state.clinican===true && this.state.openDialog===false) {
             form = <ClinicanRegistration/>
         }
         return (

@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { persistor, store } from './store';
 import { PersistGate } from 'redux-persist/integration/react';
-import {createTheme, ThemeProvider} from '@mui/material/styles';
+import {createTheme, ThemeProvider,  responsiveFontSizes} from '@mui/material/styles';
 import {Route,Routes, useNavigate} from "react-router-dom";
 import Forgetpassword from './components/login/forgetPassword';
 import Register from './components/register/register';
@@ -17,16 +17,15 @@ import Select from './components/session/select';
 import Review from './components/session/review';
 import Discuss from './components/session/discuss';
 import Profile from './components/header/profile';
-import PreviousActionItems from './components/client/previousactionitems';
-import trackAddToCart from './utils/track'
-import { SocketContext,socket } from './utils/socket';
-const theme = createTheme({
+import Summary from './components/client/summary';
+import Items from './components/client/items'
+import Protected from './utils/protected';
+let theme = createTheme({
   typography: {
-    fontFamily: [
-      'sans-serif',
-    ].join(','),
+      fontFamily: 'sans-serif',
   },
 });
+theme = responsiveFontSizes(theme);
 class App extends React.Component {
   constructor(props) {
     super(props) 
@@ -34,10 +33,16 @@ class App extends React.Component {
       openDialog:false,
       
     }
-    
+  }
+  componentDidMount() {
+    if (navigator.geolocation) {
+      navigator.geolocation.watchPosition(function(position) {
+        console.log("Latitude is :", position.coords.latitude);
+        console.log("Longitude is :", position.coords.longitude);
+      });
+    }
   }
   render () {
-  
     return (
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
@@ -46,18 +51,22 @@ class App extends React.Component {
           <div>
             <NavBar nagivate={this.props.nagivate}/>
             <Routes>
+              <Route element={<Protected/>}>
+              
+                <Route path="/register"  element={<Register nagivate={this.props.nagivate}/>}/>
+                <Route path='/clinician' element={<Clinicican nagivate={this.props.nagivate}/>}/>
+               <Route path='/client' element={<Client nagivate={this.props.nagivate}/>}/>
+                <Route path='/summary' element={<Summary nagivate={this.props.nagivate}/>}/>
+                <Route path='/session' element={<Session nagivate={this.props.nagivate}/>}/>
+                <Route path='/actionitems' element={<ActionItems nagivate={this.props.nagivate}/>}/>
+                <Route path='/review' element={<Review nagivate={this.props.nagivate}/>}/>
+                <Route path='/select' element={<Select nagivate={this.props.nagivate}/>}/>
+                <Route path='/discuss' element={<Discuss nagivate={this.props.nagivate}/>}/>
+                <Route path='/forgetpassword' element={<Forgetpassword nagivate={this.props.nagivate}/>}/>
+                <Route path='/profile' element={<Profile nagivate={this.props.nagivate}/>}/>
+                <Route path='/items' element={<Items nagivate={this.props.nagivate}/>}/>
+              </Route>
               <Route path='/' exact element={<Login nagivate={this.props.nagivate}/>}/>
-              <Route path="/register"  element={<Register nagivate={this.props.nagivate}/>}/>
-              <Route path='/clinician' element={<Clinicican nagivate={this.props.nagivate}/>}/>
-              <Route path='/client' element={<Client nagivate={this.props.nagivate}/>}/>
-              <Route path='/previousactionitem' element={<PreviousActionItems nagivate={this.props.nagivate}/>}/>
-              <Route path='/session' element={<Session nagivate={this.props.nagivate}/>}/>
-              <Route path='/actionitems' element={<ActionItems nagivate={this.props.nagivate}/>}/>
-              <Route path='/review' element={<Review nagivate={this.props.nagivate}/>}/>
-              <Route path='/select' element={<Select nagivate={this.props.nagivate}/>}/>
-              <Route path='/discuss' element={<Discuss nagivate={this.props.nagivate}/>}/>
-              <Route path='/forgetpassword' element={<Forgetpassword nagivate={this.props.nagivate}/>}/>
-              <Route path='/profile' element={<Profile nagivate={this.props.nagivate}/>}/>
             </Routes> 
           </div>
           

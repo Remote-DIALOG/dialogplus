@@ -12,6 +12,7 @@ import {connect} from 'react-redux';
 import BasicAlerts from "../../utils/alert";
 import {get_date} from '../../utils/get_date';
 import {initiateSocketConnection, join_room, send_message, recive_message} from '../../reducers/socket';
+import DyButton from "../../utils/button";
 class Session extends React.Component {
   constructor(props) {
     super(props);
@@ -24,7 +25,11 @@ class Session extends React.Component {
     this.setOpen = this.setOpen.bind(this)
     this.handleyes = this.handleyes.bind(this);
     this.handleno = this.handleno.bind(this);
+    this.handleBackButton =  this.handleBackButton.bind(this)
     
+  }
+  handleBackButton () {
+    this.props.nagivate('/summary')
   }
   setOpen(event, index) {
     let name = this.props.session.current_session[index+2].name;
@@ -37,10 +42,8 @@ class Session extends React.Component {
     let open = !this.props.session.current_session[currentIndex+2].open;
     this.props.updateHelp({name:name})
     this.props.setopen({name, open})
-    console.log("--------->", currentIndex)
     if (currentIndex<10) {
       let nextname = this.props.session.current_session[currentIndex+3].name;
-      let nextopen = !this.props.session.current_session[currentIndex+3].open;
       this.props.setopen({name:nextname, open:true})
     }
 
@@ -52,14 +55,13 @@ class Session extends React.Component {
     this.props.setopen({name, open})
     if (currentIndex < 12) {
       let nextname = this.props.session.current_session[currentIndex+3].name;
-      let nextopen = !this.props.session.current_session[currentIndex+3].open;
       this.props.setopen({name:nextname, open:true})
     }
   }
 
   componentDidMount () {
     let token = this.props.userinfo.token
-    if (this.props.userinfo.category=='client') {
+    if (this.props.userinfo.category ==='client') {
       initiateSocketConnection(token)
       join_room(this.props.userinfo.id)
     }
@@ -71,30 +73,32 @@ class Session extends React.Component {
       send_message({id:this.props.clientinfo.id, current_session:this.props.session.current_session}) 
       
     }
+    if (this.props.session.current_session[13].clinicianID == null) {
+
+    }
   }
   handleReview() {
     let userId = this.props.clientinfo.id
     var today = get_date();
     this.props.setUserIdAndTime({userId, today})
-    // this.props.saveCurrentSession(this.props.current_session).then(() =>{
-    //   this.props.nagivate('/review')    
-    // })
     this.props.nagivate('/review')    
   }
   handleChanges(event, currentIndex) {
     let name = event.target.name
     let value = event.target.value
     this.props.setCurrentSessionValue({name, value})
-   // send_message({id:this.props.clientinfo.id, current_session:this.props.session.current_session}) 
   }
   render() {
     return (
       <Container maxWidth={false}>
         {this.state.errormessage.length > 0 &&<BasicAlerts message={this.state.errormessage}/>}
-        <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
-          <Box sx={{margin:2}}><Typography variant='h4'>Assessment</Typography></Box>
-            <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.handleReview} endIcon={<ArrowForwardIosIcon/>}>Next</Button>
-          </Box>
+        { (this.props.session.current_session[13].clinicianID === null && this.props.userinfo.category==='client') ? <BasicAlerts message={"You are doing this along Clinician is not present"}/> : null}
+        { (this.props.session.current_session[13].clinicianID !== null && this.props.userinfo.category==='client') ? <BasicAlerts message={"Clinician has joined the session"}/>: null}
+        <Box sx={{marginTop: '1%',marginBottom: '1%', display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
+            <Box><DyButton buttonText="Back" onClick={this.handleBackButton} startIcon={<ArrowBackIosIcon/>}/></Box>
+            <Box><Typography variant='h2' fontSize={{lg:30, md:20, sm:20, xs:20}}>Assessment</Typography></Box>
+            <Box><DyButton buttonText="Next" onClick={this.handleReview} endIcon={<ArrowForwardIosIcon/>}/></Box>
+         </Box>   
           <List component="nav" aria-labelledby="nested-list-subheader">
             {this.props.session.scale.map((row, index)=>(
               <Row 

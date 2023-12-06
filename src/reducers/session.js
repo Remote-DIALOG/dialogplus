@@ -14,6 +14,7 @@ import API from '../utils/api';
 export const getPastSession = createAsyncThunk(
     "session/getPastSession",
     async (args, {rejectWithValue} ) => {   
+        console.log(args)
         try {
             const {data} = await API.post('/session/getPastSession',args); 
             return data;
@@ -86,7 +87,8 @@ export const SessionSlice = createSlice({
             {"name":"Personal safety","value": 0, "help":null, "select":false, open:false,actionitems:[]},
             {"name":"Medication","value":0, "help":null, "select":false, open:false,actionitems:[]},
             {"name":"Practical help","value":0, "help":null, "select":false, open:false,actionitems:[]},
-            {"name":"Meetings","value":0, "help":null, "select":false, open:false,actionitems:[]}
+            {"name":"Meetings","value":0, "help":null, "select":false, open:false,actionitems:[]},
+            {"clinicianID":null}
           ],
           select_scale:[]
     },
@@ -136,7 +138,6 @@ export const SessionSlice = createSlice({
         selectDomain(state, action) {
             let copyofSession = JSON.parse(JSON.stringify(state.current_session))
             let updateselectvalue = copyofSession.find(name=>name.name===action.payload.name)
-            console.log(updateselectvalue)
             updateselectvalue.select = !updateselectvalue.select
             return {
                 ...state,

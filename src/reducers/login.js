@@ -9,7 +9,7 @@ export const getData = createAsyncThunk(
         }catch(error) {
             // console.log(error)
             let message
-            if (error.code=='ERR_NETWORK') {
+            if (error.code ==='ERR_NETWORK') {
                 message = "Unable to connect to server please check your Network"
             } else {
                 message = error.response.data.message;
@@ -36,6 +36,7 @@ export const loginSlice = createSlice({
     extraReducers: {
         [getData.pending]: (state, {payload}) =>  {
             state.isLoading = true;
+            state.message = ""
         },
 
         [getData.fulfilled]: (state, {payload}) => {

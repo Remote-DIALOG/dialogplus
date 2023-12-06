@@ -15,9 +15,7 @@ import InputAdornment from '@mui/material/InputAdornment'
 
 // ** Icons Imports
 import EyeOutline from 'mdi-material-ui/EyeOutline'
-import KeyOutline from 'mdi-material-ui/KeyOutline'
 import EyeOffOutline from 'mdi-material-ui/EyeOffOutline'
-import LockOpenOutline from 'mdi-material-ui/LockOpenOutline'
 
 const TabSecurity = () => {
   // ** States
@@ -31,11 +29,6 @@ const TabSecurity = () => {
   })
 
   // Handle Current Password
-  
-  const handleMouseDownCurrentPassword = event => {
-    event.preventDefault()
-  }
-
   // Handle New Password
   const handleNewPasswordChange = prop => event => {
     setValues({ ...values, [prop]: event.target.value })

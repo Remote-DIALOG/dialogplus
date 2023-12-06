@@ -14,9 +14,19 @@ import FormGroup from '@mui/material/FormGroup';
 import Stack from '@mui/material/Stack';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Result from './result';
+import ProgressBarWithLabel from '../../utils/Progress'
+
 function valuetext(value) {
     return `${value}`;
+}
+function valueLabelFormat(value) {
+  if (value===1) return "totally dissatisifies"
+  if (value===2) return "very dissatisifies"
+  if (value===3) return "fairly dissatisifies"
+  if (value===4) return "in the middle"
+  if (value===5) return "fairly satisfied"
+  if (value===6) return "very satifised"
+  if (value===7) return "totally satisfied"
 }
 class Row extends React.Component {
   constructor(props) {
@@ -28,9 +38,9 @@ class Row extends React.Component {
     
   }
   componentDidUpdate (previousProps, previousState) {
-    if (previousProps.session.current_session!=this.props.session.current_session) {
+    if (previousProps.session.current_session!==this.props.session.current_session) {
         let current_value = this.props.session.current_session.find(scale => scale.name===this.props.row)
-        if (current_value!=undefined && current_value.value>0) {
+        if (current_value!==undefined && current_value.value>0) {
             let percent = current_value.value
             this.setState({progress:percent})
         }
@@ -44,7 +54,7 @@ class Row extends React.Component {
         <ListItem button onClick={(event)=>this.props.setOpen(event,this.props.currentIndex)} divider>
           {this.state.open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           <ListItemText primary={this.props.row} primaryTypographyProps={{'variant':'h6'}}/>
-          {!this.props.open ? <Result progress={this.state.progress}/>: null}
+          {!this.props.open ?  <Box sx={{ width: '25%', marginRight:'10%', marginTop:'0.5%'}}><ProgressBarWithLabel value={(this.props.value/7)*100} label={this.props.value} color='#2196f3'/> </Box>: null}
         </ListItem>
         <Collapse 
           key={this.props.key}
@@ -53,7 +63,7 @@ class Row extends React.Component {
           unmountOnExit
           >
             <Box sx={{ width: '100%', justifyContent:'space-around'}}>
-              <Typography variant='h6'>How satisfied are you with your {this.props.row}?</Typography>
+              <Typography variant='h6'>How satisfied are you with your {(this.props.row)}?</Typography>
               <Slider
                 key={`slider-${this.props.value}`}
                 aria-label="Custom marks"
@@ -65,7 +75,9 @@ class Row extends React.Component {
                 marks={this.props.session.marks}
                 onChange={(event)=>this.props.handleChanges(event,this.props.currentIndex)}
                 name={this.props.row}
-                sx={{width:'95%', marginLeft:5}}
+                sx={{width:'95%', marginLeft:'3%'}}
+                valueLabelDisplay={'on'}
+                valueLabelFormat={valueLabelFormat}
               />
             </Box>
             <Box sx={{width:'100%', justifyContent:'flex-end', display:'flex'}}>

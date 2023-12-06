@@ -1,38 +1,12 @@
-import React,{ useState } from 'react'
+import React from 'react'
 import Grid from '@mui/material/Grid'
-import { styled } from '@mui/material/styles'
 import TextField from '@mui/material/TextField'
 import CardContent from '@mui/material/CardContent'
 import Button from '@mui/material/Button'
 import {connect} from 'react-redux'
-const ImgStyled = styled('img')(({ theme }) => ({
-  width: 120,
-  height: 120,
-  marginRight: theme.spacing(6.25),
-  borderRadius: theme.shape.borderRadius
-}))
-
-const ButtonStyled = styled(Button)(({ theme }) => ({
-  [theme.breakpoints.down('sm')]: {
-    width: '100%',
-    textAlign: 'center'
-  }
-}))
-
-const ResetButtonStyled = styled(Button)(({ theme }) => ({
-  marginLeft: theme.spacing(4.5),
-  [theme.breakpoints.down('sm')]: {
-    width: '100%',
-    marginLeft: 0,
-    textAlign: 'center',
-    marginTop: theme.spacing(4)
-  }
-}))
 
 const TabAccount = (props) => {
   // ** State
-  const [openAlert, setOpenAlert] = useState(true)
-  const [imgSrc, setImgSrc] = useState('/images/1.png')
   return (
     <CardContent>
       <form>

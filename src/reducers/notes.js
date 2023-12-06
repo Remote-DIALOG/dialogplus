@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import API from '../utils/api';
-import { setUserIdAndTime } from "./session";
 export const getNotes = createAsyncThunk(
     "actionitem/getNotes",
     async (args, {rejectWithValue} ) => { 
@@ -9,6 +8,16 @@ export const getNotes = createAsyncThunk(
             return data;
         }catch(error) {
             this.rejectWithValue(error.response.data);
+        }
+    }
+)
+export const getSummary = createAsyncThunk("actionitem/getsummary", 
+    async(args, {rejectWithValue}) => {
+        try{
+            const {data} = await API.post("/session/getsessiondata", args);
+            return data;
+        }catch(error) {
+            this.rejectWithValue(error.response.data)
         }
     }
 )
@@ -27,34 +36,41 @@ export const NotesSlice = createSlice({
     name:"actionitems",
     initialState: {
         isSuccess:false,
-        pastnotes:[],
+        notes:[],
         isLoading:false,
-        currentnotes:[],
-        currentDate:""
+        currentDate:"",
+        summary:[],
+        sessionsummary:[]
     },
     reducers :{
-        addPastNotes(state, action) {
-            return {
-                ...state,
-                pastnotes:state.pastnotes.concat(action.payload)
-            }
-        },
         updateNotesExternal(state, action) {
             return {
                 ...state,
-                currentnotes:action.payload
+                notes:action.payload
             }
         },
         addCurrentNotes(state, action) {
             return {
                 ...state,
-                currentnotes:state.currentnotes.concat(action.payload)
+                notes:state.notes.concat(action.payload)
             }
         },
         setDate(state, action) {
             return {
                 ...state,
                 currentDate:action.payload
+            }
+        },
+        clearsummary(state, action) {
+            return {
+                ...state,
+                summary:[]
+            }
+        },
+        clearnotes(state, action) {
+            return {
+                ...state,
+                notes:[]
             }
         }
     },
@@ -80,7 +96,7 @@ export const NotesSlice = createSlice({
         },
         [getNotes.fulfilled]: (state, {payload}) => {
             state.isLoading = false;
-            state.pastnotes = payload;
+            state.notes = payload;
             state.isSuccess = true;
         },
         [getNotes.rejected]: (state, {payload}) => {
@@ -89,7 +105,21 @@ export const NotesSlice = createSlice({
             state.isSuccess = false;
         },
 
+        [getSummary.pending]: (state, {payload}) => {
+            state.isLoading = true;
+        },
+        [getSummary.fulfilled]: (state, {payload}) => {
+            state.summary = payload;
+            state.isLoading = false;
+            state.isSuccess = true;
+        },
+        [getSummary.rejected]: (state, {payload}) => {
+            state.message = payload;
+            state.isLoading = false;
+            state.isSuccess = false;
+        }
+
     },
 })
-export const {addPastNotes, updateNotesExternal, setDate, addCurrentNotes} = NotesSlice.actions;
+export const {updateNotesExternal, setDate, addCurrentNotes, clearsummary, clearnotes} = NotesSlice.actions;
 export default NotesSlice.reducer;

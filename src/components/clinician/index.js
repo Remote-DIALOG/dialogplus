@@ -14,15 +14,9 @@ import { connect } from "react-redux";
 import {getClients} from '../../reducers/clinician';
 import {getData} from '../../reducers/login';
 import {setClientinfo} from '../../reducers/client';
-import Paper from "@mui/material/Paper";
-import FormDialog from '../client/addnotes';
-import {styled} from '@mui/material/styles';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import AlertDialog from '../../utils/dialogbox';
 
-const Item = styled(Paper)(({ theme }) => ({
-    textAlign: 'left',
-    lineHeight: '60px',
-    padding:'25px'
-  }));
 class Clinicican extends React.Component {
     constructor(props) {
         super(props);
@@ -32,6 +26,7 @@ class Clinicican extends React.Component {
         }
         this.openAddClinet = this.openAddClinet.bind(this)
         this.handlenavigation = this.handlenavigation.bind(this)
+        this.handleExit = this.handleExit.bind(this)
     }
     handlenavigation (row) {
         if (row.id!==undefined) {
@@ -43,13 +38,13 @@ class Clinicican extends React.Component {
             let username = { 
                 "username":this.props.userinfo.username
             }
-
             this.props.getClients(username)
-
-        
     }
     openAddClinet () {
         this.setState({open:!this.state.open})
+    }
+    handleExit () { 
+        this.setState({openDialog:!this.state.openDialog})
     }
     render () {
         let props = {
@@ -60,10 +55,12 @@ class Clinicican extends React.Component {
         return (
            <div>
                <Container maxWidth={false}>
-                   <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
-                    <Box sx={{margin:2}}><Typography variant='h4'>Clients</Typography></Box>
-                    <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.openAddClinet}>New Client</Button>
-                </Box>
+                   
+                <Box sx={{marginTop: '1%',marginBottom: '1%', display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
+                        <Box><Button  variant="contained" onClick={this.handleExit} startIcon={<ArrowBackIosIcon/>}>Back</Button></Box>
+                        <Box><Typography variant='h4'>Clients</Typography></Box>
+                        <Box><Button  variant="contained" onClick={this.openAddClinet}>New Client</Button></Box>
+                    </Box>   
                 <Box>
                     <Table size="medium" padding="none" sx={{"& .MuiTableRow-root:hover": {backgroundColor: "#86b1db"}}}>
                         <TableHead></TableHead>
@@ -77,6 +74,7 @@ class Clinicican extends React.Component {
                         </TableBody>
                     </Table>
                 </Box>
+                <AlertDialog open={this.state.openDialog} nagivate={this.props.nagivate} handleExit = {this.handleExit}/> 
             </Container>
             {form}
            </div>

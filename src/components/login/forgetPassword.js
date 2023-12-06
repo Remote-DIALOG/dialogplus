@@ -26,10 +26,10 @@ class Forgetpassword extends React.Component {
     }
      handleChange (event){
         event.persist();
-        if (event.target.id == "username") {
+        if (event.target.id === "username") {
             this.setState({username:event.target.value})
         }
-        if (event.target.id == "password") {
+        if (event.target.id === "password") {
             this.setState({password:event.target.value})
         }
      }

@@ -1,6 +1,7 @@
 import React from 'react';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
+import DyButton from '../../utils/button'
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -9,7 +10,6 @@ import TableRow from '@mui/material/TableRow';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import ContentPasteIcon from '@mui/icons-material/ContentPaste';
-import EditIcon from '@mui/icons-material/Edit';
 import {connect} from 'react-redux';
 import {setActionItems} from '../../reducers/client';
 import {getSessionDates} from '../../reducers/client';
@@ -18,11 +18,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import AlertDialog from '../../utils/dialogbox';
 import { CircularProgress } from '@mui/material';
 import {initiateSocketConnection, join_room} from '../../reducers/socket';
-import {styled} from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
 import {getNotes, setDate} from '../../reducers/notes';
-
-
 class Client extends React.Component {
     constructor(props) {
         super(props)
@@ -36,31 +32,21 @@ class Client extends React.Component {
     componentDidMount () {
         let clientid = this.props.client.clientinfo.id
         this.props.getSessionDates({"clientid":clientid})
-        if (this.props.userinfo.category=='clinician') {
+        if (this.props.userinfo.category === 'clinician') {
             initiateSocketConnection(this.props.userinfo.token)
             join_room(clientid)
         }
     }
-    handleClick (event, id) {
-        console.log(id)
-        let data = {
-            "clientId": this.props.client.clientinfo.id,
-            "sessiontime": this.props.client.dates[id].replace(/['"]+/g, '')
-        }
-        console.log("-------->", data)
+    handleClick (id) {
         this.props.setDate(this.props.client.dates[id].replace(/['"]+/g, ''))
-        this.props.getNotes(data).then(()=>{
-            this.props.nagivate('/previousactionitem')
-        })
-        
-
+        this.props.nagivate('/items')
     }
     handleSession() {
-        if (this.props.client.dates.length==0) {
+        if (this.props.client.dates.length ===0) {
             this.props.nagivate('/session')
             return;
         }
-        this.props.nagivate('/previousactionitem')
+        this.props.nagivate('/summary')
     }
     handleExit () { 
         this.setState({openDialog:!this.state.openDialog})
@@ -70,20 +56,21 @@ class Client extends React.Component {
         <Container maxWidth={false}>
             { this.props.client.isLoading? <CircularProgress sx={{marginTop:'10%', marginLeft:'50%'}}/> : 
                 <div>
-                <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
-                <Box><Typography variant='h4'>{this.props.client.clientinfo.full_name}</Typography></Box>
-                <Button  variant="contained"sx={{ mt: 3, mb: 2 }} onClick={this.handleSession} endIcon={<ArrowForwardIosIcon/>}>New Session</Button>
-            </Box>
+                   <Box sx={{marginTop: '1%',marginBottom: '1%', display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
+                        <Box><DyButton buttonText="Back" onClick={this.handleExit} startIcon={<ArrowBackIosIcon/>}/></Box>
+                        <Box><Typography variant='h4'fontSize={{lg:30, md:20, sm:20, xs:20}}>{this.props.client.clientinfo.full_name}</Typography></Box>
+                        <Box><DyButton buttonText="New Session"onClick={this.handleSession} endIcon={<ArrowForwardIosIcon/>}/></Box>
+                    </Box>   
             <Box>
-            {this.props.client.dates.length==0 ? <Typography sx={{textAlign:'center'}}>No Session Yet</Typography>: 
-                <Table size="medium" padding='none'>
+            <Box display="flex" alignItems="center" justifyContent="center"><Typography variant='h6'>List of Session with you</Typography></Box>
+            {this.props.client.dates.length === 0 ? <Typography sx={{textAlign:'center'}}>No Session Yet</Typography>: 
+                <Table size="medium" padding='none' sx={{"& .MuiTableRow-root:hover": {backgroundColor: "#86b1db"}}}>
                 <TableHead></TableHead>
                 <TableBody>
                 {this.props.client.dates.map((row, key) => (
                      <TableRow key={key}>
                          <TableCell style={{width: 50}}><ContentPasteIcon/></TableCell>
-                         <TableCell align='left' style={{width:300, fontFamily:'sans-serif'}}><Typography>{row.replace(/['"]+/g, '')}</Typography></TableCell>
-                         <TableCell><div onClick = {(event)=>(this.handleClick(event,key))}><EditIcon/></div></TableCell>
+                         <TableCell onClick = {()=>(this.handleClick(key))} align='left' style={{fontFamily:'sans-serif'}}><Typography>{row.replace(/['"]+/g, '')}</Typography></TableCell>
                      </TableRow>
                  ))}
                  </TableBody>
@@ -91,14 +78,9 @@ class Client extends React.Component {
             }
             </Box>
          <Box sx={{justifyContent:'flex-start'}}>
-             <Button type="submit"
-              variant="outlined"
-              sx={{mt:2, pr:2, mr:3}}
-              onClick={this.handleExit}
-              startIcon={<Box sx={{marginTop:1}}><ArrowBackIosIcon/><ArrowBackIosIcon/></Box>}
-              >
-                 logout
-             </Button>
+             <Button type="submit" variant="outlined" sx={{mt:2, pr:4, mr:2}} onClick={this.handleExit} startIcon={<Box sx={{marginTop:1}}><ArrowBackIosIcon/><ArrowBackIosIcon/></Box>}>
+                logout
+             </Button> 
          </Box>
          <AlertDialog open={this.state.openDialog} nagivate={this.props.nagivate} handleExit = {this.handleExit}/> 
          </div>

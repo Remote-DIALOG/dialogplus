@@ -1,13 +1,13 @@
-import {setCurrentSessionValue, updateHelp, deleteHelp, updateSessionExternal} from './session'
+import {updateSessionExternal} from './session'
 import {updateNotesExternal} from './notes';
 import { io } from "socket.io-client";
 import {store} from '../store'
 const hostname = window.location.hostname
 const protocol = hostname ==='localhost'? 'http://':'https://'
-const port = ':443'
+const port = ':8080s'
 const url = protocol+hostname+port
-// const url = "http://"+"161.23.20.203:443"
-let socket;
+// const url = "http://"+"192.168.29.172:443"
+let socket = null;
 export const initiateSocketConnection = (token) => {
     socket = io(url, {auth: {token,},transports:['websocket']});
     console.log(`Connecting socket...`);
@@ -34,6 +34,12 @@ export const reciveNotes = async function () {
   console.log("recvice is called")
   socket.on("get_notes", (data)=> {
     console.log("data from notes = ", data)
-   store.dispatch(updateNotesExternal(data.currentnotes))
+   store.dispatch(updateNotesExternal(data.notes))
   })
+}
+export const disconnectSocket = async function () {
+  if (socket!=null) {
+    console.log("socket disconnect")
+    socket.emit('forceDisconnect')
+  }
 }

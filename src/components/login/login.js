@@ -19,7 +19,7 @@ class Login extends React.Component {
     constructor(props) {
         super(props);
         this.state  = {
-            error: '',
+            error: this.props.login.message,
             username:'',
             password: ''
         }
@@ -54,7 +54,7 @@ class Login extends React.Component {
             this.props.getClientInfo(this.props.userinfo).then((data) => {
                  this.props.nagivate('/client')
             })
-        }   
+        }
     }
     componentDidMount () {
         this.props.logout()
@@ -62,7 +62,8 @@ class Login extends React.Component {
     render () {
         return (
             <div>
-                {this.props.login.message.length > 0 &&<CustomAlert message={this.props.login.message}/>}
+                {/* {this.state.error.length > 0 ? <CustomAlert message={this.state.error}/ >: null} */}
+                {this.props.login.message && <CustomAlert message={this.props.login.message} />}
                 <Container component="main" maxWidth="xs">
                     <CssBaseline />
                     <Box sx={{marginTop: 8,display: 'flex',flexDirection: 'column',alignItems: 'center',}}>
