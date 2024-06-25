@@ -15,7 +15,9 @@ function FormDialog(props) {
   
   
   const handleSubmit = () => {
-    // console.log(value);
+    if (value.length === 0) {
+      return
+    }
     let notes = {
       "clientId": props.client.id,
       "message" : value,
@@ -23,7 +25,6 @@ function FormDialog(props) {
       "sessiontime":props.sessiontime,
       "created_by":props.userinfo.id
     }
-    console.log("--->", notes)
     props.addCurrentNotes(notes)
     props.addNotes(notes);
     setValue('');
@@ -48,10 +49,9 @@ function FormDialog(props) {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle> Add new notes</DialogTitle>
         <DialogContent>
-        <Box component="form" sx={{'& .MuiTextField-root': { m: 1, width: '70ch' },}} noValidate autoComplete="off">
+        <Box component="form" sx={{'& .MuiTextField-root': { m: 1 }, width:{xs:"500ich"}}} noValidate autoComplete="off">
           <div>
             <TextField
-              id="outlined-multiline-flexible"
               multiline
               maxRows={4}
               value={value}

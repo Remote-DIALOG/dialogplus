@@ -9,6 +9,8 @@ import thunkMiddleware from 'redux-thunk'
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import {get_date} from './utils/get_date'
+import API from './utils/api'
+import {parser} from './utils/parser'
 const persistConfig = {
     key: 'root',
     storage,
@@ -27,19 +29,15 @@ const reducerProxy = (state, action) => {
     return appReducer(state, action);
   }
 
-  const sendLogsToServer = (logs) => {
-    // console.log("----->", JSON.stringify(logs))
-    // axios.post('https://example.com/logs', logs)
-    // .then(response => {
-    //   // Log success message or handle response data as needed
-    // })
-    // .catch(error => {
-    //   // Handle error
-    // });
+  const sendLogsToServer = async(logs) => {
+    let logMessage = parser(logs)
+    if (logMessage == null) {
+      return
+    }
+    const data = await API.post('/session/saveLogs', {"message":logMessage})
   };
   const loggerMiddleware = store => next => action => {
     logger({ getState: store.getState })(next)(action);
-  
     const state = store.getState();
     const logData = {
       action,

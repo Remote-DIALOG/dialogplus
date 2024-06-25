@@ -7,6 +7,7 @@ import Checkbox from '@mui/material/Checkbox';
 // import {selectScale} from '../../reducers/session'
 import {connect} from 'react-redux';
 import Result from './result';
+import {updateStage} from '../../reducers/session';
 
 class Select extends React.Component {
     constructor(props) {
@@ -18,10 +19,7 @@ class Select extends React.Component {
         this.hanleDiscuss = this.hanleDiscuss.bind(this);
     }
     handleChange (index) {
-        // console.log("handle changes")
-        // console.log(event.target)
         let check = this.state.checked
-        // console.log(check, index)
         check[index] = true
         this.setState({checked:check})
     }
@@ -35,10 +33,7 @@ class Select extends React.Component {
         }
         console.log(select_scale)
         this.props.selectScale(select_scale);
-        this.props.nagivate('/discuss')
-    }
-    componentDidMount () {
-        // this.props.saveCurrentSession(this.props.current_session)
+        this.props.updateStage("discuss")
 
     }
     render () {
@@ -67,6 +62,7 @@ const mapStateToProps = (state) => ({
     session:state.SessionReducer,
   })
   const mapDispatchToProps = {
+    updateStage
     // selectScale
   }
 export default connect(mapStateToProps, mapDispatchToProps)(Select);

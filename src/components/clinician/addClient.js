@@ -22,30 +22,40 @@ class ADDClinet extends React.Component {
         }
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.generatePassword = this.generatePassword.bind(this);
     }
     handleChange (event) {
       console.log(event.target.id)
       if (event.target.id === "firstName") {
         this.setState({firstname:event.target.value})
-     }
+      }
      if (event.target.id ===  "lastName") {
          this.setState({lastname:event.target.value})
-     }
+      }
      if (event.target.id === "email") {
       this.setState({email:event.target.value})
-  }
+      }
+    }
+    generatePassword() {
+    
     }
     handleSubmit(e) {
-      e.preventDefault()
-      this.setState({password: Math.random().toString(36).slice(2, 10)})
+      this.generatePassword()
       let data = {
         clinicianId: this.props.userinfo.id, 
         fullname: this.state.firstname + " " +this.state.lastname,
         email: this.state.email,
-        password:this.state.password
+        password:Math.random().toString(36).slice(2, 10)
       }
-      this.props.setClinet(data)
+      let clientinfo = {
+        username:this.state.email,
+        full_name:this.state.firstname + " " +this.state.lastname,
+      }
+      this.props.setClinet(clientinfo)
       this.props.addClinet(data);
+      this.setState({password: data.password})
+      e.preventDefault()
+      // this.props.handles.handleClose()
       
     }
     render() {
@@ -109,7 +119,8 @@ class ADDClinet extends React.Component {
             Create New Client
             </Button>
           </Box>
-          {this.state.password.length > 0 &&<Typography>The genereated password is <strong>{this.state.password}</strong></Typography>}
+          {this.props.error_message.length > 0 &&<Typography>{this.props.error_message} and the password is <strong>{this.state.password}</strong></Typography>}
+          {/* {this.state.password.length > 0 &&<Typography>The genereated password is <strong>{this.state.password}</strong></Typography>} */}
                 </DialogContent>
             </Dialog>
         );
@@ -117,6 +128,7 @@ class ADDClinet extends React.Component {
 }
 const mapStateToProps = (state) => ({
   clinetList:state.clinicianReducer.clinetlist,
+  error_message:state.clinicianReducer.message,
   userinfo:state.loginReducer.userinfo
 })
 const mapDispatchToProps = {

@@ -14,7 +14,7 @@ import { useTheme } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
-import jsPDF from 'jspdf'
+// import jsPDF from 'jspdf'
 import {getSummary} from '../../reducers/notes'
 function SelectDate (props) {
     const [dates, selectdate] = React.useState([]);
@@ -35,19 +35,19 @@ function SelectDate (props) {
     const generatePDF = () => {
         console.log(dates);
         let result = [];
-        const pdf = new jsPDF("p", "pt", "a4");
-        const columns = [
-            "scale",
-            "value",
-            "Action Items",
-          ];
-          var rows = [];
-        for (var i=0; i<dates.length; i++ ){
-            props.getSummary({ "clientId":props.clinet.id, "timestampe": dates[i].replace(/['"]+/g, '')}).then((data)=>{
-                // console.log("------->", data.payload)
-                result.push(data.payload)
-            })
-        }
+        // const pdf = new jsPDF("p", "pt", "a4");
+        // const columns = [
+        //     "scale",
+        //     "value",
+        //     "Action Items",
+        //   ];
+        //   var rows = [];
+        // for (var i=0; i<dates.length; i++ ){
+        //     props.getSummary({ "clientId":props.clinet.id, "timestampe": dates[i].replace(/['"]+/g, '')}).then((data)=>{
+        //         // console.log("------->", data.payload)
+        //         result.push(data.payload)
+        //     })
+        // }
         // console.log("------>", result)
         // for (let i = 0; i < result.length; i++) {
         //     var temp = [
@@ -112,7 +112,7 @@ function SelectDate (props) {
                                     <Box key={index} sx={{display:'flex', flexDirection:"row", width: '100%', justifyContent:'space-around', borderBottom: 1}}>
                                         <FormControlLabel control={<Checkbox onChange={(event)=>{handleCheckbox(event, index)}} />}/> 
                                             <Box sx={{width:"15%", flex:1, display:"flex", flexDirection:"row", alignItems:'center'}}>
-                                                <Typography variant='h6'>{row.replace(/['"]+/g, '')}</Typography>
+                                                {/* <Typography variant='h6'>{row.date.replace(/['"]+/g, '')}</Typography> */}
                                             </Box>
                                     </Box>
                                 ))}

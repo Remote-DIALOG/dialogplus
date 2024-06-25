@@ -9,6 +9,8 @@ import {connect} from 'react-redux';
 import {logout} from '../../reducers/login';
 import AlertDialog from '../../utils/dialogbox';
 import SelectDate from './SelectDate';
+import Avatar from '@mui/material/Avatar';
+
 class NavBar extends React.Component {
     constructor(props) {
         super(props);
@@ -50,10 +52,33 @@ class NavBar extends React.Component {
           <div>
           <Box sx={{ flexGrow: 1 }}>
           <AppBar position="static">
-            <Toolbar>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} href="/">
+            <Toolbar disableGutters>
+            <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            href={"/"+this.props.userinfo.category}
+            sx={{
+              ml: 2,
+              flexGrow:1,
+              // display: { xs: 'none', md: 'flex' },
+              fontFamily: 'sans-serif',
+              fontWeight: 500,
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
+            }}
+          >
+             DIALOG+
+          </Typography>
+              {/* <Typography variant="h6" component="a" sx={{ flexGrow: 1 }} href="#app-bar-with-responsive-menu">
                 DIALOG+
-              </Typography>
+              </Typography> */}
+              {
+                this.props.current_session[13].clinicianID && (
+                  <Avatar sx={{height:'1.2em', width:'1.2em'}}>c</Avatar>
+                )
+              }
               {this.props.islogin && (
                 <div>
                   <IconButton
@@ -83,21 +108,23 @@ class NavBar extends React.Component {
               >
                 <MenuItem onClick={this.handleClose}>Profile</MenuItem>
                 <MenuItem onClick={this.handlelogout}>Logout</MenuItem>
-                <MenuItem onClick={this.handlexportData}>Export Data as Pdf</MenuItem>
+                {/* <MenuItem onClick={this.handlexportData}>Export Data as Pdf</MenuItem> */}
               </Menu>
                 </div>
               )}
             </Toolbar>
           </AppBar>
           <AlertDialog open={this.state.openDialog} nagivate={this.props.nagivate} handleExit = {this.handlelogout}/> 
-          <SelectDate close={this.handlexportData} open={this.state.selectDateDialog}/>
+          {/* <SelectDate close={this.handlexportData} open={this.state.selectDateDialog}/> */}
         </Box>
         </div>
         );
     }
 }
 const mapStateToProps = (state) => ({
-  islogin:state.loginReducer.isLogin
+  islogin:state.loginReducer.isLogin,
+  current_session:state.SessionReducer.current_session,
+  userinfo:state.loginReducer.userinfo
 })
 const mapDispatchToProps = {
   logout

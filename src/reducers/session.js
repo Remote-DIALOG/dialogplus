@@ -14,7 +14,6 @@ import API from '../utils/api';
 export const getPastSession = createAsyncThunk(
     "session/getPastSession",
     async (args, {rejectWithValue} ) => {   
-        console.log(args)
         try {
             const {data} = await API.post('/session/getPastSession',args); 
             return data;
@@ -43,17 +42,17 @@ export const SessionSlice = createSlice({
         isLoading:false,
         scale: ["Mental health", "Physical health", "Job situation", "Accommodation", "Leisure activities", "Relationship with partner/family", "Friendships", "Personal safety", "Medication", "Practical help", "Meetings"],
         marks: [
-            { name:"totally dissatisifies",
+            { name:"totally dissatisified",
               value: 1,
               label: 1,
             },
             {
-              name: "very dissatisifies",
+              name: "very dissatisified",
               value: 2,
               label:2,
             },
             {
-              name:"fairly dissatisifies",
+              name:"fairly dissatisified",
               value: 3,
               label:3,
             },
@@ -88,11 +87,18 @@ export const SessionSlice = createSlice({
             {"name":"Medication","value":0, "help":null, "select":false, open:false,actionitems:[]},
             {"name":"Practical help","value":0, "help":null, "select":false, open:false,actionitems:[]},
             {"name":"Meetings","value":0, "help":null, "select":false, open:false,actionitems:[]},
-            {"clinicianID":null}
+            {"clinicianID":null},
+            {"stage":"summary"}
           ],
           select_scale:[]
     },
     reducers :{
+        updateStage(state, action) {
+            let stringifyCurrentSession = JSON.stringify(state.current_session)
+            let copyofCurrentSession = JSON.parse(stringifyCurrentSession)
+            copyofCurrentSession[14].stage = action.payload
+            return {...state, current_session: copyofCurrentSession}
+        },
         setCurrentSessionValue(state, action) {
             let stringifyCurrentSession = JSON.stringify(state.current_session)
             let copyofCurrentSession = JSON.parse(stringifyCurrentSession)
@@ -178,5 +184,5 @@ export const SessionSlice = createSlice({
         }
     },
 })
-export const {setCurrentSessionValue,checkValue, setUserIdAndTime,updateHelp,deleteHelp, setopen, updateSessionExternal, selectDomain, addActionItems} = SessionSlice.actions;
+export const {setCurrentSessionValue,checkValue, setUserIdAndTime,updateHelp,deleteHelp, setopen, updateSessionExternal, selectDomain, addActionItems, updateStage} = SessionSlice.actions;
 export default SessionSlice.reducer;

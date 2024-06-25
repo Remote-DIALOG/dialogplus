@@ -14,7 +14,18 @@ export const getNotes = createAsyncThunk(
 export const getSummary = createAsyncThunk("actionitem/getsummary", 
     async(args, {rejectWithValue}) => {
         try{
+            console.log("------> getsummary", args)
             const {data} = await API.post("/session/getsessiondata", args);
+            return data;
+        }catch(error) {
+            this.rejectWithValue(error.response.data)
+        }
+    }
+)
+export const getFullSummary = createAsyncThunk("actionitem/getfullsummary", 
+    async(args, {rejectWithValue}) => {
+        try{
+            const {data} = await API.post("/session/getfullsummary", args);
             return data;
         }catch(error) {
             this.rejectWithValue(error.response.data)
@@ -109,7 +120,7 @@ export const NotesSlice = createSlice({
             state.isLoading = true;
         },
         [getSummary.fulfilled]: (state, {payload}) => {
-            state.summary = payload;
+            state.sessionsummary = payload;
             state.isLoading = false;
             state.isSuccess = true;
         },
@@ -117,7 +128,24 @@ export const NotesSlice = createSlice({
             state.message = payload;
             state.isLoading = false;
             state.isSuccess = false;
+        },
+
+        [getFullSummary.pending]: (state, {payload}) => {
+            state.isLoading = true;
+        },
+
+        [getFullSummary.fulfilled]: (state, {payload}) => {
+            state.summary = payload;
+            state.isLoading = false;
+            state.isSuccess = true;
+        },
+        [getFullSummary.rejected]: (state, {payload}) => {
+            state.message = payload;
+            state.isLoading = false;
+            state.isSuccess = false;
         }
+
+
 
     },
 })

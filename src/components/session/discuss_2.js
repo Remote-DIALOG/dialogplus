@@ -4,6 +4,9 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import {connect} from 'react-redux';
+// import Tabs from '@mui/material/Tabs';
+// import Tab from '@mui/material/Tab';
+// import TabPanel from './tabpannel';
 import TextField from '@mui/material/TextField';
 import {addActionItems} from '../../reducers/session';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -24,14 +27,14 @@ function valueLabelFormat(value) {
     if (value===6) return "very satisfied"
     if (value===7) return "totally satisfied"
   }
- class Discuss extends React.Component {
+ class Discuss2 extends React.Component {
      constructor(props) {
          super(props) 
          this.state = {
              index:0,
              actionitems:[{id:1, value:"", domain:""}],
              item:"",
-             page:1,
+             page:2,
          }
          this.handleChange          = this.handleChange.bind(this)
          this.addInput              = this.addInput.bind(this);
@@ -41,7 +44,7 @@ function valueLabelFormat(value) {
          this.handlePageChange      = this.handlePageChange.bind(this)
      }
      handleBackButton() {
-         this.props.updateStage("review")
+         this.props.updateStage("discuss1")
         //  this.props.nagivate('/review')
 
      }
@@ -68,7 +71,7 @@ function valueLabelFormat(value) {
      }
 
      handleFinishButton () {
-        this.props.updateStage("discuss2")
+        this.props.updateStage("discuss3")
         // this.props.nagivate('/actionitems')
      }
      componentDidUpdate (previousProps, previousState) {
@@ -76,10 +79,11 @@ function valueLabelFormat(value) {
         if (JSON.stringify(previousProps.session.current_session)!==JSON.stringify(this.props.session.current_session)) {
           send_message({id:this.props.clientinfo.id, current_session:this.props.session.current_session}) 
         }
+
       }
      render () {
         let selectscale = this.props.current_session.filter(name => name.select===true)
-        let data = selectscale[0]
+        let data = selectscale[1]
         return (
         <Container maxWidth={false}>
             <Box sx={{marginTop: '1%',marginBottom: '1%', display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
@@ -90,7 +94,7 @@ function valueLabelFormat(value) {
                 <Box><DyButton buttonText="Next" onClick={this.handleFinishButton} endIcon={<ArrowForwardIosIcon/>}/></Box>
             </Box>   
             <Box display="flex" alignItems="center" justifyContent="center">
-                <Typography variant='h2' fontSize={{lg:28, md:18, sm:18, xs:18}}   sx={{marginLeft:{xs:'10px', sm:'10px'}, marginTop:{xs:"10px"}}}>{data.name} (1 of 3)</Typography>
+                <Typography variant='h2' fontSize={{lg:28, md:18, sm:18, xs:18}}   sx={{marginLeft:{xs:'10px', sm:'10px'}, marginTop:{xs:"10px"}}}>{data.name}</Typography>
             </Box>
             <div>
                 <div style={{marginRight:"45%", display:"flex", flexDirection:"row", marginTop:"2%"}}>
@@ -143,7 +147,6 @@ function valueLabelFormat(value) {
                     </ul>
             </ol>
             <Box>
-                
             </Box>
     </Container>
   );
@@ -158,4 +161,4 @@ const mapDispatchToProps = {
     addActionItems,
     updateStage
 }
-export default connect(mapStateToProps, mapDispatchToProps)(Discuss);
+export default connect(mapStateToProps, mapDispatchToProps)(Discuss2);

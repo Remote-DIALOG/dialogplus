@@ -6,8 +6,8 @@ const DyButton = ({ buttonText, onClick, startIcon, endIcon }) => {
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   
   const buttonStyle = {
-    fontSize: isSmallScreen ? '12px' : '14px',
-    width: isSmallScreen ? '90px' : '200px',
+    fontSize: isSmallScreen ? '10px' : '14px',
+    width: isSmallScreen ? '90px' : '150px',
     padding: isSmallScreen ? '10px' : '12px'
     
   };

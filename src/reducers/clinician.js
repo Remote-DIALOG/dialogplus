@@ -52,6 +52,22 @@ export const ClinicianSlice = createSlice({
             state.message = payload;
             state.isLoading = false;
             state.isSuccess = false;
+        }, 
+
+
+        [addClinet.pending]: (state, {payload}) =>  {
+            state.isLoading = true;
+        },
+
+        [addClinet.fulfilled]: (state, {payload}) => {
+            state.isLoading = false;
+            state.isSuccess = true;
+            state.message = "The client has been added successfully"
+        },
+        [addClinet.rejected]: (state, {payload}) => {
+            state.message = payload;
+            state.isLoading = false;
+            state.isSuccess = false;
         }
     },
 })
