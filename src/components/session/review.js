@@ -76,7 +76,7 @@ class Review extends React.Component {
         let selected_domain = current_session.filter(domian => domian.select === true)
         
         if (selected_domain.length === 0 ) {
-            this.setState({error:"Please select at least one area to discuss"});
+            this.setState({error:"Please select up to 3 areas to discuss"});
             return;
         }
         // this.props.nagivate('/discuss')
