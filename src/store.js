@@ -34,7 +34,7 @@ const reducerProxy = (state, action) => {
     if (logMessage == null) {
       return
     }
-    const data = await API.post('/session/saveLogs', {"message":logMessage})
+    // const data = await API.post('/session/saveLogs', {"message":logMessage})
   };
   const loggerMiddleware = store => next => action => {
     logger({ getState: store.getState })(next)(action);
