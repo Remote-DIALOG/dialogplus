@@ -55,10 +55,10 @@ class Review extends React.Component {
         this.props.getPastSession({"clientId":this.props.clientinfo.id})
     }
     componentDidUpdate (previousProps, previousState) {
-        recive_message()
-        if (JSON.stringify(previousProps.session.current_session)!==JSON.stringify(this.props.session.current_session)) {
-          send_message({id:this.props.clientinfo.id, current_session:this.props.session.current_session}) 
-        }
+        // recive_message()
+        // if (JSON.stringify(previousProps.session.current_session)!==JSON.stringify(this.props.session.current_session)) {
+        //   send_message({id:this.props.clientinfo.id, current_session:this.props.session.current_session}) 
+        // }
       }
     selectPastSession(event, index) {
         

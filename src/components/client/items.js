@@ -49,7 +49,6 @@ class Items extends React.Component {
     }
     render () {
         let summary = this.props.notes.sessionsummary.slice(0,-2)
-        console.log("---------->", summary)
         return (
                <Container maxWidth={false}>
                    { this.props.client.isLoading? <CircularProgress sx={{marginTop:'10%', marginLeft:'50%'}}/> : (<>
@@ -65,7 +64,7 @@ class Items extends React.Component {
                          {row.actionitems.length > 0 ? (
                             <>
                                 {row.actionitems.map((items, i) => (
-                                     <List sx={{listStyleType: 'disc', listStylePosition: 'outside'}} >
+                                     <List sx={{listStyleType: 'disc', listStylePosition: 'outside'}}  ml={{md:"3%", xs:"3%"}}>
                                         <ListItem sx={{ display: 'list-item'}}>
                                             <ListItemText disableTypography>
                                                 <Typography variant='h2' fontSize={{lg:22, md:18, sm:16, xs:16}}>{items}</Typography>
@@ -78,7 +77,7 @@ class Items extends React.Component {
                         </>
                     ))} 
                      </Item>
-                <Divider/>
+                <Divider/>  
                 <Box sx={{display:'flex', alignItems:'center', justifyContent:'center', marginTop:"3%"}}>
                     <FormDialog sessiontime={this.props.notes.currentDate}/>
                 </Box>

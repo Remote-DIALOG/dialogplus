@@ -65,16 +65,16 @@ class Summary extends React.Component {
                 {this.props.summary.map((row,index)=>(
                     <Box key={index}>
                         <Item key={index} elevation={3}>
-                        <Box key={index} sx={{marginTop:"1%" , paddingTop:'3%'}}>
+                        <Box key={index} sx={{marginTop:"1%" , paddingTop:'1%'}}>
                             <Typography variant="h2" fontSize={{lg:28, md:26, sm:18, xs:18}}>{row[0].created_at}</Typography></Box>
-                        {row[1].actionitem.length >0 ? (
+                            {row[1].actionitem.length >0 ? (
                                 <Box>
                                     {row[1].actionitem.map((items)=>(
-                                        <List  component={Stack} sx={{listStyleType: 'disc', listStylePosition: 'outside'}} ml={{md:"2%", xs:"2%"}}>
+                                        <List  component={Stack} sx={{listStyleType: 'disc', listStylePosition: 'outside'}} ml={{md:"3%", xs:"3%"}}>
                                             <ListItem sx={{ display: 'list-item'}}>
-                                            <ListItemText disableTypography>
-                                                <Typography  variant='h2' fontSize={{lg:22, md:18, sm:16, xs:16}}>{items}</Typography>
-                                            </ListItemText>
+                                                <ListItemText disableTypography>
+                                                    <Typography  variant='h2' fontSize={{lg:22, md:18, sm:16, xs:16}}>{items}</Typography>
+                                                </ListItemText>
                                             </ListItem>
                                         </List>
                                     ))}
