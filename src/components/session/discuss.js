@@ -85,12 +85,12 @@ function valueLabelFormat(value) {
             <Box sx={{marginTop: '1%',marginBottom: '1%', display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
                 <Box><DyButton buttonText="Back" onClick={this.handleBackButton} startIcon={<ArrowBackIosIcon/>}/></Box>
                 <Box>
-                    <Typography variant='h2' fontSize={{lg:30, md:20, sm:20, xs:20}}  sx={{marginLeft:{xs:'10px', sm:'10px'}, marginTop:{xs:"10px"}}}>Discuss</Typography>
+                    <Typography variant='h2' fontSize={{lg:30, md:20, sm:20, xs:20}}  sx={{marginLeft:{xs:'10px', sm:'10px'}, marginTop:{xs:"10px"}}}>Discuss (1 of 3)</Typography>
                 </Box>
                 <Box><DyButton buttonText="Next" onClick={this.handleFinishButton} endIcon={<ArrowForwardIosIcon/>}/></Box>
             </Box>   
             <Box display="flex" alignItems="center" justifyContent="center">
-                <Typography variant='h2' fontSize={{lg:28, md:18, sm:18, xs:18}}   sx={{marginLeft:{xs:'10px', sm:'10px'}, marginTop:{xs:"10px"}}}>{data.name} (1 of 3)</Typography>
+                <Typography variant='h2' fontSize={{lg:28, md:18, sm:18, xs:18}}   sx={{marginLeft:{xs:'10px', sm:'10px'}, marginTop:{xs:"10px"}}}>{data.name} </Typography>
             </Box>
             <div>
                 <div style={{marginRight:"45%", display:"flex", flexDirection:"row", marginTop:"2%"}}>

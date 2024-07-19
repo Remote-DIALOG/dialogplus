@@ -75,14 +75,14 @@ class Assessment extends React.Component {
     this.props.nagivate('/client')
   }
   componentDidMount () {
-    // recive_message()
+    recive_message()
   }
   componentDidUpdate (previousProps, previousState) {
     recive_message()
-    // if (JSON.stringify(previousProps.session.current_session)!==JSON.stringify(this.props.session.current_session)) {
-    //   send_message({id:this.props.clientinfo.id, current_session:this.props.session.current_session}) 
+    if (JSON.stringify(previousProps.session.current_session)!==JSON.stringify(this.props.session.current_session)) {
+      send_message({id:this.props.clientinfo.id, current_session:this.props.session.current_session}) 
       
-    // }
+    }
   }
   handleReview() {
     let userId = this.props.clientinfo.id

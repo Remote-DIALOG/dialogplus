@@ -12,10 +12,10 @@ import {send_message, recive_message} from '../../reducers/socket';
 
 class Session extends React.Component {
     componentDidUpdate (previousProps, previousState) {
-        // recive_message()
-        // if (JSON.stringify(previousProps.current_session)!==JSON.stringify(this.props.current_session)) {
-        //   send_message({id:this.props.clientinfo.id, current_session:this.props.current_session}) 
-        // }
+        recive_message()
+        if (JSON.stringify(previousProps.current_session)!==JSON.stringify(this.props.current_session)) {
+          send_message({id:this.props.clientinfo.id, current_session:this.props.current_session}) 
+        }
       }
     render () {
         let current_stage = this.props.current_session[14].stage
