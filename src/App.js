@@ -64,7 +64,7 @@ class App extends React.Component {
                 <Route path='/discuss' element={<Discuss nagivate={this.props.nagivate}/>}/> */}
 
 
-                <Route path='/actionitems' element={<ActionItems nagivate={this.props.nagivate}/>}/>
+                {/* <Route path='/actionitems' element={<ActionItems nagivate={this.props.nagivate}/>}/> */}
                 
                 <Route path='/forgetpassword' element={<Forgetpassword nagivate={this.props.nagivate}/>}/>
                 <Route path='/profile' element={<Profile nagivate={this.props.nagivate}/>}/>

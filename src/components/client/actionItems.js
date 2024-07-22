@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import {connect} from 'react-redux';
 import {getNotes} from '../../reducers/notes';
-import { saveCurrentSession } from '../../reducers/session';
+import { addActionItems, saveCurrentSession } from '../../reducers/session';
 import { addCurrentNotes } from '../../reducers/notes';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { disconnectSocket } from '../../reducers/socket';
@@ -12,9 +12,12 @@ import DyButton from "../../utils/button";
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
+// import List from '@mui/material/List';
+// import ListItem from '@mui/material/ListItem';
+import {updateStage} from '../../reducers/session'
+import TextField from '@mui/material/TextField';
+
+// import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -29,14 +32,31 @@ class ActionItems extends React.Component {
         super(props);
         this.state = {
             index:0,
+            editable: false
         }
-        this.handlFinish = this.handlFinish.bind(this)
+        this.handlFinish        = this.handlFinish.bind(this);
+        this.handleBackButton   = this.handleBackButton.bind(this);
+        this.handleEdit         = this.handleEdit.bind(this);
+        this.handleDelete       = this.handleDelete.bind(this);
+    }
+    handleDelete (event, actionItemIndex, index) {
+        let selectscale = this.props.current_session.filter(name => name.select===true)
+        let scale = selectscale[index]
+
+        console.log(actionItemIndex, index)
+    }
+    handleEdit (event, actionItemIndex, index) {
+        console.log(actionItemIndex, index)
+        this.setState({editable:true})
     }
     handlFinish () {
         this.props.saveCurrentSession(this.props.current_session)
         this.props.nagivate('/client')
         disconnectSocket()
 
+    }
+    handleBackButton () {
+        this.props.updateStage("discuss")
     }
     componentDidUpdate(previousProps, previousState) {
         // reciveNotes()
@@ -59,20 +79,39 @@ class ActionItems extends React.Component {
           </Box>
           {selectscale.map( (row, index) => (
             <>
-                {row.actionitems.map( (items, ) => (
-                    <Item>
-                        <List sx={{marginTop:"10px"}}>
-                            <ListItem>
-                                <ListItemText disableTypography>
-                                    <Typography variant='h2' fontSize={{lg:22, md:18, sm:16, xs:16}}>{items}</Typography>
-                                </ListItemText>
-                                <Box display="flex" alignItem="center" width="100%">    
-                                    <IconButton edge="end" aria-label="edit"><EditIcon /></IconButton>
-                                    <IconButton edge="end" aria-label="delete"><DeleteIcon /></IconButton>
-                                </Box>
-                            </ListItem>
-                        </List>
-                    </Item>
+                {row.actionitems.map( (items, actionItemIndex) => (
+                      <Item key={index} elevation={3}>
+                        <Box key={index} sx={{margin:"1%" , paddingTop:'1%'}} display="flex" flexDirection="row" justifyContent="space-between">
+                            <Box>
+                                {/* {this.state.editable ? <TextField id="outlined-required" defaultValue={items}/> :<Typography variant='h2' fontSize={{lg:22, md:18, sm:16, xs:16}}>{items}</Typography> } */}
+                                <Typography variant='h2' fontSize={{lg:22, md:18, sm:16, xs:16}}>{items}</Typography>
+                            </Box>
+                            {/* <Box sx={{marginRight:"1%"}}>
+                                <IconButton edge="end" aria-label="edit" onClick={(event) => {this.handleEdit(event, actionItemIndex, index)}}><EditIcon /></IconButton>
+                                <IconButton edge="end" aria-label="delete" onClick={(event) => {this.handleDelete(event, actionItemIndex, index)}}><DeleteIcon /></IconButton>
+                            </Box> */}
+                        </Box>
+                              {/* <Typography variant='h2' fontSize={{lg:22, md:18, sm:16, xs:16}}>{items}</Typography>
+                            </Box>
+                              <Box display="flex" alignItem="left" width="100%">    
+                               <IconButton edge="end" aria-label="edit"><EditIcon /></IconButton>
+                                     <IconButton edge="end" aria-label="delete"><DeleteIcon /></IconButton>
+                                </Box> */}
+                          
+                      </Item>
+                    // <Item>
+                    //     <List sx={{marginTop:"10px"}}>
+                    //         <ListItem>
+                    //             <ListItemText disableTypography>
+                    //                 <Typography variant='h2' fontSize={{lg:22, md:18, sm:16, xs:16}}>{items}</Typography>
+                    //             </ListItemText>
+                    //             <Box display="flex" alignItem="center" width="100%">    
+                    //                 <IconButton edge="end" aria-label="edit"><EditIcon /></IconButton>
+                    //                 <IconButton edge="end" aria-label="delete"><DeleteIcon /></IconButton>
+                    //             </Box>
+                    //         </ListItem>
+                    //     </List>
+                    // </Item>
                     ))}
                     </>
             ))}
@@ -123,6 +162,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
     getNotes,
     saveCurrentSession,
-    addCurrentNotes
+    addCurrentNotes, 
+    updateStage
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ActionItems);

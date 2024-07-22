@@ -8,6 +8,7 @@ import Review from './review';
 import Summary from '../client/summary';
 import Discuss2 from './discuss_2';
 import Discuss3 from './discuss_3';
+import ActionItems from '../client/actionItems';
 import {send_message, recive_message} from '../../reducers/socket';
 
 class Session extends React.Component {
@@ -28,11 +29,11 @@ class Session extends React.Component {
         else if (current_stage === "select") {
             return <Select/>
         }
-        else if (current_stage === "discuss1") {
+        else if (current_stage === "discuss") {
             return <Discuss nagivate={this.props.nagivate}/>
         }
-        else if (current_stage === "discuss2") {
-          return <Discuss2 nagivate={this.props.nagivate}/>
+        else if (current_stage === "actionitems") {
+          return <ActionItems nagivate={this.props.nagivate}/>
       }
       else if (current_stage === "discuss3") {
         return <Discuss3 nagivate={this.props.nagivate}/>

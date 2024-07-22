@@ -80,7 +80,7 @@ class Review extends React.Component {
             return;
         }
         // this.props.nagivate('/discuss')
-        this.props.updateStage("discuss1")
+        this.props.updateStage("discuss")
 
     }
     render () {
