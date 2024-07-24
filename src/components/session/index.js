@@ -37,19 +37,19 @@ class Assessment extends React.Component {
     // this.props.nagivate('/summary')
     this.props.updateStage('summary')
   }
+  
   setOpen(event, index) {
-    // console.log("setOpen is called at index", index)
-    if (index > 0 && index <= 10) {
-      let previous_scale = this.props.session.current_session[index+1]
-      console.log("-------->", previous_scale, index)
+    if (index > 0 && this.props.session.current_session[index + 1].help === null) {
+      this.setState({ errormessage: "Please answer the previous row's help question before proceeding." });
+      return;
     }
-    // let current_scale = this.props.session.current_session[index+2]
-   
-    let name = this.props.session.current_session[index+2].name;
-    let open = !this.props.session.current_session[index+2].open;
-    this.props.setopen({name, open})
-    
+    let name = this.props.session.current_session[index + 2].name;
+    let open = !this.props.session.current_session[index + 2].open;
+    this.props.setopen({ name, open });
+    this.setState({ errormessage: "" });
   }
+
+  
   handleyes (event,currentIndex) {
     let name = this.props.session.current_session[currentIndex+2].name;
     let open = !this.props.session.current_session[currentIndex+2].open;
