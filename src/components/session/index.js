@@ -19,14 +19,16 @@ class Assessment extends React.Component {
     this.state = {
       errormessage:"",
       socket:null,
+      showErrorDialog: false,
     }
-    this.handleReview     = this.handleReview.bind(this)
-    this.handleChanges    = this.handleChanges.bind(this)
-    this.setOpen          = this.setOpen.bind(this)
-    this.handleyes        = this.handleyes.bind(this);
-    this.handleno         = this.handleno.bind(this);
-    this.handleBackButton =  this.handleBackButton.bind(this)
-    this.handleExitButton = this.handleExitButton.bind(this)
+    this.handleReview         = this.handleReview.bind(this)
+    this.handleChanges        = this.handleChanges.bind(this)
+    this.setOpen              = this.setOpen.bind(this)
+    this.handleyes            = this.handleyes.bind(this);
+    this.handleno             = this.handleno.bind(this);
+    this.handleBackButton     =  this.handleBackButton.bind(this)
+    this.handleExitButton     = this.handleExitButton.bind(this)
+    this.handleCloseErrorDialog = this.handleCloseErrorDialog.bind(this)
     
   }
   handleBackButton () {
@@ -37,14 +39,27 @@ class Assessment extends React.Component {
     // this.props.nagivate('/summary')
     this.props.updateStage('summary')
   }
+  handleCloseErrorDialog () {
+    this.setState({showErrorDialog:false})
+  }
   setOpen(event, index) {
-    // console.log("setOpen is called at index", index)
-    if (index > 0 && index <= 10) {
-      let previous_scale = this.props.session.current_session[index+1]
-      console.log("-------->", previous_scale, index)
+    let current_session = this.props.session.current_session;
+    let flag = false
+    let current_scale = this.props.session.current_session[index+2];
+    console.log(current_scale)
+    for (var i=2;i<current_session.length;i++) {
+      if (current_session[i].name != current_scale.name) {
+        if (current_session[i].open === true && current_session[i].help === null) {
+          flag = true;
+          break;
+         
+        }
+      }
     }
-    // let current_scale = this.props.session.current_session[index+2]
-   
+    if (flag) {
+      this.setState({showErrorDialog:true})
+      return;
+    }
     let name = this.props.session.current_session[index+2].name;
     let open = !this.props.session.current_session[index+2].open;
     this.props.setopen({name, open})
@@ -55,21 +70,12 @@ class Assessment extends React.Component {
     let open = !this.props.session.current_session[currentIndex+2].open;
     this.props.updateHelp({name:name})
     this.props.setopen({name, open})
-    // if (currentIndex<10) {
-    //   let nextname = this.props.session.current_session[currentIndex+3].name;
-    //   // this.props.setopen({name:nextname, open:true})
-    // }
-
   }
   handleno (event, currentIndex) {
     let name = this.props.session.current_session[currentIndex+2].name;
     let open = !this.props.session.current_session[currentIndex+2].open;
     this.props.deleteHelp({name:name})
     this.props.setopen({name, open})
-    // if (currentIndex < 12) {
-    //   let nextname = this.props.session.current_session[currentIndex+3].name;
-    //   // this.props.setopen({name:nextname, open:true})
-    // }
   }
   handleExitButton () {
     this.props.nagivate('/client')
@@ -81,7 +87,6 @@ class Assessment extends React.Component {
     recive_message()
     if (JSON.stringify(previousProps.session.current_session)!==JSON.stringify(this.props.session.current_session)) {
       send_message({id:this.props.clientinfo.id, current_session:this.props.session.current_session}) 
-      
     }
   }
   handleReview() {
@@ -108,7 +113,9 @@ class Assessment extends React.Component {
          </Box>   
           <List component="nav" aria-labelledby="nested-list-subheader">
             {this.props.session.scale.map((row, index)=>(
-              <Row 
+              <Row
+              showErrorDialog={this.state.showErrorDialog}
+              handleCloseErrorDialog={this.handleCloseErrorDialog}
               key={index} 
               row={row} 
               handleChanges={this.handleChanges} 

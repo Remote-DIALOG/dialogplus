@@ -44,7 +44,7 @@ function valueLabelFormat(value) {
          this.handlePageChange      = this.handlePageChange.bind(this)
      }
      handleBackButton() {
-         this.props.updateStage("discuss1")
+         this.props.updateStage("discuss")
         //  this.props.nagivate('/review')
 
      }
@@ -71,7 +71,15 @@ function valueLabelFormat(value) {
      }
 
      handleFinishButton () {
-        this.props.updateStage("discuss3")
+        let selectscale = this.props.current_session.filter(name => name.select===true)
+        console.log(selectscale.length, this.state.index)
+        if (selectscale.length >= 3 ) {
+            this.props.updateStage("discuss3")
+        }
+        else {
+            this.props.updateStage("actionitems")
+        }
+        // this.props.updateStage("discuss3")
         // this.props.nagivate('/actionitems')
      }
      componentDidUpdate (previousProps, previousState) {
@@ -89,7 +97,7 @@ function valueLabelFormat(value) {
             <Box sx={{marginTop: '1%',marginBottom: '1%', display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
                 <Box><DyButton buttonText="Back" onClick={this.handleBackButton} startIcon={<ArrowBackIosIcon/>}/></Box>
                 <Box>
-                    <Typography variant='h2' fontSize={{lg:30, md:20, sm:20, xs:20}}  sx={{marginLeft:{xs:'10px', sm:'10px'}, marginTop:{xs:"10px"}}}>Discuss(2 of 3)</Typography>
+                    <Typography variant='h2' fontSize={{lg:30, md:20, sm:20, xs:20}}  sx={{marginLeft:{xs:'10px', sm:'10px'}, marginTop:{xs:"10px"}}}>Discuss(2 of {selectscale.length})</Typography>
                 </Box>
                 <Box><DyButton buttonText="Next" onClick={this.handleFinishButton} endIcon={<ArrowForwardIosIcon/>}/></Box>
             </Box>   

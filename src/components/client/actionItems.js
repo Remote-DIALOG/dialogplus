@@ -56,6 +56,15 @@ class ActionItems extends React.Component {
 
     }
     handleBackButton () {
+        let selectscale = this.props.current_session.filter(name => name.select===true)
+        if (selectscale.length === 3) {
+            this.props.updateStage("discuss3");
+            return;
+        }
+        if (selectscale.length === 2) {
+            this.props.updateStage("discuss2");
+            return;
+        }
         this.props.updateStage("discuss")
     }
     componentDidUpdate(previousProps, previousState) {

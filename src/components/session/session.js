@@ -32,12 +32,16 @@ class Session extends React.Component {
         else if (current_stage === "discuss") {
             return <Discuss nagivate={this.props.nagivate}/>
         }
+        else if (current_stage === "discuss2") {
+          return <Discuss2 nagivate={this.props.nagivate}/>
+        }
+        else if (current_stage === "discuss3") {
+          return <Discuss3 nagivate={this.props.nagivate}/>
+      }
         else if (current_stage === "actionitems") {
           return <ActionItems nagivate={this.props.nagivate}/>
       }
-      else if (current_stage === "discuss3") {
-        return <Discuss3 nagivate={this.props.nagivate}/>
-    }
+     
         else if (current_stage === "review") {
             return <Review nagivate={this.props.nagivate}/>
         }

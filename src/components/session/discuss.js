@@ -31,6 +31,7 @@ function valueLabelFormat(value) {
              index:0,
              actionitems:[{id:1, value:"", domain:""}],
              item:"",
+             page:1,
              
          }
          this.handleChange          = this.handleChange.bind(this)
@@ -70,23 +71,14 @@ function valueLabelFormat(value) {
      }
 
      handleFinishButton () {
-        
         let selectscale = this.props.current_session.filter(name => name.select===true)
         console.log(selectscale.length, this.state.index)
-        if (this.state.index === selectscale.length-1){
-            console.log("----------> in handle finiish buttin")
-            // this.props.updateStage("discuss2")
-            // this.props.nagivate('/actionitems')
-             this.props.updateStage("actionitems")
-            return;
+        if (selectscale.length >= 2 ) {
+            this.props.updateStage("discuss2")
         }
         else {
-            this.setState((prevState, props) => ({
-                index: prevState.index + 1
-            })); 
-        }
-      
-        
+            this.props.updateStage("actionitems")
+        } 
      }
      componentDidUpdate (previousProps, previousState) {
         recive_message()
@@ -96,37 +88,33 @@ function valueLabelFormat(value) {
       }
      render () {
         let selectscale = this.props.current_session.filter(name => name.select===true)
-        let data = selectscale[this.state.index]
+        let data = selectscale[0]
         return (
-            <Container maxWidth={false}>
-               
-                    <>
-                        <Box sx={{marginTop: '1%',marginBottom: '1%', display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
-                        <Box><DyButton buttonText="Back" onClick={this.handleBackButton} startIcon={<ArrowBackIosIcon/>}/></Box>
-                        <Box>
-                            <Typography variant='h2' fontSize={{lg:30, md:20, sm:20, xs:20}}  sx={{marginLeft:{xs:'10px', sm:'10px'}, marginTop:{xs:"10px"}}}>Discuss ({this.state.index+1} of {selectscale.length})</Typography>
-                        </Box>
-                        <Box>
-                            <DyButton buttonText="Next" onClick={this.handleFinishButton} endIcon={<ArrowForwardIosIcon/>}/>
-                        </Box>
-                    </Box>  
-                    <Box display="flex" alignItems="center" justifyContent="center">
-                        <Typography variant='h2' fontSize={{lg:28, md:18, sm:18, xs:18}}   sx={{marginLeft:{xs:'10px', sm:'10px'}, marginTop:{xs:"10px"}}}>{data.name} </Typography>
-                    </Box>
-                    <div>
-                    <div style={{marginRight:"45%", display:"flex", flexDirection:"row", marginTop:"2%"}}>
-                        <div style={{width:"100%"}}>
-                            <div className="progress">
-                                <div className="progress-bar" style={{ width: `${(data.value/7)*100}%`, backgroundColor:'#2196f3'}}>
-                                        <Tooltip title= {valueLabelFormat(data.value)} placement="top" enterTouchDelay={0}>
-                                            <div className="progress-label" style={{backgroundColor:'#2196f3'}}>{data.value}</div>
-                                        </Tooltip>
-                                    </div>
-                                </div>       
+        <Container maxWidth={false}>
+            <Box sx={{marginTop: '1%',marginBottom: '1%', display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
+                <Box><DyButton buttonText="Back" onClick={this.handleBackButton} startIcon={<ArrowBackIosIcon/>}/></Box>
+                <Box>
+                    <Typography variant='h2' fontSize={{lg:30, md:20, sm:20, xs:20}}  sx={{marginLeft:{xs:'10px', sm:'10px'}, marginTop:{xs:"10px"}}}>Discuss(1 of {selectscale.length})</Typography>
+                </Box>
+                <Box><DyButton buttonText="Next" onClick={this.handleFinishButton} endIcon={<ArrowForwardIosIcon/>}/></Box>
+            </Box>   
+            <Box display="flex" alignItems="center" justifyContent="center">
+                <Typography variant='h2' fontSize={{lg:28, md:18, sm:18, xs:18}}   sx={{marginLeft:{xs:'10px', sm:'10px'}, marginTop:{xs:"10px"}}}>{data.name}</Typography>
+            </Box>
+            <div>
+                <div style={{marginRight:"45%", display:"flex", flexDirection:"row", marginTop:"2%"}}>
+                    <div style={{width:"100%"}}>
+                        <div className="progress">
+                            <div className="progress-bar" style={{ width: `${(data.value/7)*100}%`, backgroundColor:'#2196f3'}}>
+                                <Tooltip title= {valueLabelFormat(data.value)} placement="top" enterTouchDelay={0}>
+                                    <div className="progress-label" style={{backgroundColor:'#2196f3'}}>{data.value}</div>
+                                </Tooltip>
                             </div>
-                        </div>
+                        </div>       
                     </div>
-                    <ol type="1">
+                </div>
+            </div>
+            <ol type="1">
                 <Typography><li>Understanding</li></Typography>
                     <ul>
                         <li><Typography>Why this rating and not a lower one?</Typography></li>
@@ -152,20 +140,20 @@ function valueLabelFormat(value) {
                                 placeholder="Write actions here "
                                 onChange={this.handleChange}
                                 sx={{width:'50%'}}
-                                id={this.state.index}
+                                id={this.state.page-1}
                                 value={this.state.item}
                         /> 
-                        <Button id={this.state.index} variant="contained" sx={{marginLeft:'0.5%',height: '55px',}} onClick={(event)=>(this.handleKeyDown(event,this.state.index))}>Add</Button>
+                        <Button id={this.state.page-1} variant="contained" sx={{marginLeft:'0.5%',height: '55px',}} onClick={(event)=>(this.handleKeyDown(event, this.state.page-1))}>Add</Button>
                     </Box>
                     <ul>
                         {data.actionitems.map((text, idx)=>(
                             <li><Typography sx={{marginTop:"0.5%"}}>{text}</Typography></li>
                         ))}
-                        </ul>
-                    </ol>
-                </>
-               
-            </Container>
+                    </ul>
+            </ol>
+            <Box>
+            </Box>
+    </Container>
   );
 }
 }

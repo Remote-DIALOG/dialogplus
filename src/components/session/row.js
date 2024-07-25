@@ -45,7 +45,6 @@ class Row extends React.Component {
     this.state = {
       open: true,
       progress: 0,
-      helpCompleted: false,
       errorMessage: '',
       showErrorDialog: false,
     };
@@ -66,56 +65,14 @@ class Row extends React.Component {
       }
     }
   }
-
-  handleToggle = (event) => {
-    if (!this.state.helpCompleted && !this.state.open) {
-      this.setState({ showErrorDialog: true });
-      return;
-    }
-
-    this.setState((prevState) => ({
-      open: !prevState.open,
-      errorMessage: ''
-    }), () => {
-      this.props.setOpen(event, this.props.currentIndex);
-    });
-  }
-
-  handleHelpChange = (event, checked) => {
-    this.props.handleyes(event, this.props.currentIndex);
-    this.setState({
-      helpCompleted: checked,
-      errorMessage: '',
-    });
-  }
-
-  handleCloseErrorDialog = () => {
-    this.setState({ showErrorDialog: false });
-  }
-
   render() {
     let yes = this.props.help;
     let no = this.props.help === null ? false : !this.props.help;
 
     return (
       <div>
-        <Dialog
-          open={this.state.showErrorDialog}
-          onClose={this.handleCloseErrorDialog}
-        >
-          <DialogTitle>Error</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Please complete the first field before proceeding.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.handleCloseErrorDialog} color="primary">
-              OK
-            </Button>
-          </DialogActions>
-        </Dialog>
-        <ListItem button onClick={this.handleToggle} divider>
+       
+        <ListItem button onClick={(event)=>this.props.setOpen(event,this.props.currentIndex)}  divider>
           {this.state.open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           <ListItemText primary={
             this.props.help === true ? (
@@ -167,11 +124,24 @@ class Row extends React.Component {
           <Box sx={{ width: '100%', justifyContent: 'flex-end', display: 'flex' }}>
             <FormGroup>
               <Stack direction="row" spacing={1} alignItems="center">
-                <FormControlLabel control={<Checkbox onChange={(event) => { this.handleHelpChange(event, true) }} checked={yes} />} label="Yes" />
-                <FormControlLabel control={<Checkbox onChange={(event) => { this.handleHelpChange(event, false) }} checked={no} />} label="No" />
+                <FormControlLabel control={<Checkbox onChange={(event) => {this.props.handleyes(event,this.props.currentIndex) }} checked={yes} />} label="Yes" />
+                <FormControlLabel control={<Checkbox onChange={(event) => { this.props.handleyes(event,this.props.currentIndex) }} checked={no} />} label="No" />
               </Stack>
             </FormGroup>
           </Box>
+          <Dialog open={this.props.showErrorDialog}onClose={this.props.handleCloseErrorDialog}>
+          <DialogTitle>Error</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Please complete the first field before proceeding.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.props.handleCloseErrorDialog}>
+              OK
+            </Button>
+          </DialogActions>
+        </Dialog>
         </Collapse>
       </div>
     );
