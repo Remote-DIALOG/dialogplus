@@ -125,7 +125,7 @@ class Row extends React.Component {
             <FormGroup>
               <Stack direction="row" spacing={1} alignItems="center">
                 <FormControlLabel control={<Checkbox onChange={(event) => {this.props.handleyes(event,this.props.currentIndex) }} checked={yes} />} label="Yes" />
-                <FormControlLabel control={<Checkbox onChange={(event) => { this.props.handleyes(event,this.props.currentIndex) }} checked={no} />} label="No" />
+                <FormControlLabel control={<Checkbox onChange={(event) => {this.props.handleno(event,this.props.currentIndex) }} checked={no} />} label="No" />
               </Stack>
             </FormGroup>
           </Box>

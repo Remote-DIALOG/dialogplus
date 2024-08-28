@@ -165,6 +165,27 @@ export const SessionSlice = createSlice({
                 ...state,
                 current_session:action.payload
             }
+        },
+        resetSession(state, action) {
+            return {
+                ...state,
+                current_session:SessionSlice.initialState.current_session
+            }
+        },
+        deleteActionItem(state, action) {
+            let copyofSession = JSON.parse(JSON.stringify(state.current_session))
+            let updateselectvalue = copyofSession.filter(name => name.select===true)
+            console.log(action)
+            return {
+                ...state
+            }
+
+        },
+        editActionItem(state, action) {
+            return {
+                ...state,
+            }
+
         }
     },
     extraReducers: {
@@ -184,5 +205,5 @@ export const SessionSlice = createSlice({
         }
     },
 })
-export const {setCurrentSessionValue,checkValue, setUserIdAndTime,updateHelp,deleteHelp, setopen, updateSessionExternal, selectDomain, addActionItems, updateStage} = SessionSlice.actions;
+export const {setCurrentSessionValue,checkValue, setUserIdAndTime,updateHelp,deleteHelp, setopen, updateSessionExternal, selectDomain, addActionItems, updateStage, resetSession} = SessionSlice.actions;
 export default SessionSlice.reducer;
