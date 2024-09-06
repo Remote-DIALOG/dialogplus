@@ -70,7 +70,7 @@ class Summary extends React.Component {
                             {row[1].actionitem.length >0 ? (
                                 <Box>
                                     {row[1].actionitem.map((items)=>(
-                                        <List  component={Stack} sx={{listStyleType: 'disc', listStylePosition: 'outside'}} ml={{md:"3%", xs:"3%"}}>
+                                        <List  component={Stack} sx={{listStyleType: 'disc', listStylePosition: 'outside'}} ml={{md:"3%", xs:"9%"}}>
                                             <ListItem sx={{ display: 'list-item'}}>
                                                 <ListItemText disableTypography>
                                                     <Typography  variant='h2' fontSize={{lg:22, md:18, sm:16, xs:16}}>{items}</Typography>

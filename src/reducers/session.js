@@ -174,16 +174,22 @@ export const SessionSlice = createSlice({
         },
         deleteActionItem(state, action) {
             let copyofSession = JSON.parse(JSON.stringify(state.current_session))
-            let updateselectvalue = copyofSession.filter(name => name.select===true)
-            console.log(action)
-            return {
-                ...state
-            }
+            let updateselectvalue = copyofSession.filter(name => name.name===action.payload.name)
+            
+            updateselectvalue[0].actionitems.splice(action.payload.index,1)
 
-        },
-        editActionItem(state, action) {
             return {
                 ...state,
+                current_session:copyofSession
+            }
+        },
+        editActionItem(state, action) {
+            let copyofSession = JSON.parse(JSON.stringify(state.current_session))
+            let updateselectvalue = copyofSession.filter(name => name.name===action.payload.name)
+            updateselectvalue[0].actionitems[action.payload.actionItemIndex] = action.payload.item
+            return {
+                ...state,
+                current_session:copyofSession
             }
 
         }
@@ -205,5 +211,8 @@ export const SessionSlice = createSlice({
         }
     },
 })
-export const {setCurrentSessionValue,checkValue, setUserIdAndTime,updateHelp,deleteHelp, setopen, updateSessionExternal, selectDomain, addActionItems, updateStage, resetSession} = SessionSlice.actions;
+export const {setCurrentSessionValue,checkValue, 
+    setUserIdAndTime,updateHelp,deleteHelp, setopen, 
+    updateSessionExternal, selectDomain, addActionItems, updateStage, 
+    resetSession, editActionItem, deleteActionItem} = SessionSlice.actions;
 export default SessionSlice.reducer;

@@ -55,13 +55,11 @@ function valueLabelFormat(value) {
             const index = event.target.id;
             let selectscale = this.props.current_session.filter(name => name.select===true)
             let scale = selectscale[index]
-            console.log(this.state.item)
             this.props.addActionItems({name:scale.name, actionitems:this.state.item})
             this.setState({item:""})  
      }
      handleChange (event) {
          event.preventDefault()
-         console.log(event.target.value)
          this.setState({item:event.target.value})
      }
      addInput() {
@@ -87,7 +85,6 @@ function valueLabelFormat(value) {
         if (JSON.stringify(previousProps.session.current_session)!==JSON.stringify(this.props.session.current_session)) {
           send_message({id:this.props.clientinfo.id, current_session:this.props.session.current_session}) 
         }
-
       }
      render () {
         let selectscale = this.props.current_session.filter(name => name.select===true)

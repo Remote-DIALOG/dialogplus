@@ -5,8 +5,8 @@ import {store} from '../store'
 const hostname = window.location.hostname
 const protocol = hostname ==='localhost'? 'http://':'https://'
 const port = ':443'
-// const url = protocol+hostname+port
-const url = "http://35.178.194.72:8080"
+const url = protocol+hostname+port
+// const url = "http://35.178.194.72:8080"
 // const url = "http://10.6.54.183:443"
 let socket = null;
 export const initiateSocketConnection = (token) => {

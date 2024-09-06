@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import {connect} from 'react-redux';
 import {getNotes} from '../../reducers/notes';
-import { addActionItems, saveCurrentSession, resetSession } from '../../reducers/session';
+import { addActionItems, saveCurrentSession, resetSession, deleteActionItem, editActionItem } from '../../reducers/session';
 import { addCurrentNotes } from '../../reducers/notes';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { disconnectSocket } from '../../reducers/socket';
@@ -32,24 +32,61 @@ class ActionItems extends React.Component {
         super(props);
         this.state = {
             index:0,
-            editable:[]
+            actionItems:[],
+            text:""
         }
         this.handlFinish        = this.handlFinish.bind(this);
         this.handleBackButton   = this.handleBackButton.bind(this);
         this.handleEdit         = this.handleEdit.bind(this);
         this.handleDelete       = this.handleDelete.bind(this);
+        this.handleDone         = this.handleDone.bind(this);
+        this.handleTextChange   = this.handleTextChange.bind(this)
     }
-    handleDelete (event, actionItemIndex, index) {
-        let selectscale = this.props.current_session.filter(name => name.select===true)
-        let scale = selectscale[index]
 
-        console.log(actionItemIndex, index)
+    handleDone(event, name, index){
+        let updateItems;
+        const newArray = this.state.actionItems.map((item)=>{
+            if (item.name===name && item.actionItemIndex===index) {
+                updateItems = item
+                return {...item, editable:false}
+            }
+            return item
+        })
+        this.setState({actionItems:newArray})
+        this.props.editActionItem(updateItems)
+    }    
+    handleDelete (event, name, index) {
+        const newArray = this.state.actionItems
+        let ind = -1
+        console.log(name, index, this.state.actionItems)
+        for (let i=0;i<this.state.actionItems.length;i++){
+            if (this.state.actionItems[i].name===name && this.state.actionItems[i].actionItemIndex==index){
+                ind = i
+                break
+            }
+        }
+        newArray.splice(ind, 1);
+        this.setState({actionItems:newArray})
+        this.props.deleteActionItem({name, index})
     }
-    handleEdit (event, actionItemIndex, index) {
-        console.log(actionItemIndex, index)
-        // const newArray = this.state.editable.map((index) => [...index]);
-        // newArray[index][actionItemIndex] = true
-        // this.setState({editable:newArray})
+    handleEdit (event, name, index) {
+        const newArray = this.state.actionItems.map((item)=>{
+            if (item.name===name && item.actionItemIndex===index) {
+                return {...item, editable:true}
+            }
+            return item
+        })
+        this.setState({actionItems:newArray})
+        
+    }
+    handleTextChange(event,name, index) {
+        const newArray = this.state.actionItems.map((items)=>{
+            if (items.name===name && items.actionItemIndex===index) {
+                return {...items, item:event.target.value}
+            }
+            return items
+        })
+        this.setState({actionItems:newArray})
     }
     handlFinish () {
         this.props.saveCurrentSession(this.props.current_session)
@@ -71,15 +108,20 @@ class ActionItems extends React.Component {
     }
     componentDidMount () {
         let selectscale = this.props.current_session.filter(name => name.select===true)
-        let editable = []
+        let actionItems = []
         for (let i=0; i<selectscale.length;i++) {
-            editable[i] = []
             for (let j=0;j<selectscale[i].actionitems.length;j++){
-                
-                editable[i][j] = false
+                let temp = {
+                    "item":selectscale[i].actionitems[j],
+                    "name":selectscale[i].name,
+                    "actionItemIndex":j,
+                    "editable":false
+                }
+              
+                actionItems.push(temp)
             }
         }
-        this.setState({editable:editable})
+        this.setState({actionItems:actionItems})
     }
     componentDidUpdate(previousProps, previousState) {
         // console.log("----", this.state.editable)
@@ -93,55 +135,40 @@ class ActionItems extends React.Component {
 
     }
     render () {
-        let selectscale = this.props.current_session.filter(name => name.select===true)
-       
         return (
+          
             <Container maxWidth={false}>
             <Box sx={{marginTop: '1%',marginBottom: '1%', display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
                 <Box><DyButton buttonText="Back" onClick={this.handleBackButton} startIcon={<ArrowBackIosIcon/>}/></Box>
                 <Box><Typography variant='h2' fontSize={{lg:30, md:20, sm:20, xs:20}}  sx={{marginLeft:{xs:'10px', sm:'10px'}, marginTop:{xs:"10px"}}}>Review current action items</Typography></Box>
                 <Box><DyButton buttonText="Finish" onClick={this.handlFinish} endIcon={<ArrowForwardIosIcon/>}/></Box>
           </Box>
-          {selectscale.map( (row, index) => (
-            <>
-                {row.actionitems.map( (items, actionItemIndex) => (
-                   
-                      <Item key={actionItemIndex} elevation={3}>
-                           
-                           
-                           <Box sx={{display: 'flex',alignItems: 'center',justifyContent: 'space-between',padding: 2,marginBottom: 2}}>
-                               {console.log(this.state.editable[index]) }
-                            <Typography variant="h2" fontSize={{lg:28, md:26, sm:18, xs:18}} sx={{ flexGrow: 1 }}>{items}</Typography>
-                                <Box sx={{ display: 'flex', gap: 1 }}>
-                                    <IconButton aria-label="edit" onClick={(event)=>this.handleEdit(event, actionItemIndex, index )}><EditIcon /></IconButton>
-                                    <IconButton aria-label="delete" onClick={(event)=>this.handleDelete(event, actionItemIndex, index)}><DeleteIcon /></IconButton>
-                                </Box>
-                            </Box>
-                          {/* {!this.state.editable[index][actionItemIndex] ? (
-                          <Box sx={{display: 'flex',alignItems: 'center',justifyContent: 'space-between',padding: 2,marginBottom: 2}}>
-                            <Typography variant="h2" fontSize={{lg:28, md:26, sm:18, xs:18}} sx={{ flexGrow: 1 }}>{items}</Typography>
-                                <Box sx={{ display: 'flex', gap: 1 }}>
-                                    <IconButton aria-label="edit" onClick={(event)=>this.handleEdit(event, actionItemIndex, index )}><EditIcon /></IconButton>
-                                    <IconButton aria-label="delete" onClick={(event)=>this.handleDelete(event, actionItemIndex, index)}><DeleteIcon /></IconButton>
-                                </Box>
-                            </Box>)
-                            : (
-                            <Box sx={{display: 'flex',alignItems: 'center',justifyContent: 'space-between',padding: 2,marginBottom: 2}}>
-                                <TextField  label="Outlined"   defaultValue={items}/>
-                                <Box sx={{ display: 'flex', gap: 1 }}>
-                                    <IconButton aria-label="edit" onClick={(event)=>this.handleEdit(event, actionItemIndex, index )}><DoneIcon /></IconButton>
-                                    <IconButton aria-label="delete" onClick={(event)=>this.handleDelete(event, actionItemIndex, index)}><DeleteIcon /></IconButton>
-                                </Box>
-                            </Box>
-                            )    
-                        } */}
-                        
-                          
-                      </Item>
-                    ))}
-                    </>
-            ))}
-            </Container>
+          {this.state.actionItems.map((items, index)=>(
+              <>
+              {items.editable ? (
+                   <Item key={index} elevation={3}>
+                  <Box sx={{display: 'flex',alignItems: 'center',justifyContent: 'space-between',padding: 2,marginBottom: 2}}>
+                  <TextField  fullWidth={true} defaultValue={items.item} onChange={(event)=>this.handleTextChange(event, items.name, items.actionItemIndex )}/>
+                  <Box sx={{ display: 'flex', gap: 1 }}>
+                      <IconButton aria-label="dones" onClick={(event)=>this.handleDone(event, items.name, items.actionItemIndex)}><DoneIcon /></IconButton>
+                      <IconButton aria-label="delete" onClick={(event)=>this.handleDelete(event,  items.name, items.actionItemIndex)}><DeleteIcon /></IconButton>
+                  </Box>
+              </Box>
+              </Item>
+              ): (
+                    <Item key={index} elevation={3}>
+                    <Box sx={{display: 'flex',alignItems: 'center',justifyContent: 'space-between',padding: 2,marginBottom: 2}}>
+                    <Typography variant="h2" fontSize={{lg:28, md:26, sm:18, xs:18}} sx={{ flexGrow: 1 }}>{items.item}</Typography>
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                            <IconButton aria-label="edit" onClick={(event)=>this.handleEdit(event, items.name, items.actionItemIndex )}><EditIcon /></IconButton>
+                            <IconButton aria-label="delete" onClick={(event)=>this.handleDelete(event, items.name, items.actionItemIndex)}><DeleteIcon /></IconButton>
+                        </Box>
+                    </Box>
+                 </Item>
+              )}
+          </>
+          ))}
+        </Container>
         );
     }
 }
@@ -156,6 +183,8 @@ const mapDispatchToProps = {
     saveCurrentSession,
     addCurrentNotes, 
     updateStage,
-    resetSession
+    resetSession,
+    deleteActionItem, 
+    editActionItem
 }
 export default connect(mapStateToProps, mapDispatchToProps)(ActionItems);

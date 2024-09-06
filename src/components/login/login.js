@@ -57,6 +57,7 @@ class Login extends React.Component {
         }
     }
     componentDidMount () {
+        
         this.props.logout()
     }
     render () {
