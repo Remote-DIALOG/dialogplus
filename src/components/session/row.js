@@ -77,7 +77,7 @@ class Row extends React.Component {
           <ListItemText primary={
             this.props.help === true ? (
               <Box sx={{ flexDirection: 'row', display: "flex", paddingRight: 0 }}>
-                <Typography variant='h6' fontSize={{ lg: 20, md: 18, sm: 14, xs: 14 }}>{this.props.row}</Typography>
+                <Typography variant='h6'>{this.props.row}</Typography>
                 <Tooltip title="Help Needed" placement="top" enterTouchDelay={0}><PriorityHighIcon color="primary" /></Tooltip>
               </Box>
             ) : <Typography variant='h6'>{this.props.row}</Typography>

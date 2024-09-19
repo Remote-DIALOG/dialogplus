@@ -11,14 +11,12 @@ import { disconnectSocket } from '../../reducers/socket';
 import DyButton from "../../utils/button";
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-// import List from '@mui/material/List';
-// import ListItem from '@mui/material/ListItem';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import {updateStage} from '../../reducers/session'
 import TextField from '@mui/material/TextField';
+import {send_message, recive_message} from '../../reducers/socket';
 
 import DoneIcon from '@mui/icons-material/Done';
-// import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -107,7 +105,7 @@ class ActionItems extends React.Component {
         this.props.updateStage("discuss")
     }
     componentDidMount () {
-        let selectscale = this.props.current_session.filter(name => name.select===true)
+        let selectscale = this.props.session.current_session.filter(name => name.select===true)
         let actionItems = []
         for (let i=0; i<selectscale.length;i++) {
             for (let j=0;j<selectscale[i].actionitems.length;j++){
@@ -123,7 +121,27 @@ class ActionItems extends React.Component {
         }
         this.setState({actionItems:actionItems})
     }
-    componentDidUpdate(previousProps, previousState) {
+    componentDidUpdate(previousProps, previousState) { 
+        recive_message()
+        if (JSON.stringify(previousProps.session.current_session)!==JSON.stringify(this.props.session.current_session)) {
+          send_message({id:this.props.clientinfo.id, current_session:this.props.session.current_session})
+          let selectscale = this.props.current_session.filter(name => name.select===true)
+          let actionItems = []
+          for (let i=0; i<selectscale.length;i++) {
+              for (let j=0;j<selectscale[i].actionitems.length;j++){
+                  let temp = {
+                      "item":selectscale[i].actionitems[j],
+                      "name":selectscale[i].name,
+                      "actionItemIndex":j,
+                      "editable":false
+                  }
+                
+                  actionItems.push(temp)
+              }
+          }
+          this.setState({actionItems:actionItems})
+        }
+        
         // console.log("----", this.state.editable)
         // reciveNotes()
         // console.log(previousProps.notes)
@@ -176,7 +194,8 @@ const mapStateToProps = (state) => ({
     notes:state.NotesReducer.notes,
     userinfo:state.loginReducer.userinfo,
     current_session:state.SessionReducer.current_session,
-    clientinfo:state.ClientReducer.clientinfo
+    clientinfo:state.ClientReducer.clientinfo,
+    session:state.SessionReducer
 })
 const mapDispatchToProps = {
     getNotes,
