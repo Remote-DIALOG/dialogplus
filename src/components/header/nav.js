@@ -10,7 +10,7 @@ import {logout} from '../../reducers/login';
 import AlertDialog from '../../utils/dialogbox';
 import SelectDate from './SelectDate';
 import Avatar from '@mui/material/Avatar';
-
+import GroupIcon from '@mui/icons-material/Group';
 class NavBar extends React.Component {
     constructor(props) {
         super(props);
@@ -76,7 +76,7 @@ class NavBar extends React.Component {
               </Typography> */}
               {
                 this.props.current_session[13].clinicianID && (
-                  <Avatar sx={{height:'1.2em', width:'1.2em'}}>c</Avatar>
+                  <GroupIcon/>
                 )
               }
               {this.props.islogin && (

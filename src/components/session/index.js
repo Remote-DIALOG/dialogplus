@@ -104,7 +104,7 @@ class Assessment extends React.Component {
     return (
       <Container maxWidth={false}>
         {this.state.errormessage.length > 0 &&<BasicAlerts message={this.state.errormessage}/>}
-        { (this.props.session.current_session[13].clinicianID === null && this.props.userinfo.category==='client') ? <BasicAlerts message={"You are doing this alone Clinician is not present"}/> : null} 
+        { (this.props.session.current_session[13].clinicianID === null && this.props.userinfo.category==='client') ? <BasicAlerts message={"You are doing this alone. Clinician is not present"}/> : null} 
         { (this.props.session.current_session[13].clinicianID !== null && this.props.userinfo.category==='client') ? <BasicAlerts message={"Clinician has joined the session"}/>: null} 
         <Box sx={{marginTop: '1%',marginBottom: '1%', display: 'flex',flexDirection: 'row', justifyContent:'space-between'}}>
             <Box><DyButton buttonText="Back" onClick={this.handleBackButton} startIcon={<ArrowBackIosIcon/>}/></Box>

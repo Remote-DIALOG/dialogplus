@@ -73,6 +73,7 @@ export const SessionSlice = createSlice({
             label: 7,
             }
           ],
+          typing : "",
           current_session: [
             {"created_at":""},
             {"created_by":0},

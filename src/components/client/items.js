@@ -49,6 +49,7 @@ class Items extends React.Component {
     }
     render () {
         let summary = this.props.notes.sessionsummary.slice(0,-2)
+        summary  = summary.reverse()
         return (
                <Container maxWidth={false}>
                    { this.props.client.isLoading? <CircularProgress sx={{marginTop:'10%', marginLeft:'50%'}}/> : (<>
