@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import List from "@mui/material/List";
@@ -14,124 +14,168 @@ import { useTheme } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
-// import jsPDF from 'jspdf'
-import {getSummary} from '../../reducers/notes'
-function SelectDate (props) {
-    const [dates, selectdate] = React.useState([]);
+import jsPDF from 'jspdf';
+import "jspdf-autotable";
+import { getSummary } from '../../reducers/notes';
+
+function SelectDate(props) {
+    const [dates, setSelectedDates] = useState([]);  // Array for selected dates
+    const [result, setResult] = useState([]);        // Data fetched from the backend
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-    React.useEffect(() => {
-        console.log("React compoemt mounted")
-    },[])
+
+    useEffect(() => {
+        console.log("React component mounted");
+    }, []);
+
+    // Handle checkbox selection for dates
     const handleCheckbox = (event, index) => {
-        selectdate( dates => [...dates, props.dates[index]]);
-        console.log(dates)
-    }
-    React.useEffect(() => {
-        return(() => {
-          console.log("Unmounting FunctionalComponent")
-        })
-       },[])
-    const generatePDF = () => {
+        setSelectedDates((prevDates) => {
+            if (event.target.checked) {
+                return [...prevDates, props.dates[index]]; // Add selected date
+            } else {
+                return prevDates.filter((_, i) => i !== index); // Remove unselected date
+            }
+        });
         console.log(dates);
-        let result = [];
-        // const pdf = new jsPDF("p", "pt", "a4");
-        // const columns = [
-        //     "scale",
-        //     "value",
-        //     "Action Items",
-        //   ];
-        //   var rows = [];
-        // for (var i=0; i<dates.length; i++ ){
-        //     props.getSummary({ "clientId":props.clinet.id, "timestampe": dates[i].replace(/['"]+/g, '')}).then((data)=>{
-        //         // console.log("------->", data.payload)
-        //         result.push(data.payload)
-        //     })
-        // }
-        // console.log("------>", result)
-        // for (let i = 0; i < result.length; i++) {
-        //     var temp = [
-        //         result[i].name,
-        //         result[i].value,
-        //         result[i].actionitems
-        //     ];
-        //       rows.push(temp);
-        // }
-        // pdf.text(235, 40, "Table");
-        // pdf.table(columns, rows, {
-        //     startY: 65,
-        //     theme: "grid",
-        //     styles: {
-        //       font: "times",
-        //       halign: "center",
-        //       cellPadding: 3.5,
-        //       lineWidth: 0.5,
-        //       lineColor: [0, 0, 0],
-        //       textColor: [0, 0, 0]
-        //     },
-        //     headStyles: {
-        //       textColor: [0, 0, 0],
-        //       fontStyle: "normal",
-        //       lineWidth: 0.5,
-        //       lineColor: [0, 0, 0],
-        //       fillColor: [166, 204, 247]
-        //     },
-        //     alternateRowStyles: {
-        //       fillColor: [212, 212, 212],
-        //       textColor: [0, 0, 0],
-        //       lineWidth: 0.5,
-        //       lineColor: [0, 0, 0]
-        //     },
-        //     rowStyles: {
-        //       lineWidth: 0.5,
-        //       lineColor: [0, 0, 0]
-        //     },
-        //     tableLineColor: [0, 0, 0]
-        //   });
-        //   console.log(pdf.output("datauristring"));
-        //   pdf.save("pdf");
-       
-        
-        // doc.addPage() // this code creates new page in pdf document
-        // doc.setFont('helvetica')
-       
-        // doc.text(20, 100, 'This is the second page.')
-        // doc.save('sample-file.pdf')
-    }
-        return (
-            <Dialog fullScreen={fullScreen} open={props.open} onClose={props.close}>
-                <DialogTitle>
-                    <Box display="flex" alignItems="center">
-                        <Box flexGrow={1}>Select Date</Box>
-                        <Box><IconButton onClick={props.close}><CloseIcon /></IconButton></Box>
+    };
+
+    // Fetch data for selected dates
+    const fetchData = async () => {
+        let fetchedData = [];
+        for (let i = 0; i < dates.length; i++) {
+            try {
+                const data = await props.getSummary({
+                    clientId: props.client.id,
+                    timestampe: dates[i].date.replace(/['"]+/g, ""),
+                });
+                fetchedData.push(data.payload);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        }
+        setResult(fetchedData); // Store fetched data in result state
+    };
+
+    // Generate PDF
+    const generatePDF = async () => {
+        await fetchData();  // Fetch data before generating the PDF
+        const pdf = new jsPDF("p", "pt", "a4");
+
+        if (result.length === 0) {
+            alert("No data to generate the table. Please try again later.");
+            return;
+        }
+
+        // Columns and Rows for Table
+        const columns = ["Scale", "Value", "Action Items"];
+        let rows = [];
+
+        // Populate the rows
+        result.forEach((item) => {
+            if (item && item.name && item.value && item.actionitems) {
+                rows.push([item.name, item.value, item.actionitems]);
+            }
+        });
+
+        // Check if there are any rows
+        if (rows.length === 0) {
+            alert("No valid data available to populate the table.");
+            return;
+        }
+
+        // Add Title
+        pdf.setFontSize(18);
+        pdf.text(235, 40, "Table");
+
+        // Add Table with AutoTable
+        pdf.autoTable({
+            head: [columns],
+            body: rows,
+            startY: 65,
+            theme: "grid",
+            styles: {
+                font: "times",
+                halign: "center",
+                cellPadding: 3.5,
+                lineWidth: 0.5,
+                lineColor: [0, 0, 0],
+                textColor: [0, 0, 0],
+            },
+            headStyles: {
+                textColor: [0, 0, 0],
+                fontStyle: "normal",
+                lineWidth: 0.5,
+                lineColor: [0, 0, 0],
+                fillColor: [166, 204, 247],
+            },
+            alternateRowStyles: {
+                fillColor: [212, 212, 212],
+                textColor: [0, 0, 0],
+                lineWidth: 0.5,
+                lineColor: [0, 0, 0],
+            },
+            rowStyles: {
+                lineWidth: 0.5,
+                lineColor: [0, 0, 0],
+            },
+            tableLineColor: [0, 0, 0],
+        });
+
+        // Save the PDF with the Table
+        pdf.save("table_with_data.pdf");
+
+        // Add a new page
+        pdf.addPage();
+        pdf.setFont("helvetica");
+        pdf.text(20, 100, "This is the second page.");
+
+        // Save the final PDF
+        pdf.save("Rem-D-SU-Plan-Report.pdf");
+    };
+
+    return (
+        <Dialog fullScreen={fullScreen} open={props.open} onClose={props.close}>
+            <DialogTitle>
+                <Box display="flex" alignItems="center">
+                    <Box flexGrow={1}>Select Date</Box>
+                    <Box>
+                        <IconButton onClick={props.close}>
+                            <CloseIcon />
+                        </IconButton>
+                    </Box>
                 </Box>
-                </DialogTitle>
-                <DialogContent>
-                            <List component="nav" aria-labelledby="nested-list-subheader">
-                                {props.dates.map((row, index)=>(
-                                    <Box key={index} sx={{display:'flex', flexDirection:"row", width: '100%', justifyContent:'space-around', borderBottom: 1}}>
-                                        <FormControlLabel control={<Checkbox onChange={(event)=>{handleCheckbox(event, index)}} />}/> 
-                                            <Box sx={{width:"15%", flex:1, display:"flex", flexDirection:"row", alignItems:'center'}}>
-                                                {/* <Typography variant='h6'>{row.date.replace(/['"]+/g, '')}</Typography> */}
-                                            </Box>
-                                    </Box>
-                                ))}
-                            </List>
-                    </DialogContent>
-                <DialogActions>
-                    <Button variant="outlined" onClick={generatePDF} >For all</Button>
-                    <Button variant="outlined" onClick={generatePDF} >Submit</Button>
-                </DialogActions>
-          </Dialog>
-        )
+            </DialogTitle>
+            <DialogContent>
+                <List component="nav" aria-labelledby="nested-list-subheader">
+                    {props.dates.map((row, index) => (
+                        <Box key={index} sx={{ display: 'flex', flexDirection: "row", width: '100%', justifyContent: 'space-around', borderBottom: 1 }}>
+                            <FormControlLabel
+                                control={<Checkbox onChange={(event) => { handleCheckbox(event, index) }} />}
+                            />
+                            <Box sx={{ width: "15%", flex: 1, display: "flex", flexDirection: "row", alignItems: 'center' }}>
+                                <Typography variant='h6'>{row.date.replace(/['"]+/g, '')}</Typography>
+                            </Box>
+                        </Box>
+                    ))}
+                </List>
+            </DialogContent>
+            <DialogActions>
+                <Button variant="outlined" onClick={generatePDF}>Generate PDF</Button>
+            </DialogActions>
+        </Dialog>
+    );
 }
+
 const mapStateToProps = (state) => ({
-    islogin:state.loginReducer.isLogin,
-    clinet:state.ClientReducer.clientinfo,
-    dates:state.ClientReducer.dates,
-    summary:state.NotesReducer.sessionsummary
-  })
-  const mapDispatchToProps = {
+    isLogin: state.loginReducer.isLogin,
+    client: state.ClientReducer.clientinfo,
+    dates: state.ClientReducer.dates,
+    summary: state.NotesReducer.sessionsummary
+});
+
+const mapDispatchToProps = {
     getSummary
-  }
+};
+
 export default connect(mapStateToProps, mapDispatchToProps)(SelectDate);

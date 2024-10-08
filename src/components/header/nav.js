@@ -108,14 +108,14 @@ class NavBar extends React.Component {
               >
                 <MenuItem onClick={this.handleClose}>Profile</MenuItem>
                 <MenuItem onClick={this.handlelogout}>Logout</MenuItem>
-                {/* <MenuItem onClick={this.handlexportData}>Export Data as Pdf</MenuItem> */}
+                <MenuItem onClick={this.handlexportData}>Export Data as Pdf</MenuItem>
               </Menu>
                 </div>
               )}
             </Toolbar>
           </AppBar>
           <AlertDialog open={this.state.openDialog} nagivate={this.props.nagivate} handleExit = {this.handlelogout}/> 
-          {/* <SelectDate close={this.handlexportData} open={this.state.selectDateDialog}/> */}
+          <SelectDate close={this.handlexportData} open={this.state.selectDateDialog}/>
         </Box>
         </div>
         );
