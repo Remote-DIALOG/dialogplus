@@ -74,7 +74,13 @@ class Items extends React.Component {
                                     </List>
                                 ))}
                             </>
-                            ): null}
+                            ):    <List  component={Stack} sx={{listStyleType: 'disc', listStylePosition: 'outside'}} ml={{md:"2%", xs:"2%"}}>
+                            <ListItem sx={{ display: 'list-item'}}>
+                            <ListItemText disableTypography>
+                                        <Typography  variant='h2' fontSize={{lg:22, md:18, sm:16, xs:16}}>No action items</Typography>
+                                    </ListItemText>
+                            </ListItem>
+                        </List>}
                         </>
                     ))} 
                      </Item>
