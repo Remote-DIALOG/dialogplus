@@ -46,16 +46,17 @@ class Assessment extends React.Component {
     let current_session = this.props.session.current_session;
     let flag = false
     let current_scale = this.props.session.current_session[index+2];
-    console.log(current_scale)
+    
     for (var i=2;i<current_session.length;i++) {
-      if (current_session[i].name != current_scale.name) {
-        if (current_session[i].open === true && current_session[i].help === null) {
+      // if (current_session[i].name != current_scale.name) {
+        if (current_session[i].open === true && current_session[i].value > 0 && current_session[i].help === null) {
           flag = true;
           break;
          
         }
-      }
+      // }
     }
+    console.log("---->", flag)
     if (flag) {
       this.setState({showErrorDialog:true})
       return;
