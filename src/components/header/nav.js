@@ -39,7 +39,6 @@ class NavBar extends React.Component {
       //setTimeout(() =>  this.setState({anchorEl:event.currentTarget}), 1) 
     }
     handleClose () {
-      console.log('handle close')
       //setTimeout(() => this.setState({anchorEl:null}), 1) 
       this.setState({anchorEl:null})
       this.props.nagivate('/profile')
@@ -108,7 +107,7 @@ class NavBar extends React.Component {
               >
                 <MenuItem onClick={this.handleClose}>Profile</MenuItem>
                 <MenuItem onClick={this.handlelogout}>Logout</MenuItem>
-                <MenuItem onClick={this.handlexportData}>Export Data as Pdf</MenuItem>
+                {}<MenuItem onClick={this.handlexportData}>Export Data as Pdf</MenuItem>
               </Menu>
                 </div>
               )}

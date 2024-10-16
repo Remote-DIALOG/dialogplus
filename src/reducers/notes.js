@@ -14,7 +14,6 @@ export const getNotes = createAsyncThunk(
 export const getSummary = createAsyncThunk("actionitem/getsummary", 
     async(args, {rejectWithValue}) => {
         try{
-            console.log("------> getsummary", args)
             const {data} = await API.post("/session/getsessiondata", args);
             return data;
         }catch(error) {

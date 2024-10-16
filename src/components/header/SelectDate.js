@@ -30,42 +30,48 @@ function SelectDate(props) {
 
     // Handle checkbox selection for dates
     const handleCheckbox = (event, index) => {
+        const date = props.dates[index].date
         setSelectedDates((prevDates) => {
             if (event.target.checked) {
-                return [...prevDates, props.dates[index]]; // Add selected date
-            } else {
-                return prevDates.filter((_, i) => i !== index); // Remove unselected date
+                return [...prevDates, date]
             }
-        });
-        console.log(dates);
+            else  {
+                return prevDates.filter((d) => d !== date);
+            }
+        })
     };
 
     // Fetch data for selected dates
     const fetchData = async () => {
         let fetchedData = [];
+        console.log(dates)
         for (let i = 0; i < dates.length; i++) {
             try {
                 const data = await props.getSummary({
                     clientId: props.client.id,
-                    timestampe: dates[i].date.replace(/['"]+/g, ""),
+                    timestampe: dates[i].replace(/['"]+/g, ""),
                 });
+                console.log("----- fetch data",data)
                 fetchedData.push(data.payload);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
         }
-        setResult(fetchedData); // Store fetched data in result state
+        console.log(fetchedData)
+        return fetchedData
+        // setResult(fetchedData); 
+        // console.log(fetchedData) // Store fetched data in result state
     };
 
     // Generate PDF
     const generatePDF = async () => {
-        await fetchData();  // Fetch data before generating the PDF
+        let data = await fetchData(); 
+        console.log(data) // Fetch data before generating the PDF
         const pdf = new jsPDF("p", "pt", "a4");
-
-        if (result.length === 0) {
-            alert("No data to generate the table. Please try again later.");
-            return;
-        }
+        // if (result.length === 0) {
+        //     alert("No data to generate the table. Please try again later.");
+        //     return;
+        // }
 
         // Columns and Rows for Table
         const columns = ["Scale", "Value", "Action Items"];

@@ -56,7 +56,6 @@ class Assessment extends React.Component {
         }
       // }
     }
-    console.log("---->", flag)
     if (flag) {
       this.setState({showErrorDialog:true})
       return;
