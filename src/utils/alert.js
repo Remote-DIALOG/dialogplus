@@ -30,7 +30,7 @@ export default function CustomAlert(props) {
       message={props.message}
       onClose={handleClose}
       anchorOrigin={anchorOrigin}
-      sx={{width:'350px'}}
+      sx={{width:'250px'}}
       // action={action}
     />
   );

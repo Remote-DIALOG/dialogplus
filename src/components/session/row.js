@@ -133,7 +133,7 @@ class Row extends React.Component {
           <DialogTitle>Error</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Please answer the help question.
+              Please answer the "more help" question.
             </DialogContentText>
           </DialogContent>
           <DialogActions>

@@ -57,7 +57,7 @@ function SelectDate(props) {
                 console.error("Error fetching data:", error);
             }
         }
-        console.log(fetchedData)
+        // console.log(fetchedData)
         return fetchedData
         // setResult(fetchedData); 
         // console.log(fetchedData) // Store fetched data in result state
@@ -66,79 +66,102 @@ function SelectDate(props) {
     // Generate PDF
     const generatePDF = async () => {
         let data = await fetchData(); 
-        console.log(data) // Fetch data before generating the PDF
-        const pdf = new jsPDF("p", "pt", "a4");
-        // if (result.length === 0) {
-        //     alert("No data to generate the table. Please try again later.");
-        //     return;
-        // }
+        // console.log(data)
+    const pdf = new jsPDF('p', 'pt', 'a4');
 
-        // Columns and Rows for Table
-        const columns = ["Scale", "Value", "Action Items"];
-        let rows = [];
+    // Set custom font size and title
+    pdf.setFontSize(18);
 
-        // Populate the rows
-        result.forEach((item) => {
-            if (item && item.name && item.value && item.actionitems) {
-                rows.push([item.name, item.value, item.actionitems]);
+    // Draw blue box behind the username header
+    const headerY = 70;
+    const headerHeight = 30;
+    pdf.setFillColor(166, 204, 247);  // Light blue color (RGB)
+    pdf.rect(40, headerY, 500, headerHeight, 'F');  // Draw filled rectangle (x, y, width, height)
+
+    // Add header text - Username
+    pdf.setFontSize(12);
+    pdf.setTextColor(255, 255, 255);  // White text color for contrast with blue background
+    pdf.text('Report', 45, headerY + 20);  // Position the text inside the blue box
+
+    // Set color to black for section titles
+    pdf.setTextColor(0, 0, 0);
+
+    const result = data
+    let currentY = 120;
+
+    // Render each section with corresponding scales and action items
+    
+    result.forEach(x => {
+        x.forEach(item => {
+            console.log("Showing items ");
+            console.log(item);
+    
+            // Check if item has a valid name and value before rendering
+            if (item.name && typeof item.value !== 'undefined') {
+                // Render scale name and value
+                pdf.setFontSize(14);
+                pdf.text(`${item.name}`, 40, currentY);
+                pdf.setFontSize(12);
+                pdf.text(`Score: ${item.value}`, 200, currentY);
+                currentY += 20; // Move down for the next entry
+    
+                // Check if actionitems exist and are not empty
+                if (Array.isArray(item.actionitems) && item.actionitems.length > 0) {
+                    pdf.setFontSize(12);
+                    pdf.text(`Action Items: ${item.actionitems.join(', ')}`, 60, currentY);
+                    currentY += 20; // Move down after action items
+                }
+            } else {
+                console.warn("Invalid item detected", item);
             }
         });
+    });
+    
 
-        // Check if there are any rows
-        if (rows.length === 0) {
-            alert("No valid data available to populate the table.");
-            return;
-        }
+    // Notes section
+    currentY += 30;
+    pdf.setFontSize(14);
+    pdf.text('NOTES:', 40, currentY);
 
-        // Add Title
-        pdf.setFontSize(18);
-        pdf.text(235, 40, "Table");
+    // Empty boxes to indicate placeholder for scores, action items, and notes
+    currentY += 30;
+    const boxStartX = 40;
+    const boxHeight = 60;
+    const boxWidth = 150;
 
-        // Add Table with AutoTable
-        pdf.autoTable({
-            head: [columns],
-            body: rows,
-            startY: 65,
-            theme: "grid",
-            styles: {
-                font: "times",
-                halign: "center",
-                cellPadding: 3.5,
-                lineWidth: 0.5,
-                lineColor: [0, 0, 0],
-                textColor: [0, 0, 0],
-            },
-            headStyles: {
-                textColor: [0, 0, 0],
-                fontStyle: "normal",
-                lineWidth: 0.5,
-                lineColor: [0, 0, 0],
-                fillColor: [166, 204, 247],
-            },
-            alternateRowStyles: {
-                fillColor: [212, 212, 212],
-                textColor: [0, 0, 0],
-                lineWidth: 0.5,
-                lineColor: [0, 0, 0],
-            },
-            rowStyles: {
-                lineWidth: 0.5,
-                lineColor: [0, 0, 0],
-            },
-            tableLineColor: [0, 0, 0],
-        });
+    for (let i = 0; i < 3; i++) {
+        // Score box
+        pdf.setDrawColor(0, 0, 0);
+        pdf.rect(boxStartX, currentY, boxWidth, boxHeight); // Rectangle (x, y, width, height)
 
-        // Save the PDF with the Table
-        pdf.save("table_with_data.pdf");
+        // Action items box
+        pdf.rect(boxStartX + boxWidth + 10, currentY, boxWidth, boxHeight);
 
-        // Add a new page
-        pdf.addPage();
-        pdf.setFont("helvetica");
-        pdf.text(20, 100, "This is the second page.");
+        // Notes box
+        pdf.rect(boxStartX + 2 * (boxWidth + 10), currentY, boxWidth, boxHeight);
 
-        // Save the final PDF
-        pdf.save("Rem-D-SU-Plan-Report.pdf");
-    };
+        currentY += boxHeight + 20;
+    }
+
+    // Add session dates
+    currentY += 30;
+    const sessionDates = [
+        'Date of most recent session (e.g. 7th March 2024)',
+        'Date of second most recent session',
+        'Date of third most recent session'
+    ];
+
+    sessionDates.forEach((date) => {
+        pdf.text(date, 40, currentY);
+        currentY += 20;
+    });
+
+    // Save the PDF
+    pdf.save('Styled_Dialog_Plus_Report.pdf');
+};
+
+    
+    
 
     return (
         <Dialog fullScreen={fullScreen} open={props.open} onClose={props.close}>
