@@ -15,12 +15,43 @@ import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import jsPDF from 'jspdf';
-import "jspdf-autotable";
+import autoTable from 'jspdf-autotable'
+import {PDFViewer, Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { getSummary } from '../../reducers/notes';
+import logo from './dialogplus.jpg'
 
+const styles = StyleSheet.create({
+    page: {
+      flexDirection: 'column',
+      paddingTop:5,
+      paddingHorizontal:20
+    },
+    username: {
+      fontSize: 12,
+      marginTop: 45,
+    },
+    title:{
+      backgroundColor:'#4472C4',
+      with:'100%',
+      height:50,
+      marginTop:10
+    },
+    image: {
+      marginHorizontal: 500,
+      marginTop:0,
+      height:45,
+      width:50
+    },
+    sessiondates:{
+      marginTop:1
+    }
+  });
 function SelectDate(props) {
     const [dates, setSelectedDates] = useState([]);  // Array for selected dates
-    const [result, setResult] = useState([]);        // Data fetched from the backend
+    const [result, setResult] = useState([]);
+    const [title, settitle] = React.useState('')
+    const [showpdf, setshowpdf] = React.useState(false)
+    const [sessiondata, setsessiondata] = React.useState(null)        // Data fetched from the backend
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -51,7 +82,6 @@ function SelectDate(props) {
                     clientId: props.client.id,
                     timestampe: dates[i].replace(/['"]+/g, ""),
                 });
-                console.log("----- fetch data",data)
                 fetchedData.push(data.payload);
             } catch (error) {
                 console.error("Error fetching data:", error);
@@ -64,105 +94,12 @@ function SelectDate(props) {
     };
 
     // Generate PDF
-    const generatePDF = async () => {
+    const generatePDF = async (event, username) => {
         let data = await fetchData(); 
-        // console.log(data)
-    const pdf = new jsPDF('p', 'pt', 'a4');
-
-    // Set custom font size and title
-    pdf.setFontSize(18);
-
-    // Draw blue box behind the username header
-    const headerY = 70;
-    const headerHeight = 30;
-    pdf.setFillColor(166, 204, 247);  // Light blue color (RGB)
-    pdf.rect(40, headerY, 500, headerHeight, 'F');  // Draw filled rectangle (x, y, width, height)
-
-    // Add header text - Username
-    pdf.setFontSize(12);
-    pdf.setTextColor(255, 255, 255);  // White text color for contrast with blue background
-    pdf.text('Report', 45, headerY + 20);  // Position the text inside the blue box
-
-    // Set color to black for section titles
-    pdf.setTextColor(0, 0, 0);
-
-    const result = data
-    let currentY = 120;
-
-    // Render each section with corresponding scales and action items
-    
-    result.forEach(x => {
-        x.forEach(item => {
-            console.log("Showing items ");
-            console.log(item);
-    
-            // Check if item has a valid name and value before rendering
-            if (item.name && typeof item.value !== 'undefined') {
-                // Render scale name and value
-                pdf.setFontSize(14);
-                pdf.text(`${item.name}`, 40, currentY);
-                pdf.setFontSize(12);
-                pdf.text(`Score: ${item.value}`, 200, currentY);
-                currentY += 20; // Move down for the next entry
-    
-                // Check if actionitems exist and are not empty
-                if (Array.isArray(item.actionitems) && item.actionitems.length > 0) {
-                    pdf.setFontSize(12);
-                    pdf.text(`Action Items: ${item.actionitems.join(', ')}`, 60, currentY);
-                    currentY += 20; // Move down after action items
-                }
-            } else {
-                console.warn("Invalid item detected", item);
-            }
-        });
-    });
-    
-
-    // Notes section
-    currentY += 30;
-    pdf.setFontSize(14);
-    pdf.text('NOTES:', 40, currentY);
-
-    // Empty boxes to indicate placeholder for scores, action items, and notes
-    currentY += 30;
-    const boxStartX = 40;
-    const boxHeight = 60;
-    const boxWidth = 150;
-
-    for (let i = 0; i < 3; i++) {
-        // Score box
-        pdf.setDrawColor(0, 0, 0);
-        pdf.rect(boxStartX, currentY, boxWidth, boxHeight); // Rectangle (x, y, width, height)
-
-        // Action items box
-        pdf.rect(boxStartX + boxWidth + 10, currentY, boxWidth, boxHeight);
-
-        // Notes box
-        pdf.rect(boxStartX + 2 * (boxWidth + 10), currentY, boxWidth, boxHeight);
-
-        currentY += boxHeight + 20;
-    }
-
-    // Add session dates
-    currentY += 30;
-    const sessionDates = [
-        'Date of most recent session (e.g. 7th March 2024)',
-        'Date of second most recent session',
-        'Date of third most recent session'
-    ];
-
-    sessionDates.forEach((date) => {
-        pdf.text(date, 40, currentY);
-        currentY += 20;
-    });
-
-    // Save the PDF
-    pdf.save('Styled_Dialog_Plus_Report.pdf');
-};
-
-    
-    
-
+        setshowpdf(true)
+        settitle(username)
+        setsessiondata(data)    
+    };
     return (
         <Dialog fullScreen={fullScreen} open={props.open} onClose={props.close}>
             <DialogTitle>
@@ -188,9 +125,77 @@ function SelectDate(props) {
                         </Box>
                     ))}
                 </List>
+               
             </DialogContent>
             <DialogActions>
-                <Button variant="outlined" onClick={generatePDF}>Generate PDF</Button>
+            {showpdf && (
+                <div>
+                    <PDFViewer width="100%" height="500px">
+            <Document>
+              <Page style={styles.page}>
+                <Text style={styles.username}>{title}</Text>
+                <Image style={styles.image} src={logo}  />
+                <View style={styles.title}>
+                  <Text style={{marginTop:10, color:'white'}}>Remote DIALOG+ Plan</Text>
+                </View>
+                {sessiondata.map(function(data, index){
+                  return (
+                    <View>
+                      <View style={{ backgroundColor:'#4472C4',with:'100%',height:40, marginTop:10}}>
+                        <Text style={{marginTop:10, color:'white', fontSize:11}}>{data[12].created_at}</Text>
+                      </View>
+                      <View style={{flexDirection:'row', justifyContent:'space-between', border: "1px solid black"}}>
+                        <View style={{flexDirection:'column', marginLeft:10, marginTop:10}}>
+                          <Text style={{marginTop:1}}>{data[0].name}</Text>
+                          <Text style={{marginTop:1}}>{data[1].name}</Text>
+                          <Text style={{marginTop:1}}>{data[2].name}</Text>
+                          <Text style={{marginTop:1}}>{data[3].name}</Text>
+                          <Text style={{marginTop:1}}>{data[4].name}</Text>
+                          <Text style={{marginTop:1}}>{data[5].name}</Text>
+                          <Text style={{marginTop:1}}>{data[6].name}</Text>
+                          <Text style={{marginTop:1}}>{data[7].name}</Text>
+                          <Text style={{marginTop:1}}>{data[8].name}</Text>
+                          <Text style={{marginTop:1}}>{data[9].name}</Text>
+                          <Text style={{marginTop:1}}>{data[10].name}</Text>
+                        </View>
+                        <View style={{flexDirection:'column',  marginLeft:10, marginTop:10}}>
+                        <Text style={{marginTop:1}}>{data[0].value}</Text>
+                          <Text style={{marginTop:1}}>{data[1].value}</Text>
+                          <Text style={{marginTop:1}}>{data[2].value}</Text>
+                          <Text style={{marginTop:1}}>{data[3].value}</Text>
+                          <Text style={{marginTop:1}}>{data[4].value}</Text>
+                          <Text style={{marginTop:1}}>{data[5].value}</Text>
+                          <Text style={{marginTop:1}}>{data[6].value}</Text>
+                          <Text style={{marginTop:1}}>{data[7].value}</Text>
+                          <Text style={{marginTop:1}}>{data[8].value}</Text>
+                          <Text style={{marginTop:1}}>{data[9].value}</Text>
+                          <Text style={{marginTop:1}}>{data[10].value}</Text>
+                        </View>
+                        <View>
+                        </View>
+                        <View style={{flexDirection:'column',  marginRight:10, marginTop:10}}>
+                        <Text style={{marginTop:1}}>{data[0].select}</Text>
+                          <Text style={{marginTop:1}}>{data[1].select == true ? "Yes": "No"}</Text>
+                          <Text style={{marginTop:1}}>{data[2].select == true ? "Yes": "No"}</Text>
+                          <Text style={{marginTop:1}}>{data[3].select == true ? "Yes": "No"}</Text>
+                          <Text style={{marginTop:1}}>{data[4].select == true ? "Yes": "No"}</Text>
+                          <Text style={{marginTop:1}}>{data[5].select == true ? "Yes": "No"}</Text>
+                          <Text style={{marginTop:1}}>{data[6].select == true ? "Yes": "No"}</Text>
+                          <Text style={{marginTop:1}}>{data[7].select == true ? "Yes": "No"}</Text>
+                          <Text style={{marginTop:1}}>{data[8].select == true ? "Yes": "No"}</Text>
+                          <Text style={{marginTop:1}}>{data[9].select== true ? "Yes": "No"}</Text>
+                          <Text style={{marginTop:1}}>{data[10].select == true ? "Yes": "No"}</Text>
+                        </View>
+                      </View>
+                  </View>
+                  )
+                })}
+              </Page>
+            </Document>
+          </PDFViewer>
+                </div>
+            )}
+                <Button variant="outlined" onClick={(event)=>generatePDF(event, props.client.full_name)}>Generate PDF</Button>
             </DialogActions>
         </Dialog>
     );
