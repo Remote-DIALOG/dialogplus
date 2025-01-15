@@ -9,9 +9,9 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import {send_message, recive_message} from '../../reducers/socket';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
-import {saveCurrentSession,getPastSession, selectDomain, updateStage} from '../../reducers/session'
+import {saveCurrentSession,getPastSession, selectDomain, updateStage} from '../../reducers/session';
 import {connect} from 'react-redux';
-import ProgressBarWithLabel from '../../utils/Progress'
+import ProgressBarWithLabel from '../../utils/Progress';
 import CustomAlert from '../../utils/alert';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
@@ -20,71 +20,65 @@ import DyButton from "../../utils/button";
 
 class Review extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             pastSession:"",
             flag:false,
             setIndex:null, 
             error:""
-        }
-        this.handleSelect = this.handleSelect.bind(this)
-        this.selectPastSession = this.selectPastSession.bind(this)
-        this.handleCheckbox = this.handleCheckbox.bind(this)
-        this.handleBackButton = this.handleBackButton.bind(this)
+        };
+        this.handleSelect = this.handleSelect.bind(this);
+        this.selectPastSession = this.selectPastSession.bind(this);
+        this.handleCheckbox = this.handleCheckbox.bind(this);
+        this.handleBackButton = this.handleBackButton.bind(this);
     }
     handleBackButton() {
-        // this.props.nagivate('/session')
-        this.props.updateStage("assessment")
+        this.props.updateStage("assessment");
     }
     handleCheckbox (event, index) {
-        const current_session = this.props.current_session.slice(2)
-        let selected_domain = current_session.filter(domian => domian.select === true)
-        console.log(selected_domain)
+        const current_session = this.props.current_session.slice(2);
+        let selected_domain = current_session.filter(domian => domian.select === true);
         if (current_session[index].select === true) {
-            this.props.selectDomain({name:current_session[index].name})
+            this.props.selectDomain({name:current_session[index].name});
             return;
         }
         if (selected_domain.length >=3) {
             this.setState({error:"You cannot select more than 3 areas"});
             return;
         }
-        this.props.selectDomain({name:current_session[index].name})
-        
+        this.props.selectDomain({name:current_session[index].name});
     }
     componentDidMount () {
-        this.props.getPastSession({"clientId":this.props.clientinfo.id})
+        this.props.getPastSession({"clientId":this.props.clientinfo.id});
     }
     componentDidUpdate (previousProps, previousState) {
-        recive_message()
+        recive_message();
         if (JSON.stringify(previousProps.session.current_session)!==JSON.stringify(this.props.session.current_session)) {
-          send_message({id:this.props.clientinfo.id, current_session:this.props.session.current_session}) 
+          send_message({id:this.props.clientinfo.id, current_session:this.props.session.current_session}); 
         }
       }
     selectPastSession(event, index) {
-        
-       let pastsession = this.props.session.past_session[index]
+       let pastsession = this.props.session.past_session[index];
        if (this.state.setIndex === index) {
            this.setState({pastSession:""});
-           this.setState({setIndex:null})
+           this.setState({setIndex:null});
            return;
        }
-       this.setState({pastSession:pastsession})
-       this.setState({setIndex:index})
+       this.setState({pastSession:pastsession});
+       this.setState({setIndex:index});
     }
     handleSelect () {
-        const current_session = this.props.current_session.slice(2)
-        let selected_domain = current_session.filter(domian => domian.select === true)
+        const current_session = this.props.current_session.slice(2);
+        let selected_domain = current_session.filter(domian => domian.select === true);
         
         if (selected_domain.length === 0 ) {
             this.setState({error:"Please select up to 3 areas to discuss"});
             return;
         }
-        // this.props.nagivate('/discuss')
-        this.props.updateStage("discuss")
-
+        this.props.updateStage("discuss");
     }
     render () {
-        const current_session = this.props.current_session.slice(2)
+        const current_session = this.props.current_session.slice(2);
         return (
             <Container maxWidth={false}>
                  {this.state.error.length > 0 ? <CustomAlert message={this.state.error}/>: null}
@@ -95,7 +89,6 @@ class Review extends React.Component {
                     </Box>
 
                     <Box><DyButton buttonText="Next" onClick={this.handleSelect} endIcon={<ArrowForwardIosIcon/>}/></Box>
-                    
                 </Box>   
                 <Box>
                     <Typography variant='h2' textAlign={'center'} fontSize={{lg:28, md:26, sm:18, xs:18}}>
@@ -125,9 +118,21 @@ class Review extends React.Component {
                                     </Box>
                                     <Stack spacing={2} sx={{flex:1, marginTop:'0.25%', marginRight:"10%", marginLeft:"30%", paddingTop:"1%", paddingBottom:"1%"}}>
                                         <Box>
-                                            <ProgressBarWithLabel value={(current_session[index].value/7)*100} label={current_session[index].value} color='#2196f3'/>
+                                            <ProgressBarWithLabel
+                                                value={(current_session[index].value / 7) * 100}
+                                                label={current_session[index].value > 0 ? current_session[index].value : null}
+                                                color={current_session[index].value > 0 ? '#2196f3' : '#DCDCDC'}
+                                            />
                                         </Box>
-                                        {this.state.pastSession==="" ? null:  <Box><ProgressBarWithLabel value={(this.state.pastSession[index+2].value/7)*100} label={this.state.pastSession[index+2].value} color='#FFA500'/></Box>}
+                                        {this.state.pastSession === "" ? null : (
+                                            <Box>
+                                                <ProgressBarWithLabel
+                                                    value={(this.state.pastSession[index + 2].value / 7) * 100}
+                                                    label={this.state.pastSession[index + 2].value > 0 ? this.state.pastSession[index + 2].value : null}
+                                                    color={this.state.pastSession[index + 2].value > 0 ? '#FFA500' : '#DCDCDC'}
+                                                />
+                                            </Box>
+                                        )}
                                     </Stack>
                             </Box>
                         ))}
@@ -141,12 +146,11 @@ const mapStateToProps = (state) => ({
     current_session:state.SessionReducer.current_session,
     session:state.SessionReducer,
     clientinfo:state.ClientReducer.clientinfo
-  })
+  });
   const mapDispatchToProps = {
       saveCurrentSession,
       getPastSession,
       selectDomain,
       updateStage
-  }
-// export default connect(mapStateToProps, mapDispatchToProps)(Review);
+  };
 export default connect(mapStateToProps, mapDispatchToProps)(Review);

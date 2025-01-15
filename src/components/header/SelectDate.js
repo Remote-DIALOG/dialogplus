@@ -14,44 +14,52 @@ import { useTheme } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable'
-import {PDFViewer, Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
+import { PDFViewer, Document, Page, Text, View, StyleSheet, Image } from '@react-pdf/renderer';
 import { getSummary } from '../../reducers/notes';
-import logo from './dialogplus.jpg'
+import logo from './dialogplus.jpg';
 
 const styles = StyleSheet.create({
     page: {
-      flexDirection: 'column',
-      paddingTop:5,
-      paddingHorizontal:20
+        flexDirection: 'column',
+        paddingTop: 5,
+        paddingHorizontal: 20
     },
     username: {
-      fontSize: 12,
-      marginTop: 45,
+        fontSize: 12,
+        marginTop: 45,
     },
-    title:{
-      backgroundColor:'#4472C4',
-      with:'100%',
-      height:50,
-      marginTop:10
+    title: {
+        backgroundColor: '#4472C4',
+        width: '100%',
+        height: 50,
+        marginTop: 10
     },
     image: {
-      marginHorizontal: 500,
-      marginTop:0,
-      height:45,
-      width:50
+        marginHorizontal: 500,
+        marginTop: 0,
+        height: 45,
+        width: 50
     },
-    sessiondates:{
-      marginTop:1
+    sessiondates: {
+        marginTop: 1
+    },
+    tableRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 5
+    },
+    tableHeader: {
+        fontWeight: 'bold',
+        marginBottom: 5
     }
-  });
+});
+
 function SelectDate(props) {
-    const [dates, setSelectedDates] = useState([]);  // Array for selected dates
+    const [dates, setSelectedDates] = useState([]); // Array for selected dates
     const [result, setResult] = useState([]);
-    const [title, settitle] = React.useState('')
-    const [showpdf, setshowpdf] = React.useState(false)
-    const [sessiondata, setsessiondata] = React.useState(null)        // Data fetched from the backend
+    const [title, setTitle] = useState('');
+    const [showPDF, setShowPDF] = useState(false);
+    const [sessionData, setSessionData] = useState(null); // Data fetched from the backend
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -61,21 +69,19 @@ function SelectDate(props) {
 
     // Handle checkbox selection for dates
     const handleCheckbox = (event, index) => {
-        const date = props.dates[index].date
+        const date = props.dates[index].date;
         setSelectedDates((prevDates) => {
             if (event.target.checked) {
-                return [...prevDates, date]
-            }
-            else  {
+                return [...prevDates, date];
+            } else {
                 return prevDates.filter((d) => d !== date);
             }
-        })
+        });
     };
 
     // Fetch data for selected dates
     const fetchData = async () => {
         let fetchedData = [];
-        console.log(dates)
         for (let i = 0; i < dates.length; i++) {
             try {
                 const data = await props.getSummary({
@@ -87,19 +93,17 @@ function SelectDate(props) {
                 console.error("Error fetching data:", error);
             }
         }
-        // console.log(fetchedData)
-        return fetchedData
-        // setResult(fetchedData); 
-        // console.log(fetchedData) // Store fetched data in result state
+        return fetchedData;
     };
 
     // Generate PDF
     const generatePDF = async (event, username) => {
-        let data = await fetchData(); 
-        setshowpdf(true)
-        settitle(username)
-        setsessiondata(data)    
+        let data = await fetchData();
+        setShowPDF(true);
+        setTitle(username);
+        setSessionData(data);
     };
+
     return (
         <Dialog fullScreen={fullScreen} open={props.open} onClose={props.close}>
             <DialogTitle>
@@ -117,7 +121,7 @@ function SelectDate(props) {
                     {props.dates.map((row, index) => (
                         <Box key={index} sx={{ display: 'flex', flexDirection: "row", width: '100%', justifyContent: 'space-around', borderBottom: 1 }}>
                             <FormControlLabel
-                                control={<Checkbox onChange={(event) => { handleCheckbox(event, index) }} />}
+                                control={<Checkbox onChange={(event) => { handleCheckbox(event, index); }} />}
                             />
                             <Box sx={{ width: "15%", flex: 1, display: "flex", flexDirection: "row", alignItems: 'center' }}>
                                 <Typography variant='h6'>{row.date.replace(/['"]+/g, '')}</Typography>
@@ -125,77 +129,41 @@ function SelectDate(props) {
                         </Box>
                     ))}
                 </List>
-               
             </DialogContent>
             <DialogActions>
-            {showpdf && (
-                <div>
-                    <PDFViewer width="100%" height="500px">
-            <Document>
-              <Page style={styles.page}>
-                <Text style={styles.username}>{title}</Text>
-                <Image style={styles.image} src={logo}  />
-                <View style={styles.title}>
-                  <Text style={{marginTop:10, color:'white'}}>Remote DIALOG+ Plan</Text>
-                </View>
-                {sessiondata.map(function(data, index){
-                  return (
-                    <View>
-                      <View style={{ backgroundColor:'#4472C4',with:'100%',height:40, marginTop:10}}>
-                        <Text style={{marginTop:10, color:'white', fontSize:11}}>{data[12].created_at}</Text>
-                      </View>
-                      <View style={{flexDirection:'row', justifyContent:'space-between', border: "1px solid black"}}>
-                        <View style={{flexDirection:'column', marginLeft:10, marginTop:10}}>
-                          <Text style={{marginTop:1}}>{data[0].name}</Text>
-                          <Text style={{marginTop:1}}>{data[1].name}</Text>
-                          <Text style={{marginTop:1}}>{data[2].name}</Text>
-                          <Text style={{marginTop:1}}>{data[3].name}</Text>
-                          <Text style={{marginTop:1}}>{data[4].name}</Text>
-                          <Text style={{marginTop:1}}>{data[5].name}</Text>
-                          <Text style={{marginTop:1}}>{data[6].name}</Text>
-                          <Text style={{marginTop:1}}>{data[7].name}</Text>
-                          <Text style={{marginTop:1}}>{data[8].name}</Text>
-                          <Text style={{marginTop:1}}>{data[9].name}</Text>
-                          <Text style={{marginTop:1}}>{data[10].name}</Text>
-                        </View>
-                        <View style={{flexDirection:'column',  marginLeft:10, marginTop:10}}>
-                        <Text style={{marginTop:1}}>{data[0].value}</Text>
-                          <Text style={{marginTop:1}}>{data[1].value}</Text>
-                          <Text style={{marginTop:1}}>{data[2].value}</Text>
-                          <Text style={{marginTop:1}}>{data[3].value}</Text>
-                          <Text style={{marginTop:1}}>{data[4].value}</Text>
-                          <Text style={{marginTop:1}}>{data[5].value}</Text>
-                          <Text style={{marginTop:1}}>{data[6].value}</Text>
-                          <Text style={{marginTop:1}}>{data[7].value}</Text>
-                          <Text style={{marginTop:1}}>{data[8].value}</Text>
-                          <Text style={{marginTop:1}}>{data[9].value}</Text>
-                          <Text style={{marginTop:1}}>{data[10].value}</Text>
-                        </View>
-                        <View>
-                        </View>
-                        <View style={{flexDirection:'column',  marginRight:10, marginTop:10}}>
-                        <Text style={{marginTop:1}}>{data[0].select}</Text>
-                          <Text style={{marginTop:1}}>{data[1].select == true ? "Yes": "No"}</Text>
-                          <Text style={{marginTop:1}}>{data[2].select == true ? "Yes": "No"}</Text>
-                          <Text style={{marginTop:1}}>{data[3].select == true ? "Yes": "No"}</Text>
-                          <Text style={{marginTop:1}}>{data[4].select == true ? "Yes": "No"}</Text>
-                          <Text style={{marginTop:1}}>{data[5].select == true ? "Yes": "No"}</Text>
-                          <Text style={{marginTop:1}}>{data[6].select == true ? "Yes": "No"}</Text>
-                          <Text style={{marginTop:1}}>{data[7].select == true ? "Yes": "No"}</Text>
-                          <Text style={{marginTop:1}}>{data[8].select == true ? "Yes": "No"}</Text>
-                          <Text style={{marginTop:1}}>{data[9].select== true ? "Yes": "No"}</Text>
-                          <Text style={{marginTop:1}}>{data[10].select == true ? "Yes": "No"}</Text>
-                        </View>
-                      </View>
-                  </View>
-                  )
-                })}
-              </Page>
-            </Document>
-          </PDFViewer>
-                </div>
-            )}
-                <Button variant="outlined" onClick={(event)=>generatePDF(event, props.client.full_name)}>Generate PDF</Button>
+                {showPDF && (
+                    <div>
+                        <PDFViewer width="100%" height="500px">
+                            <Document>
+                                <Page style={styles.page}>
+                                    <Text style={styles.username}>{title}</Text>
+                                    <Image style={styles.image} src={logo} />
+                                    <View style={styles.title}>
+                                        <Text style={{ marginTop: 10, color: 'white' }}>Remote DIALOG+ Plan</Text>
+                                    </View>
+                                    {sessionData.map((data, index) => (
+                                        <View key={index} style={{ marginBottom: 10 }}>
+                                            <View style={{ backgroundColor: '#4472C4', width: '100%', height: 40, marginTop: 10 }}>
+                                                <Text style={{ marginTop: 10, color: 'white', fontSize: 11 }}>{data[12]?.created_at || "N/A"}</Text>
+                                            </View>
+                                            <View style={{ border: "1px solid black", padding: 10 }}>
+                                                <Text style={styles.tableHeader}> Field                   | Score           | Action Items </Text>
+                                                {Object.values(data).filter(entry => entry.name).map((entry, idx) => (
+                                                      <View key={idx} style={styles.tableRow}>
+                                                          <Text style={{ width: '30%' }}>{entry.name || "N/A"}</Text>
+                                                          <Text style={{ width: '20%' }}>{entry.value || "N/A"}</Text>
+                                                          <Text style={{ width: '50%' }}>{(entry.actionitems || []).join(', ') || "No action items"}</Text>
+                                                      </View>
+                                                  ))}
+                                            </View>
+                                        </View>
+                                    ))}
+                                </Page>
+                            </Document>
+                        </PDFViewer>
+                    </div>
+                )}
+                <Button variant="outlined" onClick={(event) => generatePDF(event, props.client.full_name)}>Generate PDF</Button>
             </DialogActions>
         </Dialog>
     );
