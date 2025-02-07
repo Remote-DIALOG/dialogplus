@@ -41,7 +41,7 @@ class NavBar extends React.Component {
     handleClose () {
       //setTimeout(() => this.setState({anchorEl:null}), 1) 
       this.setState({anchorEl:null})
-      this.props.nagivate('/profile')
+      // this.props.nagivate('/profile')
     }
     handlelogout () {
       this.setState({openDialog:!this.state.openDialog})

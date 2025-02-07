@@ -41,16 +41,21 @@ const styles = StyleSheet.create({
         width: 50
     },
     sessiondates: {
-        marginTop: 1
+        marginTop: 10,
+        fontSize: 18, // Increased font size
+        fontWeight: 'bold', // Make it bold
+        textAlign: 'center', // Center alignment
+        paddingLeft: 20 // Add more space from the left
     },
     tableRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 5
+        marginBottom: 10 // Increased spacing between rows
     },
     tableHeader: {
-        fontWeight: 'bold',
-        marginBottom: 5
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 10 // Increased spacing between rows
     }
 });
 
@@ -144,10 +149,10 @@ function SelectDate(props) {
                                     {sessionData.map((data, index) => (
                                         <View key={index} style={{ marginBottom: 10 }}>
                                             <View style={{ backgroundColor: '#4472C4', width: '100%', height: 40, marginTop: 10 }}>
-                                                <Text style={{ marginTop: 10, color: 'white', fontSize: 11 }}>{data[12]?.created_at || "N/A"}</Text>
+                                                <Text style={{ marginTop: 10, color: 'white', fontSize: 18 }}>{data[12]?.created_at || "N/A"}</Text>
                                             </View>
                                             <View style={{ border: "1px solid black", padding: 10 }}>
-                                                <Text style={styles.tableHeader}> Field                   | Score           | Action Items </Text>
+                                                <Text style={styles.tableHeader}> Field                      | Score          | Action Items </Text>
                                                 {Object.values(data).filter(entry => entry.name).map((entry, idx) => (
                                                       <View key={idx} style={styles.tableRow}>
                                                           <Text style={{ width: '30%' }}>{entry.name || "N/A"}</Text>
